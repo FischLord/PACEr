@@ -1,29 +1,27 @@
 # **P.A.C.E.r**
 
-## **P**räzise **A**bstands-**C**alculierung für ein **E**rfolgreiches Ma**r**rathon
+**P**räzise **A**bstands-**C**alculierung für ein **E**rfolgreiches Ma**r**athon
 
+## Entwicklung
 
-## Development
+### Erste Installation
 
-    ### First Install
+Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen Schritten:
 
-    1. Create Virtualenv and Enter it
-        '''
-        python -m venv .PACEr
-        .PACEr/Scripts/Activate.ps1
-        '''
+1. Erstellen Sie eine virtuelle Umgebung und aktivieren Sie sie:
 
-    2. Instal Requirements
-        '''
-        pip install -r .\requirements.txt
-        '''
+   ```bash
+   python -m venv .PACEr
+   .PACEr/Scripts/Activate.ps1
+   ```
 
-    ### Starting Development Server
-    1. Launch CSS Watcher 
-    '''
+2. Installieren Sie die erforderlichen Pakete:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+### Starten des Entwicklung-Servers
+    ```bash
     npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch
-    '''
-
-    2. Start Flask App
-    '''
-    python 
+    ```
