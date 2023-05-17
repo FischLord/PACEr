@@ -1,0 +1,66 @@
+{% extends "layout.html" %} {% block content %}
+
+<main class="container mx-auto px-4 py-8 text-center">
+    <!--? Überschrift -->
+    <h1 class="text-4xl font-bold text-orange-600 mb-4">Willkommen auf der Startseite</h1>
+
+    <!--? Raster von Bildern und Beschreibungen -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!--? Element 1 -->
+        <div class="bg-gray-800 rounded-lg p-4">
+            <img src="https://via.placeholder.com/300" alt="Bild 1" class="w-full h-auto rounded-lg mb-4">
+            <p class="text-gray-400">Beschreibung 1</p>
+        </div>
+
+        <!--? Element 2 -->
+        <div class="bg-gray-800 rounded-lg p-4">
+            <img src="https://via.placeholder.com/300" alt="Bild 2" class="w-full h-auto rounded-lg mb-4">
+            <p class="text-gray-400">Beschreibung 2</p>
+        </div>
+
+        <!--? Element 3 -->
+        <div class="bg-gray-800 rounded-lg p-4">
+            <img src="https://via.placeholder.com/300" alt="Bild 3" class="w-full h-auto rounded-lg mb-4">
+            <p class="text-gray-400">Beschreibung 3</p>
+        </div>
+    </div>
+
+    <!--? Großes Bild mit Beschreibung -->
+    <div class="my-8">
+        <img src="https://via.placeholder.com/500" alt="Großes Bild" class="w-full h-auto rounded-lg mb-4">
+        <h2 class="text-2xl font-bold text-orange-600">Ein weiteres tolles Bild</h2>
+        <p class="text-gray-400">Hier ist eine Beschreibung des Bildes.</p>
+    </div>
+
+    <!--? Textblock -->
+    <div class="my-8">
+        <h2 class="text-2xl font-bold text-orange-600">Ein Textblock</h2>
+        <p class="text-gray-400">Dies ist ein Beispieltext, der den Textblock beschreibt. Du kannst hier beliebigen Text einfügen, um deine Informationen darzustellen.</p>
+    </div>
+
+    <!--? Element mit Objekt auf der linken Seite -->
+    <div class="flex flex-col md:flex-row items-center">
+        <div class="w-full md:w-1/2">
+            <img src="https://via.placeholder.com/300" alt="Objekt" class="w-full h-auto rounded-lg mb-4">
+        </div>
+        <div class="w-full md:w-1/2 md:ml-4">
+            <h2 class="text-2xl font-bold text-orange-600 mb-2">Titel des Objekts</h2>
+            <p class="text-gray-400">Beschreibung des Objekts.</p>
+        </div>
+    </div>
+
+    <!--? Element mit Objekt auf der rechten Seite -->
+    <div class="flex flex-col md:flex-row items-center">
+        <div class="w-full md:w-1/2 md:mr-4">
+            <h2 class="text-2xl font-bold text-orange-600 mb-2">Titel des Objekts</h2>
+            <p class="text-gray-400">Beschreibung des Objekts.</p>
+        </div>
+        <div class="w-full md:w-1/2">
+            <img src="https://via.placeholder.com/300" alt="Objekt" class="w-full h-auto rounded-lg mb-4">
+        </div>
+    </div>
+</main>
+
+
+
+{% endblock %}

@@ -1,6 +1,6 @@
 module.exports = {
   mode: 'jit',
-  content: ['./statzy/templates/**/*.html'],
+  content: ['./PACEr/templates/**/*.html'],
   theme: {
     extend: {},
   },
