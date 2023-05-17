@@ -30,7 +30,8 @@ Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen S
     
 ### Akzentfarben
 
-- Hintergrundfarbe: Grau (`bg-gray-800`)
+- Hintergrundfarbe: Grau (`bg-gray-900`)
+- Hintergrnud Header/Footer: Grau (`bg-gray-900`)
 - Akzentfarbe / Logo: Orange (`text-orange-600`)
 - Textfarbe: Hellgrau (`text-gray-400`)
 - Hover / Interaktionsfarbe: Orange (`hover:text-orange-600`)
