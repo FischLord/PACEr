@@ -1,29 +1,42 @@
 # **P.A.C.E.r**
 
-## **P**räzise **A**bstands-**C**alculierung für ein **E**rfolgreiches Ma**r**rathon
+**P**räzise **A**bstands-**C**alculierung für ein **E**rfolgreiches Ma**r**athon
 
+## Entwicklung
 
-## Development
+### Erste Installation
 
-    ### First Install
+Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen Schritten:
 
-    1. Create Virtualenv and Enter it
-        '''
-        python -m venv .PACEr
-        .PACEr/Scripts/Activate.ps1
-        '''
+1. Erstellen Sie eine virtuelle Umgebung und aktivieren Sie sie:
 
-    2. Instal Requirements
-        '''
-        pip install -r .\requirements.txt
-        '''
+   ```bash
+   python -m venv .PACEr
+   .PACEr/Scripts/Activate.ps1
+   ```
 
-    ### Starting Development Server
-    1. Launch CSS Watcher 
-    '''
-    npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch
-    '''
+2. Installieren Sie die erforderlichen Pakete:
 
-    2. Start Flask App
-    '''
-    python 
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+### Starten des Entwicklung-Servers
+
+   ```bash
+   npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch
+   python .\PACEr\app.py
+   ```
+    
+### Akzentfarben
+
+- Hintergrundfarbe: Grau (`bg-gray-900`)
+- Hintergrnud Header/Footer: Grau (`bg-gray-800`)
+- Akzentfarbe / Logo: Orange (`text-orange-600`)
+- Textfarbe: Hellgrau (`text-gray-400`)
+- Hover / Interaktionsfarbe: Orange (`hover:text-orange-600`)
+- Randfarbe für interaktive Elemente: Orange (`border-orange-600`)
+- Sekundäre Akzentfarbe: Blau (`text-blue-600`)
+- Fehlermeldung oder kritische Informationen: Rot (`text-red-600`)
+- Erfolgsmeldung oder positive Informationen: Grün (`text-green-600`)
+- Warnhinweise: Gelb (`text-yellow-600`)
