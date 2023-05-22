@@ -9,11 +9,19 @@
 Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen Schritten:
 
 1. Erstellen Sie eine virtuelle Umgebung und aktivieren Sie sie:
-
-   ```bash
-   python -m venv .PACEr
-   .PACEr/Scripts/Activate.ps1
-   ```
+    
+    Unter Linux:
+    ```bash
+    python3 -m venv .PACEr
+    source .PACEr/bin/activate
+    ```
+    
+    Unter Windows:
+    ```powershell
+    python -m venv .PACEr
+    .PACEr\Scripts\Activate.ps1
+    ```
+   
 
 2. Installieren Sie die erforderlichen Pakete:
 
@@ -23,13 +31,20 @@ Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen S
    
 ### Starten des Entwicklung-Servers
 
+Unter Linux:
    ```bash
+   npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch
+   python ./PACEr/app.py
+   ```
+   
+Unter Windows (in PowerShell):
+   ```powershell
    npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch
    python .\PACEr\app.py
    ```
     
 ### Akzentfarben
-
+ 
 - Hintergrundfarbe: Grau (`bg-gray-900`)
 - Hintergrnud Header/Footer: Grau (`bg-gray-800`)
 - Akzentfarbe / Logo: Orange (`text-orange-600`)
