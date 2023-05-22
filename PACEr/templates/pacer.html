@@ -1,0 +1,108 @@
+{% extends "layout.html" %} {% block content %}
+
+<div class="bg-gray-900">
+    <div id="warning" class="bg-red-600 text-white p-4 mb-4 rounded hidden">
+    </div>
+    <form action="{{ url_for('calculator.pacer') }}" method="POST" class="container mx-auto px-4 py-8"
+        id="form_calculator">
+
+        <! <div class="mb-4">
+            <label for="streckenlaenge" class="block text-gray-400 mb-2">Streckenlänge in m</label>
+            <input type="number" id="streckenlaenge" name="laenge"
+                class="bg-gray-800 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+                required>
+</div>
+
+<div class="mb-4">
+    <label for="bestzeit" class="block text-gray-400 mb-2">Bestzeit</label>
+    <div class="flex">
+        <input type="number" id="bestzeit_min" name="bz_min"
+            class="bg-gray-800 text-gray-400 rounded-l w-1/2 py-2 px-3 leading-tight border-2 border-r-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+            placeholder="Min" required>
+        <input type="number" id="bestzeit_sec" name="bz_sec"
+            class="bg-gray-800 text-gray-400 rounded-r w-1/2 py-2 px-3 leading-tight border-2 border-l-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+            placeholder="Sec" required>
+    </div>
+</div>
+
+<div class="mb-4">
+    <label for="erlaubtezeit" class="block text-gray-400 mb-2">Erlaubte Zeit</label>
+    <div class="flex">
+        <input type="number" id="erlaubtezeit_min" name="ez_min"
+            class="bg-gray-800 text-gray-400 rounded-l w-1/2 py-2 px-3 leading-tight border-2 border-r-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+            placeholder="Min" required>
+        <input type="number" id="erlaubtezeit_sec" name="ez_sec"
+            class="bg-gray-800 text-gray-400 rounded-r w-1/2 py-2 px-3 leading-tight border-2 border-l-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+            placeholder="Sec" required>
+    </div>
+</div>
+
+<div class="mb-4">
+    <label for="hoechstzeit" class="block text-gray-400 mb-2">Höchstzeit</label>
+    <div class="flex">
+        <input type="number" id="hoechstzeit_min" name="hz_min"
+            class="bg-gray-800 text-gray-400 rounded-l w-1/2 py-2 px-3 leading-tight border-2 border-r-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+            placeholder="Min" required>
+        <input type="number" id="hoechstzeit_sec" name="hz_sec"
+            class="bg-gray-800 text-gray-400 rounded-r w-1/2 py-2 px-3 leading-tight border-2 border-l-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+            placeholder="Sec" required>
+    </div>
+</div>
+
+<button type="submit"
+    class="text-orange-600 bg-gray-800 hover:text-gray-400 hover:bg-orange-600 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">Berechnen</button>
+
+</form>
+</div>
+
+<script>
+document.getElementById("form_calculator").addEventListener("submit", function(event) {
+    var laenge = document.getElementById("streckenlaenge");
+    var bz_sec = document.getElementById("bestzeit_sec");
+    var hz_sec = document.getElementById("hoechstzeit_sec");
+    var ez_sec = document.getElementById("erlaubtezeit_sec");
+    var bz_min = document.getElementById("bestzeit_min");
+    var hz_min = document.getElementById("hoechstzeit_min");
+    var ez_min = document.getElementById("erlaubtezeit_min");
+    
+    var fehler = [];
+
+    if (!Number.isInteger(Number(laenge.value)) || Number(laenge.value) <= 0) {
+        fehler.push("Feld 'Streckenlänge': Die Länge muss eine positive ganze Zahl sein.");
+        laenge.classList.add("border-red-600");
+    }
+
+    if (Number(bz_sec.value) > 60 || Number(hz_sec.value) > 60 || Number(ez_sec.value) > 60) {
+        fehler.push("Feld 'Sekunden': Sekunden dürfen nicht mehr als 60 sein.");
+        bz_sec.classList.add("border-red-600");
+        hz_sec.classList.add("border-red-600");
+        ez_sec.classList.add("border-red-600");
+    }
+
+    if (Number(bz_sec.value) < 0 || Number(hz_sec.value) < 0 || Number(ez_sec.value) < 0) {
+        fehler.push("Feld 'Sekunden': Sekunden dürfen nicht weniger als 0 sein.");
+        bz_sec.classList.add("border-red-600");
+        hz_sec.classList.add("border-red-600");
+        ez_sec.classList.add("border-red-600");
+    }
+
+    if (Number(bz_min.value) < 0 || Number(hz_min.value) < 0 || Number(ez_min.value) < 0) {
+        fehler.push("Feld 'Minuten': Minuten dürfen nicht weniger als 0 sein.");
+        bz_min.classList.add("border-red-600");
+        hz_min.classList.add("border-red-600");
+        ez_min.classList.add("border-red-600");
+    }
+
+    if(fehler.length > 0){
+        event.preventDefault();
+        var warnung = document.getElementById("warning");
+        warnung.innerHTML = fehler.join('<br>');
+        warnung.classList.remove("hidden");
+        warnung.classList.add("block");
+    }
+});
+</script>
+
+</script>
+
+{% endblock %}

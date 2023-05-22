@@ -9,6 +9,14 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/theme.css') }}" />
     <script src="{{ url_for('static', filename='/js/script.js') }}"></script>
     <title>{{ title }}</title>
+
+    <style>
+        main {
+            min-height: calc(100vh - 88px);
+            /* 88px is the combined height of the navbar and footer */
+        }
+    </style>
+
 </head>
 
 <body class="bg-gray-900 text-gray-200">
@@ -28,7 +36,7 @@
         <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto hidden transition-all duration-500 ease-in-out"
             id="nav-content">
             <div class="text-sm lg:flex-grow">
-                <a href="/calculator"
+                <a href="/pacer"
                     class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-orange-600 mr-4 transition-colors duration-200">
                     Rechner
                 </a>
@@ -123,14 +131,24 @@
         </div>
     </footer>
 
-<script>
-    //? Javascript to toggle the Burger menu
-    document.getElementById('nav-toggle').onclick = function () {
-        document.getElementById("nav-content").classList.toggle("hidden");
-    }
-</script>
+    <script>
+        //? Javascript to toggle the Burger menu
+        document.getElementById('nav-toggle').onclick = function () {
+            document.getElementById("nav-content").classList.toggle("hidden");
+        }
 
-<script src="{{ url_for('static', filename='/js/dist/flowbite.min.js') }}"></script>
+        // Get viewport height
+        let vh = window.innerHeight * 0.01;
+        // Set document variable
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        // On window resize, recalculate viewport height
+        window.addEventListener('resize', () => {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='/js/dist/flowbite.min.js') }}"></script>
 
 </body>
 
