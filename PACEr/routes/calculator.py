@@ -14,9 +14,23 @@ def pacer():
             bz_min = request.form['bz_min']
             hz_min = request.form['hz_min']
             ez_min = request.form['ez_min']
+            print("POST: ", laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
             return render_template('pacer.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min)
 
         except Exception as e:
             return 'Error: ' + str(e)
     else:
-        return render_template('pacer.html')
+        try:
+            laenge = request.args.get('laenge')
+            bz_sec = request.args.get('bz_sec')
+            hz_sec = request.args.get('hz_sec')
+            ez_sec = request.args.get('ez_sec')
+            bz_min = request.args.get('bz_min')
+            hz_min = request.args.get('hz_min')
+            ez_min = request.args.get('ez_min')
+            # debug print all variables
+            print("GET:", laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
+            return render_template('pacer.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min)
+
+        except Exception as e:
+            return 'Error: ' + str(e)
