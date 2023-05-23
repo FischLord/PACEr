@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-
+from helper import pace
 
 bp_calculator = Blueprint('calculator', __name__)
 
@@ -14,9 +14,12 @@ def pacer():
             bz_min = request.form['bz_min']
             hz_min = request.form['hz_min']
             ez_min = request.form['ez_min']
-            print("POST: ", laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
-            return render_template('pacer.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min)
-
+            laenge = int(request.form['laenge'])
+            # print("POST: ", laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
+            # debug print the result of the pace function
+            # print("Result: ", pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min))
+            result = pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
+            return render_template('pacer.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, result=result)
         except Exception as e:
             return 'Error: ' + str(e)
     else:
@@ -28,9 +31,13 @@ def pacer():
             bz_min = request.args.get('bz_min')
             hz_min = request.args.get('hz_min')
             ez_min = request.args.get('ez_min')
+            laenge = int(request.form['laenge'])
             # debug print all variables
-            print("GET:", laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
-            return render_template('pacer.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min)
+            #print("GET:", laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
+            result = pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min)
+            return render_template('pacer.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, result=result)
 
         except Exception as e:
             return 'Error: ' + str(e)
+        
+

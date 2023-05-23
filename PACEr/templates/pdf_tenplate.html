@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ergebnis</title>
+    <style>
+        /* Add your custom styles for the PDF here */
+    </style>
+</head>
+<body>
+    <h1>Ergebnis</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Streckenlänge (m)</th>
+                <th>Bestzeit</th>
+                <th>Erlaubte Zeit</th>
+                <th>Höchstzeit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in result.items() %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value.bz_min }}:{{ value.bz_sec }}</td>
+                <td>{{ value.ez_min }}:{{ value.ez_sec }}</td>
+                <td>{{ value.hz_min }}:{{ value.hz_sec }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
