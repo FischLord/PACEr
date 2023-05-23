@@ -65,7 +65,7 @@
     </form>
 </div>
 
-
+{% if result is not none %}
 <div class="container mx-auto px-4 py-8">
     <table class="table-auto w-full text-gray-400">
         <thead>
@@ -88,9 +88,7 @@
         </tbody>
     </table>
 </div>
-
-<a href="" class="text-orange-600 bg-gray-800 hover:text-gray-400 hover:bg-orange-600 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange float-right">PDF herunterladen</a>
-
+{% endif %}
 
 <script>
     document.getElementById("form_calculator").addEventListener("submit", function (event) {
