@@ -86,9 +86,9 @@
                 {% for key, value in result.items() %}
                 <tr class="bg-gray-900 hover:bg-gray-800">
                     <td class="border px-4 py-2">{{ key }}</td>
-                    <td class="border px-4 py-2">{{ value.bz_min }}:{{ value.bz_sec }}</td>
-                    <td class="border px-4 py-2">{{ value.ez_min }}:{{ value.ez_sec }}</td>
-                    <td class="border px-4 py-2">{{ value.hz_min }}:{{ value.hz_sec }}</td>
+                    <td class="border px-4 py-2">{{ value.bz_min }}:{{ '{:02}'.format(value.bz_sec) }}</td>
+                    <td class="border px-4 py-2">{{ value.ez_min }}:{{ '{:02}'.format(value.ez_sec) }}</td>
+                    <td class="border px-4 py-2">{{ value.hz_min }}:{{ '{:02}'.format(value.hz_sec) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -96,6 +96,7 @@
     </div>
 </div>
 {% endif %}
+
 
 
 <script>
