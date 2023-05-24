@@ -1,14 +1,15 @@
 {% extends "layout.html" %} {% block content %}
-<header class="bg-gray-800">
-    <h1 class="text-4xl font-bold text-orange-600 p-4">Informationen zu PACEr</h1>
+<header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold text-orange-600">PACEr - Präzise Abstands-Calculierung für ein Erfolgreiches Marathon</h1>
 </header>
 
 
-<main class="container mx-auto p-4">
-    
-
+<main class="container mx-auto p-4 lg:p-8">
     <section class="my-8">
-        <p class="text-gray-400">Der App-Name PACEr steht für "Präzise Abstands-Calculierung für ein Erfolgreiches Marathon" und zielt darauf ab, Turnierfahrern die mühsame Aufgabe des Zeitenrechnens abzunehmen. Im Marathon ist es entscheidend, dass die Gespanne zum richtigen Zeitpunkt ins Ziel einfahren, um Strafpunkte zu vermeiden oder gar auszuscheiden. Bisher mussten Fahrer ihre Etappenzeiten manuell berechnen, was während eines Turniers oft eine Herausforderung darstellt, da es meist hektisch zugeht. PACEr soll die Teilnehmer entlasten, indem es ihnen die Berechnung vollständig abnimmt.</p>
+        <h2 class="text-2xl font-bold text-orange-600">Was ist PACEr?</h2>
+        <p class="text-gray-400 mt-4">
+            Es ist eine App, die Turnierfahrern hilft, ihre Fahrzeiten präzise zu berechnen. Im Marathon müssen die Fahrer das Ziel zum richtigen Zeitpunkt erreichen, um Strafpunkte zu vermeiden. PACEr nimmt den Fahrern diese mühsame Aufgabe ab und übernimmt die gesamte Berechnung.
+        </p>
         <p class="text-gray-400">Die zugrunde liegende analoge Berechnung ist keine Zauberei. Zuerst müssen die Minuten in Sekunden umgerechnet werden. Dann nimmt man eine der vorgegebenen Zeiten (Bestzeit, Erlaubte Zeit, Höchstzeit) und dividiert sie durch die Gesamtstrecke in Metern. Anschließend multipliziert man das Ergebnis mit 1000, um den Pace für den ersten Kilometer zu erhalten. Die Zeiten für die weiteren Etappenpunkte können dann durch einfache Addition (oder Multiplikation) ermittelt werden.</p>
         <div class="bg-gray-800 p-4 rounded-lg">
             <p class="text-orange-600 font-bold">Formel:</p>
