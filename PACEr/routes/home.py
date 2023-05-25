@@ -6,7 +6,7 @@ bp_home = Blueprint('home', __name__)
 @bp_home.route('/')
 def index():
     try:
-        return render_template('index.html')
+        return render_template('projektInfo.html')
 
     except Exception as e:
         return 'Error: ' + str(e)
