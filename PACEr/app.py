@@ -2,7 +2,7 @@ from flask import Flask
 import secrets
 from routes import home, calculator
 
-pacer = Flask(__name__)
+pacer = Flask(__name__, static_folder='static', template_folder='templates')
 pacer.secret_key = secrets.token_hex(16)
 
 
