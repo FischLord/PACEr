@@ -1,3 +1,36 @@
-{% extends "layout.html" %} {% block content %}
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Überschrift -->
+<header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8 mb-8">
+    <h1 class="text-4xl font-bold text-orange-600">Über uns!</h1>
+</header>
+<!-- R von Bildern und Beschreibungen -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Element 1 -->
+    <div class="bg-gray-800 rounded-lg p-4">
+        <img src="https://via.placeholder.com/300" alt="Bild von Janneck Lehmann" class="w-full h-auto rounded-lg mb-4">
+        <h2 class="text-2xl font-bold text-600 mb-2 text-orange-600">Janneck Lehmann</h2>
+        <p class="text-gray-400">Seit dem 15. August 2022 absolviere ich eine Ausbildung zum Fachinformatiker für Systemintegration beim Zentralen IT-Dienstleister Brandenburg.
+            Darüber hinaus bin ich seit 2016 leidenschaftlicher Fahrer im Turniersport. Projekte wie dieses nutze ich, um meine Fähigkeiten zu erweitern und gleichzeitig etwas Sinnvolles zu erschaffen.</p>
+    </div>
+</div>
+
+<!-- Textblock -->
+<div class="my-8">
+    <h2 class="text-2xl font-bold text-orange-600">Weitere Informationen</h2>
+    <p class="text-gray-400">Ich möchte diesen Textblock nutzen, um jeden Nutzer des Rechners darauf hinzuweisen, dass Anregungen oder Verbesserungsvorschläge gerne über das Problem-Melden-Kontaktformular weitergegeben werden können.
+        Ich freue mich über jede Nachricht und werde versuchen, diese schnellstmöglich zu bearbeiten. <br>
+        Aktuell kann es zu unregelmäßigen Onlinezeiten kommen, da sich die Webapplikation PACEr noch in der Entwicklung befindet. Weiterhin läuft die Website auf einem Server, der mir durch meinen Dozenten zur Verfügung gestellt wurde.
+        Das Rechenzentrum, in dem sich der Server befindet, wird von den Azubis des ZIT-BB betreut. Sollte es zu Ausfällen kommen, bitte ich um Verständnis. <br>
+        Solange ich keine Kosten durch das Hosting der Webapplikation habe, wird keine Werbung auf der Website geschaltet. Sollte sich dies ändern, werde ich dies an dieser Stelle bekannt geben.  
+    </p>
+</div>
+
+<!-- Kontaktinformationen -->
+<div class="my-8">
+    <h2 class="text-2xl font-bold text-orange-600">Kontakt</h2>
+    <p class="text-gray-400">Name: Janneck Lehmann<br>E-Mail: sample@email.com</p>
+</div>
 
 {% endblock %}
