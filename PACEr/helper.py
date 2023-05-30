@@ -52,7 +52,18 @@ def pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
         return 'Error: ' + str(e)
 
 
-
+def calculatePace(laenge, kmh):
+    # calculate the pace for EZ with formula laenge in km * 60 / kmh
+    # hz time = ez + 20%
+    # 
+    
+    return bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min
+    
+    
+    
+    
+    
+    
 #     # example call
 # result = pace(4900, 37, 14, 37, 16, 45, 19)
 
