@@ -1,12 +1,16 @@
 {% extends "layout.html" %} {% block content %}
 <header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8">
-    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">Rechner</h1>
+    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">
+        Rechner
+    </h1>
 </header>
+
+{% if result is none %}
 <form action="{{ url_for('calculator.pacer') }}" method="POST" class="container mx-auto px-4 py-8" id="form_calculator">
     <div class="mb-4">
         <label for="laenge" class="block text-gray-400 mb-2">Streckenlänge (m)</label>
         <input type="number" id="laenge" name="laenge"
-            class="bg-gray-800 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+            class="bg-gray-900 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"
             placeholder="Streckenlänge (m)" required value="{{ laenge }}" />
         <div id="laenge-error" class="text-red-600 hidden">
             Es sollte eine positive ganze Zahl die größer als 0m ist angegeben werden.
@@ -14,66 +18,61 @@
     </div>
 
     <div class="mb-4">
-        <label for="bestzeit" class="block text-gray-400 mb-2">Bestzeit</label>
+        <label for="art" class="block text-gray-400 mb-2">Art der Strecke</label>
+        <div class="relative">
+            <select id="art" name="art"
+                class="bg-gray-900 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+                required value="{{ art }}" onchange="updateKmhOptions(this.value)">
+                <option value="" disabled selected>Bitte wählen</option>
+                <option value="hindernisstrecke">Hindernisstrecke</option>
+                <option value="wegstrecke">Wegstrecke</option>
+                <option value="schrittstrecke">Schrittstrecke</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mb-4" id="tempoInputField" style="display: none">
+        <label for="bestzeit" class="block text-gray-400 mb-2">Tempo in km/h</label>
         <div class="flex">
-            <input type="number" id="bestzeit_min" name="bz_min"
-                class="bg-gray-800 text-gray-400 rounded-l w-1/2 py-2 px-3 leading-tight border-2 border-r-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
-                placeholder="Min" required value="{{ bz_min }}" />
-            <input type="number" id="bestzeit_sec" name="bz_sec"
-                class="bg-gray-800 text-gray-400 rounded-r w-1/2 py-2 px-3 leading-tight border-2 border-l-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
-                placeholder="Sec" required value="{{ bz_sec }}" />
+            <select id="kmh" name="kmh"
+                class="bg-gray-900 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+                required value="{{ kmh }}">
+                <option value="" disabled selected>Bitte wählen</option>
+            </select>
         </div>
         <div id="bestzeit-error" class="text-red-600 hidden">
-            Es dürfen keine negativen Minuten oder Sekunden eingegeben werden und die
-            Sekunden dürfen nicht mehr als 60 betragen.
-        </div>
-    </div>
-
-    <div class="mb-4">
-        <label for="erlaubtezeit" class="block text-gray-400 mb-2">Erlaubte Zeit</label>
-        <div class="flex">
-            <input type="number" id="erlaubtezeit_min" name="ez_min"
-                class="bg-gray-800 text-gray-400 rounded-l w-1/2 py-2 px-3 leading-tight border-2 border-r-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
-                placeholder="Min" required value="{{ ez_min }}" />
-            <input type="number" id="erlaubtezeit_sec" name="ez_sec"
-                class="bg-gray-800 text-gray-400 rounded-r w-1/2 py-2 px-3 leading-tight border-2 border-l-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
-                placeholder="Sec" required value="{{ ez_sec }}" />
-        </div>
-        <div id="erlaubtezeit-error" class="text-red-600 hidden">
-            Es dürfen keine negativen Minuten oder Sekunden eingegeben werden und die
-            Sekunden dürfen nicht mehr als 60 betragen.
-        </div>
-    </div>
-
-    <div class="mb-4">
-        <label for="hoechstzeit" class="block text-gray-400 mb-2">Höchstzeit</label>
-        <div class="flex">
-            <input type="number" id="hoechstzeit_min" name="hz_min"
-                class="bg-gray-800 text-gray-400 rounded-l w-1/2 py-2 px-3 leading-tight border-2 border-r-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
-                placeholder="Min" required value="{{ hz_min }}" />
-            <input type="number" id="hoechstzeit_sec" name="hz_sec"
-                class="bg-gray-800 text-gray-400 rounded-r w-1/2 py-2 px-3 leading-tight border-2 border-l-0 border-gray-800 focus:outline-none focus:shadow-outline-orange"
-                placeholder="Sec" required value="{{ hz_sec }}" />
-        </div>
-        <div id="hoechstzeit-error" class="text-red-600 hidden">
-            Es dürfen keine negativen Minuten oder Sekunden eingegeben werden und die
-            Sekunden dürfen nicht mehr als 60 betragen.
+            Es darf keine negatives Tempo eingegeben werden und es muss eine Ganze
+            Zahl sein.
         </div>
     </div>
 
     <button id="submit-button" type="submit"
-        class="text-orange-600 bg-gray-800 hover:text-gray-400 hover:bg-orange-600 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange float-right">
+        class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange float-right">
         Berechnen
     </button>
 </form>
-</div>
+<script src="{{ url_for('static', filename='js/pacer.js') }}"></script>
+{% endif %} {% if result is not none %}
 
-
-<!--? TEST PUSH PULL -->
-{% if result is not none %}
 <div class="container mx-auto px-4 py-8">
+    <div class="mt-8">
+        <div class="flex justify-center mt-4">
+            <div class="flex flex-wrap bg-gray-800 text-gray-400 rounded-lg px-4 py-2 justify-center md:justify-between">
+                <div class="w-full md:w-auto mb-4 md:mb-0 md:text-right md:mx-8">
+                    <p class="text-center md:text-left"><span class="font-semibold">Streckenlänge:</span> {{ laenge }} m</p>
+                </div>
+                <div class="w-full md:w-auto mb-4 md:mb-0 md:text-center md:mx-8">
+                    <p class="text-center md:text-left"><span class="font-semibold">Geschwindigkeit:</span> {{ kmh }} km/h</p>
+                </div>
+                <div class="w-full md:w-auto md:text-right md:mx-8">
+                    <p class="text-center md:text-left"><span class="font-semibold">Art der Strecke:</span> <span id="capitalized-art">{{ art }}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="overflow-x-auto">
-        <table class="table-auto w-full text-gray-400">
+
+        <table class="table-auto w-full text-gray-400 mt-8">
             <thead>
                 <tr>
                     <th class="px-4 py-2">Streckenlänge (m)</th>
@@ -85,135 +84,20 @@
             <tbody>
                 {% for key, value in result.items() %}
                 <tr class="bg-gray-900 hover:bg-gray-800">
-                    <td class="border px-4 py-2">{{ key }}</td>
-                    <td class="border px-4 py-2">{{ value.bz_min }}:{{ '{:02}'.format(value.bz_sec) }}</td>
-                    <td class="border px-4 py-2">{{ value.ez_min }}:{{ '{:02}'.format(value.ez_sec) }}</td>
-                    <td class="border px-4 py-2">{{ value.hz_min }}:{{ '{:02}'.format(value.hz_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.bz_min }}:{{ '{:02}'.format(value.bz_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.ez_min }}:{{ '{:02}'.format(value.ez_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.hz_min }}:{{ '{:02}'.format(value.hz_sec) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+
+
+<script src="{{ url_for('static', filename='js/pacerresult.js') }}"></script>
 {% endif %}
 
-
-
-<script>
-    function validateInput(input, errorDiv) {
-        if (!Number.isInteger(Number(input.value)) || Number(input.value) <= 0) {
-            errorDiv.innerHTML =
-                "Es sollte eine positive ganze Zahl die größer als 0m ist angegeben werden.";
-            errorDiv.classList.remove("hidden");
-            errorDiv.classList.add("block");
-            input.classList.add("border-red-600");
-            document.getElementById("submit-button").disabled = true; // disable submit button
-            return false;
-        } else {
-            errorDiv.classList.remove("block");
-            errorDiv.classList.add("hidden");
-            input.classList.remove("border-red-600");
-            document.getElementById("submit-button").disabled = false; // enable submit button
-            return true;
-        }
-    }
-
-    var laengeInput = document.getElementById("laenge");
-    var laengeError = document.getElementById("laenge-error");
-    laengeInput.addEventListener("input", function () {
-        validateInput(laengeInput, laengeError);
-    });
-
-    var bestzeitMinInput = document.getElementById("bestzeit_min");
-    var bestzeitSecInput = document.getElementById("bestzeit_sec");
-    var bestzeitError = document.getElementById("bestzeit-error");
-    bestzeitMinInput.addEventListener("input", function () {
-        validateTimeInput(bestzeitMinInput, bestzeitSecInput, bestzeitError);
-    });
-    bestzeitSecInput.addEventListener("input", function () {
-        validateTimeInput(bestzeitMinInput, bestzeitSecInput, bestzeitError);
-    });
-
-    var erlaubtezeitMinInput = document.getElementById("erlaubtezeit_min");
-    var erlaubtezeitSecInput = document.getElementById("erlaubtezeit_sec");
-    var erlaubtezeitError = document.getElementById("erlaubtezeit-error");
-    erlaubtezeitMinInput.addEventListener("input", function () {
-        validateTimeInput(
-            erlaubtezeitMinInput,
-            erlaubtezeitSecInput,
-            erlaubtezeitError
-        );
-    });
-    erlaubtezeitSecInput.addEventListener("input", function () {
-        validateTimeInput(
-            erlaubtezeitMinInput,
-            erlaubtezeitSecInput,
-            erlaubtezeitError
-        );
-    });
-
-    var hoechstzeitMinInput = document.getElementById("hoechstzeit_min");
-    var hoechstzeitSecInput = document.getElementById("hoechstzeit_sec");
-    var hoechstzeitError = document.getElementById("hoechstzeit-error");
-    hoechstzeitMinInput.addEventListener("input", function () {
-        validateTimeInput(
-            hoechstzeitMinInput,
-            hoechstzeitSecInput,
-            hoechstzeitError
-        );
-    });
-    hoechstzeitSecInput.addEventListener("input", function () {
-        validateTimeInput(
-            hoechstzeitMinInput,
-            hoechstzeitSecInput,
-            hoechstzeitError
-        );
-    });
-
-    function validateTimeInput(minInput, secInput, errorDiv) {
-        var min = Number(minInput.value);
-        var sec = Number(secInput.value);
-        if (min < 0 || sec < 0 || sec > 60) {
-            errorDiv.innerHTML =
-                "Es dürfen keine negativen Minuten oder Sekunden eingegeben werden und die Sekunden dürfen nicht mehr als 60 betragen.";
-            errorDiv.classList.remove("hidden");
-            errorDiv.classList.add("block");
-            minInput.classList.add("border-red-600");
-            secInput.classList.add("border-red-600");
-            document.getElementById("submit-button").disabled = true; // disable submit button
-            return false;
-        } else {
-            errorDiv.classList.remove("block");
-            errorDiv.classList.add("hidden");
-            minInput.classList.remove("border-red-600");
-            secInput.classList.remove("border-red-600");
-            document.getElementById("submit-button").disabled = false; // enable submit button
-            return true;
-        }
-    }
-
-    document
-        .getElementById("form_calculator")
-        .addEventListener("submit", function (event) {
-            var valid = true;
-            valid = validateInput(laengeInput, laengeError) && valid;
-            valid =
-                validateTimeInput(bestzeitMinInput, bestzeitSecInput, bestzeitError) &&
-                valid;
-            valid =
-                validateTimeInput(
-                    erlaubtezeitMinInput,
-                    erlaubtezeitSecInput,
-                    erlaubtezeitError
-                ) && valid;
-            valid =
-                validateTimeInput(
-                    hoechstzeitMinInput,
-                    hoechstzeitSecInput,
-                    hoechstzeitError
-                ) && valid;
-            if (!valid) {
-                event.preventDefault();
-            }
-        });
-</script> {% endblock %}
+{% endblock %}
