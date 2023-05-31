@@ -52,15 +52,42 @@ def pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
         return 'Error: ' + str(e)
 
 
-def calculatePace(laenge, kmh):
-    # calculate the pace for EZ with formula laenge in km * 60 / kmh
-    # hz time = ez + 20%
-    # 
+def calculatePace(laenge, kmh, art):
+    # Bergriffsklärung: HZ = Höchstzeit, BZ = Bestzeit, EZ = Erlaubte Zeit
+    # convert laenge from m to km
+    laenge = laenge / 1000
+    # calculate the pace for EZ with formula: laenge in km * 60 / kmh = EZ in min
+    #print(laenge, kmh, art)
+    ez = (laenge * 60 / kmh)
+    # convert min to sec for precise calculation
+    ez = int(ez * 60)
     
+    # now there is a different calculation for each art
+    if art == "wegstrecke":
+        hz = ez + (ez * 0.2)
+        bz = ez - 120
+    elif art == "hindernisstrecke":
+        hz = 2 * ez
+        bz = ez - 180
+    elif art == "schrittstrecke":
+        hz = 2 * ez
+        bz = None
+    else:
+        raise ValueError("Error: Art not defined")
+
+    # Convert times from seconds to minutes and seconds
+    ez_min = int(ez / 60)
+    ez_sec = int(ez % 60)
+    hz_min = int(hz / 60)
+    hz_sec = int(hz % 60)
+    bz_min = int(bz / 60)
+    bz_sec = int(bz % 60)
+
     return bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min
+
     
     
-    
+
     
     
     

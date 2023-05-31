@@ -1,7 +1,11 @@
 {% extends "layout.html" %} {% block content %}
 <header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8">
-    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">Rechner</h1>
+    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">
+        Rechner
+    </h1>
 </header>
+
+{% if result is none %}
 <form action="{{ url_for('calculator.pacer') }}" method="POST" class="container mx-auto px-4 py-8" id="form_calculator">
     <div class="mb-4">
         <label for="laenge" class="block text-gray-400 mb-2">Streckenlänge (m)</label>
@@ -14,32 +18,31 @@
     </div>
 
     <div class="mb-4">
-        <label for="bestzeit" class="block text-gray-400 mb-2">Tempo in km/h</label>
-        <div class="flex">
-            <input type="number" id="kmh" name="kmh"
+        <label for="art" class="block text-gray-400 mb-2">Art der Strecke</label>
+        <div class="relative">
+            <select id="art" name="art"
                 class="bg-gray-900 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"
-                placeholder="km/h" required value="{{ kmh }}" />
-        </div>
-        <div id="bestzeit-error" class="text-red-600 hidden">
-            Es darf keine negatives Tempo eingegeben werden und es muss eine Ganze Zahl sein.
+                required value="{{ art }}" onchange="updateKmhOptions(this.value)">
+                <option value="" disabled selected>Bitte wählen</option>
+                <option value="hindernisstrecke">Hindernisstrecke</option>
+                <option value="wegstrecke">Wegstrecke</option>
+                <option value="schrittstrecke">Schrittstrecke</option>
+            </select>
         </div>
     </div>
 
-    <div class="mb-4">
-        <label for="art" class="block text-gray-400 mb-2">Art der Strecke</label>
+    <div class="mb-4" id="tempoInputField" style="display: none">
+        <label for="bestzeit" class="block text-gray-400 mb-2">Tempo in km/h</label>
         <div class="flex">
-            <label for="hindernissstrecke" class="mr-4">
-                <input type="radio" id="hindernissstrecke" name="art" value="hindernissstrecke" required class="text-orange-600 focus:ring-2 ring-orange-600">
-                Hindernisstrecke
-            </label>
-            <label for="wegstrecke" class="mr-4">
-                <input type="radio" id="wegstrecke" name="art" value="wegstrecke" required class="text-orange-600 focus:ring-2 ring-orange-600">
-                Wegstrecke
-            </label>
-            <label for="schrittstrecke">
-                <input type="radio" id="schrittstrecke" name="art" value="schrittstrecke" required class="text-orange-600 focus:ring-2 ring-orange-600">
-                Schrittstrecke
-            </label>
+            <select id="kmh" name="kmh"
+                class="bg-gray-900 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"
+                required value="{{ kmh }}">
+                <option value="" disabled selected>Bitte wählen</option>
+            </select>
+        </div>
+        <div id="bestzeit-error" class="text-red-600 hidden">
+            Es darf keine negatives Tempo eingegeben werden und es muss eine Ganze
+            Zahl sein.
         </div>
     </div>
 
@@ -48,17 +51,28 @@
         Berechnen
     </button>
 </form>
+<script src="{{ url_for('static', filename='js/pacer.js') }}"></script>
+{% endif %} {% if result is not none %}
 
-
-
-</div>
-
-
-<!--? TEST PUSH PULL -->
-{% if result is not none %}
 <div class="container mx-auto px-4 py-8">
+    <div class="mt-8">
+        <div class="flex justify-center mt-4">
+            <div class="flex flex-wrap bg-gray-800 text-gray-400 rounded-lg px-4 py-2 justify-center md:justify-between">
+                <div class="w-full md:w-auto mb-4 md:mb-0 md:text-right md:mx-8">
+                    <p class="text-center md:text-left"><span class="font-semibold">Streckenlänge:</span> {{ laenge }} m</p>
+                </div>
+                <div class="w-full md:w-auto mb-4 md:mb-0 md:text-center md:mx-8">
+                    <p class="text-center md:text-left"><span class="font-semibold">Geschwindigkeit:</span> {{ kmh }} km/h</p>
+                </div>
+                <div class="w-full md:w-auto md:text-right md:mx-8">
+                    <p class="text-center md:text-left"><span class="font-semibold">Art der Strecke:</span> <span id="capitalized-art">{{ art }}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="overflow-x-auto">
-        <table class="table-auto w-full text-gray-400">
+
+        <table class="table-auto w-full text-gray-400 mt-8">
             <thead>
                 <tr>
                     <th class="px-4 py-2">Streckenlänge (m)</th>
@@ -70,45 +84,20 @@
             <tbody>
                 {% for key, value in result.items() %}
                 <tr class="bg-gray-900 hover:bg-gray-800">
-                    <td class="border px-4 py-2">{{ key }}</td>
-                    <td class="border px-4 py-2">{{ value.bz_min }}:{{ '{:02}'.format(value.bz_sec) }}</td>
-                    <td class="border px-4 py-2">{{ value.ez_min }}:{{ '{:02}'.format(value.ez_sec) }}</td>
-                    <td class="border px-4 py-2">{{ value.hz_min }}:{{ '{:02}'.format(value.hz_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.bz_min }}:{{ '{:02}'.format(value.bz_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.ez_min }}:{{ '{:02}'.format(value.ez_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.hz_min }}:{{ '{:02}'.format(value.hz_sec) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+
+
+<script src="{{ url_for('static', filename='js/pacerresult.js') }}"></script>
 {% endif %}
 
-
-
-<script>
-    document.getElementById('form_calculator').addEventListener('submit', function(event) {
-        var laengeInput = document.getElementById('laenge');
-        var kmhInput = document.getElementById('kmh');
-        var laengeError = document.getElementById('laenge-error');
-        var bestzeitError = document.getElementById('bestzeit-error');
-    
-        var laengeValue = parseInt(laengeInput.value);
-        var kmhValue = parseInt(kmhInput.value);
-    
-        // Überprüfung der Streckenlänge
-        if (isNaN(laengeValue) || laengeValue <= 0) {
-            event.preventDefault(); // Verhindert das Absenden des Formulars
-            laengeError.classList.remove('hidden'); // Zeigt den Fehler an
-        } else {
-            laengeError.classList.add('hidden'); // Versteckt den Fehler
-        }
-    
-        // Überprüfung des Tempos
-        if (isNaN(kmhValue) || kmhValue < 0) {
-            event.preventDefault(); // Verhindert das Absenden des Formulars
-            bestzeitError.classList.remove('hidden'); // Zeigt den Fehler an
-        } else {
-            bestzeitError.classList.add('hidden'); // Versteckt den Fehler
-        }
-    });
-    
-</script> {% endblock %}
+{% endblock %}
