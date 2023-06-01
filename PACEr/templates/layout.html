@@ -58,6 +58,22 @@
             </div>
         </div>
     </nav>
+    {% if notification %}
+    <div id="popup" class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="bg-gray-900 w-64 p-4 rounded shadow-lg">
+          <div class="flex justify-between">
+            <strong class="font-bold text-orange-600">{{notificationName}}</strong>
+            <button id="closeBtn" class="text-gray-400 hover:text-orange-600 focus:outline-none">
+              <svg class="fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <title>Close</title>
+                <path d="M14.348 5.652c.488.488.488 1.28 0 1.768L10 10.234l-4.348-4.814c-.488-.488-1.28-.488-1.768 0-.488.488-.488 1.28 0 1.768L8.766 10l-4.348 4.814c-.488.488-.488 1.28 0 1.768.488.488 1.28.488 1.768 0L10 11.766l4.348 4.814c.488.488 1.28.488 1.768 0 .488-.488.488-1.28 0-1.768L11.234 10l4.348-4.814c.488-.488.488-1.28 0-1.768-.488-.488-1.28-.488-1.768 0L10 8.234l-4.348-4.814c-.488-.488-1.28-.488-1.768 0-.488.488-.488 1.28 0 1.768L8.766 10l-4.348 4.814c-.488.488-.488 1.28 0 1.768.488.488 1.28.488 1.768 0L10 11.766l4.348 4.814c.488.488 1.28.488 1.768 0 .488-.488.488-1.28 0-1.768L11.234 10l4.348-4.814c.488-.488.488-1.28 0-1.768-.488-.488-1.28-.488-1.768 0L10 8.234z"/>
+              </svg>
+            </button>
+          </div>
+          <span class="block text-gray-400">{{ notification }}</span>
+        </div>
+      </div>
+    {% endif %}
 
     <main class="m-2">{% block content %} {% endblock %}</main>
 
