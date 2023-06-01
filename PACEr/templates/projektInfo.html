@@ -25,7 +25,8 @@
                 ez_Pace_1km = (1177 / 4900) * 1000 = 240,20 Sekunden (04:00)<br>
                 hz_Pace_1km = (2714 / 4900) * 1000 = 553,88 Sekunden (09:13)</p>
             <p class="text-orange-600 font-bold mt-4">Berechnung der Zeiten für jede Etappe:</p>
-            <p class="text-orange-400">Für jede Etappe (km) multiplizieren Sie den Pace für den ersten Kilometer mit der Etappennummer:</p>
+            <p class="text-orange-400">Für jede Etappe (km) multiplizieren Sie den Pace für den ersten Kilometer mit der
+                Etappennummer:</p>
             <ul class="list-disc pl-8">
                 <li class="text-orange-600 font-bold">Bestzeit:</li>
                 <ul class="list-disc pl-8 text-orange-400">
@@ -52,93 +53,91 @@
         </div>
     </section>
 </div>
-            
-            
+
+
+<div class="container mx-auto">
+    <section class="my-8 mb-16">
+        <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 p-4">
+                <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Dressur"
+                    class="w-full">
+            </div>
+            <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
+                <h2 class="text-2xl font-bold text-orange-600 text-center">Der Fahrsport</h2>
+                <p class="text-gray-400 mt-4 text-center">
+                    Der Fahrsport besteht grundsätzlich aus 3 Disziplinen (Vollprüfung). Wenn alle
+                    Disziplinen bestritten wurden, d.h. die Dressur, das Geländefahren (oder Marathon) und
+                    das Hindernisfahren, werden alle drei Disziplinen gewertet und man erhält eine Punktzahl
+                    aus welcher die Rangierung der Teilnehmer eruiert wird. Auch gibt es reduzierte
+                    Prüfungen respektive Kurzprüfungen bei welchen eine Auswahl der Disziplinen – zum
+                    Beispiel Dressur mit Hindernisfahren oder Dressur mit kombinierter Geländeprüfung
+                    (Derby) – gefahren und gewertet werden.
+                </p>
+            </div>
+        </div>
     </section>
 
-    <div class="container mx-auto">
-        <section class="my-8 mb-16">
-            <div class="flex flex-wrap">
-                <div class="w-full md:w-1/2 p-4">
-                    <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Dressur"
-                        class="w-full">
-                </div>
-                <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
-                    <h2 class="text-2xl font-bold text-orange-600 text-center">Der Fahrsport</h2>
-                    <p class="text-gray-400 mt-4 text-center">
-                        Der Fahrsport besteht grundsätzlich aus 3 Disziplinen (Vollprüfung). Wenn alle
-                        Disziplinen bestritten wurden, d.h. die Dressur, das Geländefahren (oder Marathon) und
-                        das Hindernisfahren, werden alle drei Disziplinen gewertet und man erhält eine Punktzahl
-                        aus welcher die Rangierung der Teilnehmer eruiert wird. Auch gibt es reduzierte
-                        Prüfungen respektive Kurzprüfungen bei welchen eine Auswahl der Disziplinen – zum
-                        Beispiel Dressur mit Hindernisfahren oder Dressur mit kombinierter Geländeprüfung
-                        (Derby) – gefahren und gewertet werden.
-                    </p>
-                </div>
+    <section class="my-8 mb-16">
+        <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
+                <h2 class="text-2xl font-bold text-orange-600 text-center">Dressur</h2>
+                <p class="text-gray-400 text-center">
+                    Bei der Dressur geht es darum, sein Gespann von seiner besten Seite zu präsentieren.
+                    Dabei geht es aber nicht nur um das Erscheinungsbild der Pferde und Kutsche, sondern
+                    auch des Fahrers. Außerdem muss ein vorgeschriebener Parcours abgefahren werden, der von
+                    der FEI bzw. vom SVPS vorgeschrieben wird. Das Ganze ergibt am Schluss eine Note, die
+                    aus der Präsentation des Gespannes, der Präzision des gefahrenen Dressurprogramms sowie
+                    der Durchlässigkeit der Pferde gewertet wird.
+                </p>
             </div>
-        </section>
+            <div class="w-full md:w-1/2 p-4">
+                <img src="{{ url_for('static', filename='img/projektInfo/dressur.webp') }}" alt="Dressur"
+                    class="w-full">
+            </div>
+        </div>
+    </section>
 
-        <section class="my-8 mb-16">
-            <div class="flex flex-wrap">
-                <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
-                    <h2 class="text-2xl font-bold text-orange-600 text-center">Dressur</h2>
-                    <p class="text-gray-400 text-center">
-                        Bei der Dressur geht es darum, sein Gespann von seiner besten Seite zu präsentieren.
-                        Dabei geht es aber nicht nur um das Erscheinungsbild der Pferde und Kutsche, sondern
-                        auch des Fahrers. Außerdem muss ein vorgeschriebener Parcours abgefahren werden, der von
-                        der FEI bzw. vom SVPS vorgeschrieben wird. Das Ganze ergibt am Schluss eine Note, die
-                        aus der Präsentation des Gespannes, der Präzision des gefahrenen Dressurprogramms sowie
-                        der Durchlässigkeit der Pferde gewertet wird.
-                    </p>
-                </div>
-                <div class="w-full md:w-1/2 p-4">
-                    <img src="{{ url_for('static', filename='img/projektInfo/dressur.webp') }}" alt="Dressur"
-                        class="w-full">
-                </div>
+    <section class="my-8 mb-16">
+        <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 p-4">
+                <img src="{{ url_for('static', filename='img/projektInfo/marathon.webp') }}" alt="Gelände"
+                    class="w-full">
             </div>
-        </section>
+            <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
+                <h2 class="text-2xl font-bold text-orange-600 text-center">Gelände</h2>
+                <p class="text-gray-400 text-center">
+                    Die Geländeprüfung gilt für den Zuschauer als der spannendste Teil des Fahrens. Mit viel
+                    Geschick und Wendigkeit müssen sowohl die Pferde als auch die Fahrer beweisen, wie
+                    schnell sie um die Hindernisse fahren können. Dabei zählt aber meist nicht nur
+                    ausschließlich die Geschwindigkeit, sondern auch die Wendigkeit der Pferde ist ein
+                    wichtiges Element. Die Geländeprüfung besteht aus 3 Phasen: der A-Phase, der D-Phase und
+                    der E-Phase. Dabei gibt es vorgeschriebene Geschwindigkeiten, die je nach Gespannsart
+                    (1-Spänner, 2-Spänner oder 4-Spänner) und Pferdegröße (Pony oder Großpferde) eingehalten
+                    werden müssen.
+                </p>
+            </div>
+        </div>
+    </section>
 
-        <section class="my-8 mb-16">
-            <div class="flex flex-wrap">
-                <div class="w-full md:w-1/2 p-4">
-                    <img src="{{ url_for('static', filename='img/projektInfo/marathon.webp') }}" alt="Gelände"
-                        class="w-full">
-                </div>
-                <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
-                    <h2 class="text-2xl font-bold text-orange-600 text-center">Gelände</h2>
-                    <p class="text-gray-400 text-center">
-                        Die Geländeprüfung gilt für den Zuschauer als der spannendste Teil des Fahrens. Mit viel
-                        Geschick und Wendigkeit müssen sowohl die Pferde als auch die Fahrer beweisen, wie
-                        schnell sie um die Hindernisse fahren können. Dabei zählt aber meist nicht nur
-                        ausschließlich die Geschwindigkeit, sondern auch die Wendigkeit der Pferde ist ein
-                        wichtiges Element. Die Geländeprüfung besteht aus 3 Phasen: der A-Phase, der D-Phase und
-                        der E-Phase. Dabei gibt es vorgeschriebene Geschwindigkeiten, die je nach Gespannsart
-                        (1-Spänner, 2-Spänner oder 4-Spänner) und Pferdegröße (Pony oder Großpferde) eingehalten
-                        werden müssen.
-                    </p>
-                </div>
+    <section class="my-8 mb-16">
+        <div class="flex flex-wrap">
+            <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
+                <h2 class="text-2xl font-bold text-orange-600 text-center">Hindernisfahren</h2>
+                <p class="text-gray-400 text-center">
+                    Im Hindernisfahren gilt es, einen abgesteckten Parcours, der aus maximal 20 Hindernissen
+                    (meist Pylonen) besteht, abzufahren. Dabei geht es darum, das Gespann geschickt und mit
+                    einer vorgeschriebenen Geschwindigkeit fehlerlos durch den Parcours zu bringen. Je nach
+                    Qualifikation des Fahrers (L, M oder S) haben die Gespanne eine Spannweite von maximal
+                    40 cm bis 20 cm zwischen Wagen und dem Hindernis zur Verfügung.
+                </p>
             </div>
-        </section>
-
-        <section class="my-8 mb-16">
-            <div class="flex flex-wrap">
-                <div class="w-full md:w-1/2 p-4 flex flex-col justify-center">
-                    <h2 class="text-2xl font-bold text-orange-600 text-center">Hindernisfahren</h2>
-                    <p class="text-gray-400 text-center">
-                        Im Hindernisfahren gilt es, einen abgesteckten Parcours, der aus maximal 20 Hindernissen
-                        (meist Pylonen) besteht, abzufahren. Dabei geht es darum, das Gespann geschickt und mit
-                        einer vorgeschriebenen Geschwindigkeit fehlerlos durch den Parcours zu bringen. Je nach
-                        Qualifikation des Fahrers (L, M oder S) haben die Gespanne eine Spannweite von maximal
-                        40 cm bis 20 cm zwischen Wagen und dem Hindernis zur Verfügung.
-                    </p>
-                </div>
-                <div class="w-full md:w-1/2 p-4">
-                    <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}"
-                        alt="Hindernisfahren" class="w-full">
-                </div>
+            <div class="w-full md:w-1/2 p-4">
+                <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}"
+                    alt="Hindernisfahren" class="w-full">
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 </div>
 
 

@@ -4,16 +4,24 @@
     <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">Problem Melden</h1>
 </header>
 <form action="/submit-issue" method="post" class="container mx-auto px-4 py-8">
-    <div class="mb-4">
-        <label for="name" class="block text-gray-400 mb-2">Name:</label>
-        <input type="text" id="name" name="name" required
-            class="bg-gray-800 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange">
+    <div class="mb-4 flex">
+        <div class="w-1/2 mr-2">
+            <label for="name" class="block text-gray-400 mb-2">Name:</label>
+            <input type="text" id="name" name="name" required
+                class="bg-gray-800 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange">
+        </div>
+        <div class="w-1/2 ml-2">
+            <label for="vorname" class="block text-gray-400 mb-2">Vorname:</label>
+            <input type="text" id="vorname" name="vorname" required
+                class="bg-gray-800 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange">
+        </div>
     </div>
 
     <div class="mb-4">
         <label for="email" class="block text-gray-400 mb-2">Email Addresse:</label>
         <input type="email" id="email" name="email" required
             class="bg-gray-800 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange">
+        <span id="email-error" class="text-red-500"></span>
     </div>
 
     <div class="mb-4">
@@ -21,8 +29,9 @@
         <textarea id="issue" name="issue" rows="10" cols="50" maxlength="1000" required
             class="bg-gray-800 text-gray-400 rounded w-full py-2 px-3 leading-tight border-2 border-gray-800 focus:outline-none focus:shadow-outline-orange"></textarea>
     </div>
-
+    <input type="hidden" id="bot-field" name="bot-field">
     <input type="submit" value="Submit"
         class="text-orange-600 bg-gray-800 hover:text-gray-400 hover:bg-orange-600 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">
 </form>
+<script src="{{ url_for('static', filename='js/reportProblem.js') }}"></script>
 {% endblock %}

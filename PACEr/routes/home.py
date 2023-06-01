@@ -33,10 +33,3 @@ def projektInfo():
 
     except Exception as e:
         return 'Error: ' + str(e)
-    
-@bp_home.route('/report')
-def report():
-    try:
-        return render_template('report.html')
-    except Exception as e:
-        return 'Error: ' + str(e)
