@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='build/theme.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/theme.css') }}" />
-    <title>{{ title }}</title>
+    <title> PACEr {{ title }}</title>
 
     <style>
         main {
@@ -43,7 +43,7 @@
                     class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-orange-600 mr-4 transition-colors duration-200">
                     Projekt Info
                 </a>
-                <a href="/report"
+                <a href="/reportProblem"
                     class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-orange-600 mr-4 transition-colors duration-200">
                     Probleme melden
                 </a>
@@ -58,6 +58,24 @@
             </div>
         </div>
     </nav>
+    {% if notification %}
+    <div id="popup" class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="bg-gray-900 w-64 p-4 rounded shadow-lg">
+            <div class="flex justify-between">
+                <strong class="font-bold text-orange-600">{{notificationName}}</strong>
+                <button id="closeBtn" class="text-gray-400 hover:text-orange-600 focus:outline-none">
+                    <svg class="fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path
+                            d="M14.348 5.652c.488.488.488 1.28 0 1.768L10 10.234l-4.348-4.814c-.488-.488-1.28-.488-1.768 0-.488.488-.488 1.28 0 1.768L8.766 10l-4.348 4.814c-.488.488-.488 1.28 0 1.768.488.488 1.28.488 1.768 0L10 11.766l4.348 4.814c.488.488 1.28.488 1.768 0 .488-.488.488-1.28 0-1.768L11.234 10l4.348-4.814c.488-.488.488-1.28 0-1.768-.488-.488-1.28-.488-1.768 0L10 8.234l-4.348-4.814c-.488-.488-1.28-.488-1.768 0-.488.488-.488 1.28 0 1.768L8.766 10l-4.348 4.814c-.488.488-.488 1.28 0 1.768.488.488 1.28.488 1.768 0L10 11.766l4.348 4.814c.488.488 1.28.488 1.768 0 .488-.488.488-1.28 0-1.768L11.234 10l4.348-4.814c.488-.488.488-1.28 0-1.768-.488-.488-1.28-.488-1.768 0L10 8.234z" />
+                    </svg>
+                </button>
+            </div>
+            <span class="block text-gray-400">{{ notification }}</span>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+    {% endif %}
 
     <main class="m-2">{% block content %} {% endblock %}</main>
 
@@ -69,29 +87,26 @@
                     <a class="text-orange-600 no-underline hover:no-underline font-bold text-2xl lg:text-4xl" href="#">
                         PACEr
                     </a>
+                    <p class="text-gray-400 text-sm">&copy; 2023 | All rights reserved</p>
                 </div>
                 <div class="flex-1">
                     <p class="uppercase text-gray-500 md:mb-6">Links</p>
                     <ul class="list-reset mb-6">
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
+                            <a href="/pacer"
                                 class="no-underline hover:underline text-gray-400 hover:text-orange-500">Rechner</a>
                         </li>
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#" class="no-underline hover:underline text-gray-400 hover:text-orange-500">Projekt
-                                Info</a>
-                        </li>
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
+                            <a href="/reportProblem"
                                 class="no-underline hover:underline text-gray-400 hover:text-orange-500">Probleme
                                 Melden</a>
                         </li>
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#" class="no-underline hover:underline text-gray-400 hover:text-orange-500">Über
+                            <a href="/aboutUs" class="no-underline hover:underline text-gray-400 hover:text-orange-500">Über
                                 uns</a>
                         </li>
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
+                            <a href="/impressum"
                                 class="no-underline hover:underline text-gray-400 hover:text-orange-500">Impressum</a>
                         </li>
                     </ul>
@@ -100,11 +115,11 @@
                     <p class="uppercase text-gray-500 md:mb-6">Legal</p>
                     <ul class="list-reset mb-6">
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
+                            <a href="/impressum"
                                 class="no-underline hover:underline text-gray-400 hover:text-orange-500">Privacy</a>
                         </li>
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
+                            <a href="/impressum"
                                 class="no-underline hover:underline text-gray-400 hover:text-orange-500">Terms</a>
                         </li>
                     </ul>
@@ -113,15 +128,15 @@
                     <p class="uppercase text-gray-500 md:mb-6">Social</p>
                     <ul class="list-reset mb-6">
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
+                            <a href="https://www.facebook.com/profile.php?id=100012000550092"
                                 class="no-underline hover:underline text-gray-400 hover:text-orange-500">Facebook</a>
                         </li>
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">LinkedIn</a>
+                            <a href="https://www.instagram.com/dark4doener/"
+                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Instagram</a>
                         </li>
                         <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="#"
+                            <a href="https://twitter.com/dark4doener"
                                 class="no-underline hover:underline text-gray-400 hover:text-orange-500">Twitter</a>
                         </li>
                     </ul>

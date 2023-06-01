@@ -1,6 +1,7 @@
 # Lehmann Janneck 22.05.2023
 # PACEr Calculation Programm
 # quick and dirty
+import os
 
 def pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
     try:
