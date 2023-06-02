@@ -46,26 +46,46 @@
         </div>
     </div>
 
-    <button id="submit-button" type="submit"
-        class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange float-right">
-        Berechnen
-    </button>
+    <div class="flex flex-col items-center sm:flex-row sm:justify-between">
+        <div class="md:block hidden">
+            <a href="/pacerOld"
+                class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">Hier
+                geht's zur alten Berechnung</a>
+        </div>
+        <div class="mb-6 sm:mb-0">
+            <button id="submit-button" type="submit"
+                class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">
+                Berechnen
+            </button>
+        </div>
+        <div class="md:hidden block">
+            <a href="/pacerOld"
+                class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">Hier
+                geht's zur alten Berechnung</a>
+        </div>
+    </div>
+    
+    
 </form>
 <script src="{{ url_for('static', filename='js/pacer.js') }}"></script>
 {% endif %} {% if result is not none %}
 
 <div class="container mx-auto px-4 py-8">
-    <div class="mt-8">
+    <div class="mt-4">
         <div class="flex justify-center mt-4">
-            <div class="flex flex-wrap bg-gray-800 text-gray-400 rounded-lg px-4 py-2 justify-center md:justify-between">
+            <div
+                class="flex flex-wrap bg-gray-800 text-gray-400 rounded-lg px-4 py-2 justify-center md:justify-between">
                 <div class="w-full md:w-auto mb-4 md:mb-0 md:text-right md:mx-8">
-                    <p class="text-center md:text-left"><span class="font-semibold">Streckenlänge:</span> {{ laenge }} m</p>
+                    <p class="text-center md:text-left"><span class="font-semibold">Streckenlänge:</span> {{ laenge }} m
+                    </p>
                 </div>
                 <div class="w-full md:w-auto mb-4 md:mb-0 md:text-center md:mx-8">
-                    <p class="text-center md:text-left"><span class="font-semibold">Geschwindigkeit:</span> {{ kmh }} km/h</p>
+                    <p class="text-center md:text-left"><span class="font-semibold">Geschwindigkeit:</span> {{ kmh }}
+                        km/h</p>
                 </div>
                 <div class="w-full md:w-auto md:text-right md:mx-8">
-                    <p class="text-center md:text-left"><span class="font-semibold">Art der Strecke:</span> <span id="capitalized-art">{{ art }}</span></p>
+                    <p class="text-center md:text-left"><span class="font-semibold">Art der Strecke:</span> <span
+                            id="capitalized-art">{{ art }}</span></p>
                 </div>
             </div>
         </div>
@@ -85,9 +105,12 @@
                 {% for key, value in result.items() %}
                 <tr class="bg-gray-900 hover:bg-gray-800">
                     <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
-                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.bz_min }}:{{ '{:02}'.format(value.bz_sec) }}</td>
-                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.ez_min }}:{{ '{:02}'.format(value.ez_sec) }}</td>
-                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.hz_min }}:{{ '{:02}'.format(value.hz_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.bz_min }}:{{
+                        '{:02}'.format(value.bz_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.ez_min }}:{{
+                        '{:02}'.format(value.ez_sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.hz_min }}:{{
+                        '{:02}'.format(value.hz_sec) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -99,5 +122,4 @@
 
 <script src="{{ url_for('static', filename='js/pacerresult.js') }}"></script>
 {% endif %}
-
 {% endblock %}
