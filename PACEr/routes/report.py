@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 from random import randint
 from datetime import date
+from helper import getDirPath
 import os
 bp_report = Blueprint('report', __name__)
 
@@ -11,12 +12,12 @@ def reportProblem():
         try:
             # create folder reports/date
             currentDate = date.today().strftime("%d.%m.%Y")
-            folderPath = 'PACEr/reports/' + currentDate
+            absPath = getDirPath()
+            folderPath = absPath + '/reports/' + currentDate
             # when more then 100 issues get reported in one day, stop accepting reports
+            if not os.path.exists(folderPath):
+                os.makedirs(folderPath)
             if len(os.listdir(folderPath)) <= 100:
-                if not os.path.exists(folderPath):
-                    os.makedirs(folderPath)
-
                 name = request.form['name']
                 vorname = request.form['vorname']
                 email = request.form['email']
@@ -37,3 +38,10 @@ def reportProblem():
             return render_template('reportProblem.html')
         except Exception as e:
             return 'Error: ' + str(e)
+        
+        
+        
+currentDate = date.today().strftime("%d.%m.%Y")
+absPath = getDirPath()
+folderPath = absPath + '/reports/' + currentDate
+print(folderPath)

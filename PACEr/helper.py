@@ -90,9 +90,13 @@ def calculatePace(laenge, kmh, art):
     
 
     
-    
-    
-#     # example call
+def getDirPath():
+    # get the folder the file is in
+    dirPath = os.path.dirname(os.path.realpath(__file__))
+    dirPath = dirPath.replace("\\", "/") # replace backslashes with forward slashes
+    return dirPath
+
+# example call
 # result = pace(4900, 37, 14, 37, 16, 45, 19)
 
 # # output the results
