@@ -1,7 +1,10 @@
 # Lehmann Janneck 22.05.2023
-# PACEr Calculation Programm
-# quick and dirty
+
 import os
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+import json
 
 def oldPace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
     try:
@@ -135,11 +138,58 @@ def getDirPath():
     return dirPath
 
 # example call
-result = oldPace(4900, 37, 14, 37, 16, 45, 19)
-print(result)
+# result = oldPace(4900, 37, 14, 37, 16, 45, 19)
+# print(result)
 # # output the results
 # for km, data in result.items():
 #     print(f"Kilometer {km}:")
 #     print(f"\tBestzeit: {data['bz_min']}:{data['bz_sec']}")
 #     print(f"\tErlaubte Zeit: {data['ez_min']}:{data['ez_sec']}")
 #     print(f"\tHöchstzeit: {data['hz_min']}:{data['hz_sec']}")
+
+
+
+
+def generate_pdf_from_json(json_data, output_path):
+    data = json.loads(json_data)
+
+    # PDF erstellen
+    c = canvas.Canvas(output_path, pagesize=A4)
+
+    # PDF-Inhalt erstellen
+    table_header = ['Länge', 'BZ', 'EZ', 'HZ']
+    table_data = [table_header]
+
+    for key, value in data.items():
+        row = [str(key) + ' m']
+        if 'bz_min' in value and 'bz_sec' in value:
+            row.append(f"{value['bz_min']}:{'{:02}'.format(value['bz_sec'])}")
+        row.append(f"{value['ez_min']}:{'{:02}'.format(value['ez_sec'])}")
+        row.append(f"{value['hz_min']}:{'{:02}'.format(value['hz_sec'])}")
+
+        table_data.append(row)
+
+    # Tabelle im PDF zeichnen
+    x_offset = 50
+    y_offset = 700
+    cell_width = (A4[0] - 2 * x_offset) / len(table_header)
+    cell_height = 40
+
+    background_colors = [colors.white, colors.green, colors.orange, colors.red]
+
+    for index, row in enumerate(table_data):
+        for i, cell in enumerate(row):
+            if index == 0:  # Header
+                c.setFont("Helvetica-Bold", 14)
+                c.setFillColor(colors.black)
+            else:  # Daten
+                c.setFont("Helvetica-Bold", 22)  # Größere Schriftart
+                c.setFillColor(colors.black)
+                c.setFillColor(background_colors[i])
+                c.rect(x_offset + (i * cell_width), y_offset - cell_height, cell_width, cell_height, fill=True, stroke=True)
+                c.setFillColor(colors.black if i == 0 else colors.white)
+
+            c.drawString(x_offset + (i * cell_width) + 10, y_offset - cell_height + 10, cell)
+        y_offset -= 2 * cell_height  # Lassen Sie eine Zeile frei zwischen den Reihen
+
+    c.save()
