@@ -96,7 +96,9 @@
             <thead>
                 <tr>
                     <th class="px-4 py-2">Streckenlänge (m)</th>
-                    <th class="px-4 py-2">Bestzeit</th>
+                    {% if not art == 'schrittstrecke' %}
+                        <th class="px-4 py-2">Bestzeit</th>
+                    {% endif %}
                     <th class="px-4 py-2">Erlaubte Zeit</th>
                     <th class="px-4 py-2">Höchstzeit</th>
                 </tr>
@@ -105,8 +107,11 @@
                 {% for key, value in result.items() %}
                 <tr class="bg-gray-900 hover:bg-gray-800">
                     <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
-                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.bz_min }}:{{
-                        '{:02}'.format(value.bz_sec) }}</td>
+                    <!-- falls die Art der Stercke Schrittstrecke ist, gibt es keine Bestzeit-->
+                    {% if not art == 'schrittstrecke' %}
+                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.bz_min }}:{{
+                            '{:02}'.format(value.bz_sec) }}</td>
+                    {% endif %}
                     <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.ez_min }}:{{
                         '{:02}'.format(value.ez_sec) }}</td>
                     <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.hz_min }}:{{

@@ -3,7 +3,7 @@
 # quick and dirty
 import os
 
-def pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
+def oldPace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
     try:
         # Convert times to seconds
         bz = int(bz_min) * 60 + int(bz_sec)
@@ -53,6 +53,40 @@ def pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
         return 'Error: ' + str(e)
 
 
+def pace(laenge, time_min, time_sec):
+    try:
+        # Convert time to seconds
+        time = int(time_min) * 60 + int(time_sec)
+        
+        return_dict = {}
+        
+        # Check if the length is at least 1km (1000m)
+        if laenge >= 1000:
+            # Calculate the time for 1km
+            pace_1km = time / laenge * 1000
+
+            # Calculate the time for each km
+            for km in range(1, int(laenge/1000)+1):
+                # Calculate the time for this km
+                time_km = km * pace_1km
+
+                # Convert the time to minutes and seconds
+                min_km = int(time_km / 60)
+                sec_km = int(time_km % 60)
+
+                # Add the km (1000) data to the return dictionary
+                return_dict[km*1000] = {
+                    "min": min_km,
+                    "sec": sec_km
+                }
+        # if less 1km (1000m) = finishing time |  so add the km data to the return dictionary
+        return_dict[laenge] = {"min": time_min, "sec": time_sec}
+        return return_dict
+    
+    except Exception as e:
+        return 'Error: ' + str(e)
+
+
 def calculatePace(laenge, kmh, art):
     # Bergriffsklärung: HZ = Höchstzeit, BZ = Bestzeit, EZ = Erlaubte Zeit
     # convert laenge from m to km
@@ -81,8 +115,12 @@ def calculatePace(laenge, kmh, art):
     ez_sec = int(ez % 60)
     hz_min = int(hz / 60)
     hz_sec = int(hz % 60)
-    bz_min = int(bz / 60)
-    bz_sec = int(bz % 60)
+    if bz is not None:
+        bz_min = int(bz / 60)
+        bz_sec = int(bz % 60)
+    else:
+        bz_min = None
+        bz_sec = None
 
     return bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min
 
