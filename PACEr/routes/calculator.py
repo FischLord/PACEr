@@ -29,6 +29,8 @@ def pacer():
     else:
         return render_template('pacer.html', laenge=None, kmh=None, art=None, bz_sec=None, hz_sec=None, ez_sec=None, bz_min=None, hz_min=None, ez_min=None, result=None)
 
+# not implemented:
+# feature that you can calculate only with one type of pace
 @bp_calculator.route('/pacerOld', methods=['GET', 'POST'])
 def pacerOld():
     if request.method == 'POST':
