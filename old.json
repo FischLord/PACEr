@@ -1,0 +1,12 @@
+{
+    1000: {'bz_min': 3, 'bz_sec': 23, 'hz_min': 9, 'hz_sec': 13, 'ez_min': 4, 'ez_sec': 0
+    },
+    2000: {'bz_min': 6, 'bz_sec': 46, 'hz_min': 18, 'hz_sec': 27, 'ez_min': 8, 'ez_sec': 0
+    },
+    3000: {'bz_min': 10, 'bz_sec': 10, 'hz_min': 27, 'hz_sec': 41, 'ez_min': 12, 'ez_sec': 0
+    },
+    4000: {'bz_min': 13, 'bz_sec': 33, 'hz_min': 36, 'hz_sec': 55, 'ez_min': 16, 'ez_sec': 0
+    },
+    4900: {'bz_min': 16, 'bz_sec': 37, 'hz_min': 45, 'hz_sec': 14, 'ez_min': 19, 'ez_sec': 37
+    }
+}
