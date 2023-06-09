@@ -90,6 +90,7 @@ def pace(laenge, time_min, time_sec):
         return 'Error: ' + str(e)
 
 
+
 def calculatePace(laenge, kmh, art):
     # Bergriffsklärung: HZ = Höchstzeit, BZ = Bestzeit, EZ = Erlaubte Zeit
     # convert laenge from m to km
@@ -138,8 +139,8 @@ def getDirPath():
     return dirPath
 
 # example call
-# result = oldPace(4900, 37, 14, 37, 16, 45, 19)
-# print(result)
+result = oldPace(4900, 37, 14, 37, 16, 45, 19)
+print(result)
 # # output the results
 # for km, data in result.items():
 #     print(f"Kilometer {km}:")

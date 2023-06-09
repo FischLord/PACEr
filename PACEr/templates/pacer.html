@@ -104,20 +104,23 @@
                 </tr>
             </thead>
             <tbody>
-                {% for key, value in result.items() %}
                 <tr class="bg-gray-900 hover:bg-gray-800">
-                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
+                    {% for key, value in ez_result.items() %}
+                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
+                    {% endfor %}
                     <!-- falls die Art der Stercke Schrittstrecke ist, gibt es keine Bestzeit-->
                     {% if not art == 'schrittstrecke' %}
-                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.bz_min }}:{{
-                            '{:02}'.format(value.bz_sec) }}</td>
+                        {% for key, value in bz_result.items() %}
+                            <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.min }}:{{'{:02}'.format(value.sec) }}</td>
+                        {% endfor %}
                     {% endif %}
-                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.ez_min }}:{{
-                        '{:02}'.format(value.ez_sec) }}</td>
-                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.hz_min }}:{{
-                        '{:02}'.format(value.hz_sec) }}</td>
+                    {% for key, value in ez_result.items() %}
+                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.min }}:{{'{:02}'.format(value.sec) }}</td>
+                    {% endfor %}
+                    {% for key, value in hz_result.items() %}
+                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.min }}:{{'{:02}'.format(value.sec) }}</td>
+                    {% endfor %}
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
     </div>
