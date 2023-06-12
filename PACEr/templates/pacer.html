@@ -1,14 +1,20 @@
 {% extends "layout.html" %} {% block content %}
 <header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8">
-    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">
-        Rechner
-    </h1>
-    <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" id="toggle-switch" value="" class="sr-only peer" checked>
-        <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500"></div>
-        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 peer-checked:hidden">Hier geht's zur alten Berechnung</span>
-        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 peer-checked:block hidden">Hier geht's zur neuen Berechnung</span>
-    </label>
+    <div class="flex items-center flex-col md:flex-row">
+        <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center mb-2 md:mb-0">Rechner</h1>
+        <!--? Start switch toggle-->
+        <div class="flex items-center md:ml-auto mt-4 md:mt-0">
+            <label class="text-sm font-medium text-orange-600">Alt</label>
+            <label class="relative inline-flex items-center cursor-pointer ml-2">
+                <input type="checkbox" id="toggle-switch" value="" class="sr-only peer" checked>
+                <div
+                    class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500">
+                </div>
+            </label>
+            <label class="text-sm font-medium text-orange-600 ml-2">Neu</label>
+        </div>
+        <!--? End switch toggle-->
+    </div>
 </header>
 
 {% if result is none %}
@@ -63,11 +69,6 @@
                 class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">
                 Berechnen
             </button>
-        </div>
-        <div class="md:hidden block">
-            <a href="/pacerOld"
-                class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">Hier
-                geht's zur alten Berechnung</a>
         </div>
     </div>
 </form>

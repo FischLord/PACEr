@@ -1,14 +1,25 @@
 {% extends "layout.html" %} {% block content %}
 <header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8">
-    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">Rechner</h1>
-    <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" id="toggle-switch" value="" class="sr-only peer">
-        <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500"></div>
-        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 peer-checked:hidden">Hier geht's zur alten Berechnung</span>
-        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 peer-checked:block hidden">Hier geht's zur neuen Berechnung</span>
-    </label>
+    <div class="flex items-center flex-col md:flex-row">
+        <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center mb-2 md:mb-0">Rechner</h1>
+        <!--? Start switch toggle-->
+        <div class="flex items-center md:ml-auto mt-4 md:mt-0">
+            <label class="text-sm font-medium text-orange-600">Alt</label>
+            <label class="relative inline-flex items-center cursor-pointer ml-2">
+                <input type="checkbox" id="toggle-switch" value="" class="sr-only peer">
+                <div
+                    class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500">
+                </div>
+            </label>
+            <label class="text-sm font-medium text-orange-600 ml-2">Neu</label>
+        </div>
+        <!--? End switch toggle-->
+    </div>
 </header>
-<form action="{{ url_for('calculator.pacerOld') }}" method="POST" class="container mx-auto px-4 py-8" id="form_calculator">
+
+{% if result is none %}
+<form action="{{ url_for('calculator.pacerOld') }}" method="POST" class="container mx-auto px-4 py-8"
+    id="form_calculator">
     <div class="mb-4">
         <label for="laenge" class="block text-gray-400 mb-2">Streckenlänge (m)</label>
         <input type="number" id="laenge" name="laenge"
@@ -79,15 +90,10 @@
                 Berechnen
             </button>
         </div>
-        <div class="md:hidden block">
-            <a href="/pacer"
-                class="text-orange-600 bg-gray-800 hover:text-orange-600 hover:bg-gray-700 rounded px-4 py-2 focus:outline-none focus:shadow-outline-orange">Hier
-                geht's zur neuen Berechnung</a>
-        </div>
     </div>
 </form>
 </div>
-
+{% endif %}
 
 {% if result is not none %}
 <div class="container mx-auto px-4 py-8">
@@ -97,22 +103,25 @@
             <thead>
                 <tr>
                     <th class="px-4 py-2">Streckenlänge (m)</th>
-                    <th class="px-4 py-2">Bestzeit</th> 
+                    <th class="px-4 py-2">Bestzeit</th>
                     <th class="px-4 py-2">Erlaubte Zeit</th>
                     <th class="px-4 py-2">Höchstzeit</th>
                 </tr>
             </thead>
             <tbody>
                 {% for key, value in ez_result.items() %}
-                    <tr class="bg-gray-900 hover:bg-gray-800">
-                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
-                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ bz_result[key].min }}:{{'{:02}'.format(bz_result[key].sec) }}</td>
-                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.min }}:{{'{:02}'.format(value.sec) }}</td>
-                        <td class="border-l border-gray-700 px-4 py-2 text-center">{{ hz_result[key].min }}:{{'{:02}'.format(hz_result[key].sec) }}</td>
-                    </tr>
+                <tr class="bg-gray-900 hover:bg-gray-800">
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ key }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ bz_result[key].min
+                        }}:{{'{:02}'.format(bz_result[key].sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ value.min
+                        }}:{{'{:02}'.format(value.sec) }}</td>
+                    <td class="border-l border-gray-700 px-4 py-2 text-center">{{ hz_result[key].min
+                        }}:{{'{:02}'.format(hz_result[key].sec) }}</td>
+                </tr>
                 {% endfor %}
             </tbody>
-            
+
         </table>
     </div>
 </div>
