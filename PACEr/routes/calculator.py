@@ -47,15 +47,15 @@ def pacerOld():
             hz_min = request.form['hz_min']
             ez_min = request.form['ez_min']
 
-            if laenge is not None:
-                ez_result = pace(laenge, ez_min, ez_sec)
-                hz_result = pace(laenge, hz_min, hz_sec)
-                if bz_min is not None and bz_sec is not None:
-                    bz_result = pace(laenge, bz_min, bz_sec)
-                    result = {"bz": bz_result, "hz": hz_result, "ez": ez_result}
-                return render_template('pacerOld.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, result=result)
-            else:
-                return render_template('pacerOld.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, result=None)
+            #if laenge is not None:
+            ez_result = pace(laenge, ez_min, ez_sec)
+            hz_result = pace(laenge, hz_min, hz_sec)
+            if bz_min is not None and bz_sec is not None:
+                bz_result = pace(laenge, bz_min, bz_sec)
+                result = {"bz": bz_result, "hz": hz_result, "ez": ez_result}
+            return render_template('pacerOld.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, bz_result=bz_result, ez_result=ez_result, hz_result=hz_result)
+            #else:
+            #    return render_template('pacerOld.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, result=None)
 
         except Exception as e:
             return 'Error: ' + str(e)
