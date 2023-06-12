@@ -34,9 +34,9 @@ function updateKmhOptions(selectedValue) {
     kmhSelect.innerHTML = ""; // Clear existing options
 
     if (selectedValue === "hindernisstrecke") {
-        addKmhOptions(10, 14);
+        addKmhOptions(8, 14);
     } else if (selectedValue === "wegstrecke") {
-        addKmhOptions(10, 15);
+        addKmhOptions(8, 15);
     } else if (selectedValue === "schrittstrecke") {
         addKmhOptions(3, 7);
     }

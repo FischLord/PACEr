@@ -1,9 +1,12 @@
 # Lehmann Janneck 22.05.2023
-# PACEr Calculation Programm
-# quick and dirty
-import os
 
-def pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
+import os
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+import json
+
+def oldPace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
     try:
         # Convert times to seconds
         bz = int(bz_min) * 60 + int(bz_sec)
@@ -53,6 +56,41 @@ def pace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
         return 'Error: ' + str(e)
 
 
+def pace(laenge, time_min, time_sec):
+    try:
+        # Convert time to seconds
+        time = int(time_min) * 60 + int(time_sec)
+        
+        return_dict = {}
+        
+        # Check if the length is at least 1km (1000m)
+        if laenge >= 1000:
+            # Calculate the time for 1km
+            pace_1km = time / laenge * 1000
+
+            # Calculate the time for each km
+            for km in range(1, int(laenge/1000)+1):
+                # Calculate the time for this km
+                time_km = km * pace_1km
+
+                # Convert the time to minutes and seconds
+                min_km = int(time_km / 60)
+                sec_km = int(time_km % 60)
+
+                # Add the km (1000) data to the return dictionary
+                return_dict[km*1000] = {
+                    "min": min_km,
+                    "sec": sec_km
+                }
+        # if less 1km (1000m) = finishing time |  so add the km data to the return dictionary
+        return_dict[laenge] = {"min": time_min, "sec": time_sec}
+        return return_dict
+    
+    except Exception as e:
+        return 'Error: ' + str(e)
+
+
+
 def calculatePace(laenge, kmh, art):
     # Bergriffsklärung: HZ = Höchstzeit, BZ = Bestzeit, EZ = Erlaubte Zeit
     # convert laenge from m to km
@@ -81,8 +119,12 @@ def calculatePace(laenge, kmh, art):
     ez_sec = int(ez % 60)
     hz_min = int(hz / 60)
     hz_sec = int(hz % 60)
-    bz_min = int(bz / 60)
-    bz_sec = int(bz % 60)
+    if bz is not None:
+        bz_min = int(bz / 60)
+        bz_sec = int(bz % 60)
+    else:
+        bz_min = None
+        bz_sec = None
 
     return bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min
 
@@ -97,11 +139,58 @@ def getDirPath():
     return dirPath
 
 # example call
-# result = pace(4900, 37, 14, 37, 16, 45, 19)
-
+result = oldPace(4900, 37, 14, 37, 16, 45, 19)
+print(result)
 # # output the results
 # for km, data in result.items():
 #     print(f"Kilometer {km}:")
 #     print(f"\tBestzeit: {data['bz_min']}:{data['bz_sec']}")
 #     print(f"\tErlaubte Zeit: {data['ez_min']}:{data['ez_sec']}")
 #     print(f"\tHöchstzeit: {data['hz_min']}:{data['hz_sec']}")
+
+
+
+
+def generate_pdf_from_json(json_data, output_path):
+    data = json.loads(json_data)
+
+    # PDF erstellen
+    c = canvas.Canvas(output_path, pagesize=A4)
+
+    # PDF-Inhalt erstellen
+    table_header = ['Länge', 'BZ', 'EZ', 'HZ']
+    table_data = [table_header]
+
+    for key, value in data.items():
+        row = [str(key) + ' m']
+        if 'bz_min' in value and 'bz_sec' in value:
+            row.append(f"{value['bz_min']}:{'{:02}'.format(value['bz_sec'])}")
+        row.append(f"{value['ez_min']}:{'{:02}'.format(value['ez_sec'])}")
+        row.append(f"{value['hz_min']}:{'{:02}'.format(value['hz_sec'])}")
+
+        table_data.append(row)
+
+    # Tabelle im PDF zeichnen
+    x_offset = 50
+    y_offset = 700
+    cell_width = (A4[0] - 2 * x_offset) / len(table_header)
+    cell_height = 40
+
+    background_colors = [colors.white, colors.green, colors.orange, colors.red]
+
+    for index, row in enumerate(table_data):
+        for i, cell in enumerate(row):
+            if index == 0:  # Header
+                c.setFont("Helvetica-Bold", 14)
+                c.setFillColor(colors.black)
+            else:  # Daten
+                c.setFont("Helvetica-Bold", 22)  # Größere Schriftart
+                c.setFillColor(colors.black)
+                c.setFillColor(background_colors[i])
+                c.rect(x_offset + (i * cell_width), y_offset - cell_height, cell_width, cell_height, fill=True, stroke=True)
+                c.setFillColor(colors.black if i == 0 else colors.white)
+
+            c.drawString(x_offset + (i * cell_width) + 10, y_offset - cell_height + 10, cell)
+        y_offset -= 2 * cell_height  # Lassen Sie eine Zeile frei zwischen den Reihen
+
+    c.save()
