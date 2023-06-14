@@ -139,8 +139,8 @@ def getDirPath():
     return dirPath
 
 # example call
-result = oldPace(4900, 37, 14, 37, 16, 45, 19)
-print(result)
+# result = oldPace(4900, 37, 14, 37, 16, 45, 19)
+# print(result)
 # # output the results
 # for km, data in result.items():
 #     print(f"Kilometer {km}:")

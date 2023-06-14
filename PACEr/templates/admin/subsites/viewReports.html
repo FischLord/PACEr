@@ -1,0 +1,10 @@
+{% extends "admin/adminTools.html" %}
+
+{% block adminContent %}
+    <h1>View Reports</h1>
+    <ul>
+        {% for report in reports %}
+            <li>{{ report }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

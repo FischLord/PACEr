@@ -3,6 +3,7 @@ from random import randint
 from datetime import date
 from helper import getDirPath
 import os
+import json
 bp_report = Blueprint('report', __name__)
 
 
@@ -22,11 +23,12 @@ def reportProblem():
                 vorname = request.form['vorname']
                 email = request.form['email']
                 issue = request.form['issue']
-                # write in text file and save in folder reports/date/name + random nuimber.txt
-                filename = name + vorname + str(randint(0, 1000)) + '.txt'
+                # write in json file and save in folder reports/date/name + random nuimber.json
+                filename = name + vorname + str(randint(0, 1000)) + '.json'
                 filepath = folderPath + '/' + filename
                 report = open(filepath, 'w')
-                report.write('Name: ' + name + '\n' + 'Vorname: ' + vorname + '\n' + 'Email: ' + email + '\n' + 'Issue: ' + issue)
+                report_dict = {'Name': name, 'Vorname': vorname, 'Email': email, 'Issue': issue}
+                json.dump(report_dict, report)
                 report.close()
                 return render_template('projektInfo.html', notification='Ihr Problem wurde erfolgreich gemeldet.', notificationName='Info')
             else:
@@ -38,10 +40,3 @@ def reportProblem():
             return render_template('reportProblem.html')
         except Exception as e:
             return 'Error: ' + str(e)
-        
-        
-        
-currentDate = date.today().strftime("%d.%m.%Y")
-absPath = getDirPath()
-folderPath = absPath + '/reports/' + currentDate
-print(folderPath)

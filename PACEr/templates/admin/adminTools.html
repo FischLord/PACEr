@@ -1,0 +1,21 @@
+{% extends "layout.html" %} {% block content %}
+<input type="hidden" id="key" name="key" value="{{key}}">
+<header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8 mb-4">
+    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">Admin Tools</h1>
+</header>
+<div class="flex">
+    <nav class="w-full md:w-1/4 bg-gray-800 py-4 px-4">
+        <ul>
+            <li>
+                <a href="/viewReports" class="text-gray-400 hover:text-orange-600">Reports</a>
+            </li>
+            <li>
+                <a href="#" class="text-gray-400 hover:text-orange-600">Platzhalter</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="w-full md:w-3/4">
+        {% block adminContent %} {% endblock %}
+    </div>
+</div>
+{% endblock %}
