@@ -194,3 +194,14 @@ def generate_pdf_from_json(json_data, output_path):
         y_offset -= 2 * cell_height  # Lassen Sie eine Zeile frei zwischen den Reihen
 
     c.save()
+    
+    
+def returnReport(reportPath):
+    # get the folder the file is in
+    # read the report file and return the content
+    if os.path.isfile(reportPath):
+        with open(reportPath, 'r') as file:
+            report = json.load(file)
+        return report
+    else:
+        return "Error: Report not found"

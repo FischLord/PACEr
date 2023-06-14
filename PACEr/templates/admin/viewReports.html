@@ -1,0 +1,19 @@
+{% extends "admin/adminTools.html" %}
+
+{% block adminContent %}
+<div class="ml-4">
+    {% for date, reports_group in reports|groupby('date') %}
+        <div class="my-4">
+            <h2 class="text-2xl font-bold text-orange-600 mt-4 text-center">{{ date }}</h2>
+            <hr class="border-gray-400">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                {% for report in reports_group|sort(attribute='name') %}
+                    <a href="/displayReport?report={{ report.path }}" class="block bg-gray-800 text-gray-400 rounded py-2 px-4 hover:text-gray-200 hover:bg-gray-700">
+                        {{ report.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

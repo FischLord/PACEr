@@ -31,17 +31,30 @@ def adminTools():
     except Exception as e:
         return 'Error: ' + str(e)
     
-bp_admin.route('/adminTools/viewReports', methods=['GET', 'POST'])
+@bp_admin.route('/viewReports', methods=['GET', 'POST'])
 def viewReports():
-    if request.method == 'POST':
-        try:
-            # get all reports
-            absPath = getDirPath()
-            reportsPath = absPath + '/reports'
-            reports = []
-            for date in os.listdir(reportsPath):
-                for report in os.listdir(reportsPath + '/' + date):
-                    reports.append(reportsPath + '/' + date + '/' + report)
-            return render_template('admin/subsites/viewReports.html', reports=reports)
-        except Exception as e:
-            return 'Error: ' + str(e)
+    try:
+        # get all reports
+        absPath = getDirPath()
+        reportsPath = absPath + '/reports'
+        reports = []
+        for date in sorted(os.listdir(reportsPath), reverse=True):
+            for report in sorted(os.listdir(reportsPath + '/' + date)):
+                reports.append({
+                    'path': reportsPath + '/' + date + '/' + report,
+                    'date': date,
+                    'name': report
+                })
+        return render_template('admin/viewReports.html', reports=reports)
+    except Exception as e:
+        return 'Error: ' + str(e)
+    
+@bp_admin.route('/displayReport', methods=['GET', 'POST'])
+def displayReport():
+    # get request for a specific report will be in the form of /displayReport?report=reportPath
+    try:
+        report = returnReport(reportPath=request.args.get('report'))
+        return render_template('admin/displayReport.html', report=report)
+    except Exception as e:
+        return 'Error: ' + str(e)
+    
