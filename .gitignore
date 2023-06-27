@@ -168,3 +168,4 @@ package.json
 package-lock.json
 PACEr/reports/*
 .vscode/settings.json
+PACEr/stats.json

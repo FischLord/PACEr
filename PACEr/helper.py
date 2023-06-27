@@ -5,6 +5,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 import json
+import datetime
 
 def oldPace(laenge, bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min):
     try:
@@ -205,3 +206,43 @@ def returnReport(reportPath):
         return report
     else:
         return "Error: Report not found"
+
+
+def writeStatistics():
+    """This function writes the statistics of the usage of pacer to a JSON file.
+
+    The file is divided into the date and the number of usages of pacer.
+    If the file does not exist, it is created with the current date and 1 usage.
+    If the file exists, it is checked if the current date is already in the file.
+    If yes, the usage counter is increased by 1. If not, the current date and 1 usage are added to the file.
+    """
+    # Get the folder path and the file path
+    folder_path = getDirPath()
+    file_path = os.path.join(folder_path, "stats.json")
+
+    # Get the current date as a string
+    today = datetime.date.today().strftime("%Y-%m-%d")
+
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        print("The file does not exist!")
+        print(file_path)
+        # Create the file with the current date and 1 usage
+        with open(file_path, "w") as f:
+            data = {today: 1}
+            json.dump(data, f)
+    else:
+        print("The file exists!")
+        # Open the file and read the data
+        with open(file_path, "r") as f:
+            data = json.load(f)
+        # Check if the current date is already in the data
+        if today in data:
+            # Increase the usage counter by 1
+            data[today] += 1
+        else:
+            # Add the current date and 1 usage to the data
+            data[today] = 1
+        # Write the updated data to the file
+        with open(file_path, "w") as f:
+            json.dump(data, f)
