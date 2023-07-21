@@ -31,6 +31,8 @@ def adminTools():
     except Exception as e:
         return 'Error: ' + str(e)
     
+    
+#################### Reports Section Start ####################
 @bp_admin.route('/viewReports', methods=['GET', 'POST'])
 def viewReports():
     try:
@@ -57,4 +59,36 @@ def displayReport():
         return render_template('admin/displayReport.html', report=report)
     except Exception as e:
         return 'Error: ' + str(e)
+
+#################### Reports Section End ####################
+
+#################### Question Section Start ####################
+
+@bp_admin.route('/viewQuestions', methods=['GET', 'POST'])
+def viewQuestions():
+    try:
+        return render_template('admin/viewQuestions.html')
+    except Exception as e:
+        return 'Error: ' + str(e)
     
+@bp_admin.route('/loadQuestion', methods=['GET', 'POST'])
+def loadQuestion():
+    return
+    
+@bp_admin.route('/saveQuestion', methods=['GET', 'POST'])
+def saveQuestion():
+    return
+
+@bp_admin.route('/deleteQuestion', methods=['GET', 'POST'])
+def deleteQuestion():
+    return
+
+@bp_admin.route('/editQuestion', methods=['GET', 'POST'])
+def editQuestion():
+    return
+
+@bp_admin.route('/addQuestion', methods=['GET', 'POST'])
+def addQuestion():
+    return
+
+#################### Question Section End ####################
