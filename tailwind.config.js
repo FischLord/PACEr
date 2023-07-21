@@ -1,6 +1,6 @@
 module.exports = {
   mode: 'jit',
-  content: ['./PACEr/templates/**/*.html', './PACEr/static/**/*.js'],
+  content: ['./TurnierManager/templates/**/*.html', './TurnierManager/static/**/*.js'],
   theme: {
     extend: {},
   },

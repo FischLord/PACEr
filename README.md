@@ -12,14 +12,14 @@ Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen S
     
     Unter Linux:
     ```bash
-    python3 -m venv .PACEr
-    source .PACEr/bin/activate
+    python3 -m venv .tm
+    source .tm/bin/activate
     ```
     
     Unter Windows:
     ```powershell
-    python -m venv .PACEr
-    .PACEr\Scripts\Activate.ps1
+    python -m venv .tm
+    .tm\Scripts\Activate.ps1
     ```
    
 
@@ -33,14 +33,14 @@ Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen S
 
 Unter Linux:
    ```bash
-   npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch
-   python ./PACEr/app.py
+   npx tailwindcss -i TurnierManager/static/css/theme.css -o TurnierManager/static/build/theme.css --watch
+   python ./TurnierManager/app.py
    ```
    
 Unter Windows (in PowerShell):
    ```powershell
-   npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch
-   python .\PACEr\app.py
+   npx tailwindcss -i TurnierManager/static/css/theme.css -o TurnierManager/static/build/theme.css --watch
+   python .\TurnierManager\app.py
    ```
     
 ### Akzentfarben

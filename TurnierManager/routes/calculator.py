@@ -23,14 +23,14 @@ def pacer():
             else:
                 bz_result = None
             writeStatistics()
-            return render_template('pacer.html', laenge=laenge, kmh=kmh, art=art, bz_result=bz_result, ez_result=ez_result, hz_result=hz_result)
+            return render_template('pacer/pacer.html', laenge=laenge, kmh=kmh, art=art, bz_result=bz_result, ez_result=ez_result, hz_result=hz_result)
             #else:
             #    return render_template('pacer.html', laenge=laenge, kmh=kmh, art=art, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, result=None)
 
         except Exception as e:
             return 'Error: ' + str(e)
     else:
-        return render_template('pacer.html', laenge=None, kmh=None, art=None, bz_sec=None, hz_sec=None, ez_sec=None, bz_min=None, hz_min=None, ez_min=None, result=None)
+        return render_template('pacer/pacer.html', laenge=None, kmh=None, art=None, bz_sec=None, hz_sec=None, ez_sec=None, bz_min=None, hz_min=None, ez_min=None, result=None)
 
 # not implemented:
 # feature that you can calculate only with one type of pace
@@ -54,11 +54,11 @@ def pacerOld():
                 bz_result = pace(laenge, bz_min, bz_sec)
                 result = {"bz": bz_result, "hz": hz_result, "ez": ez_result}
             writeStatistics()
-            return render_template('pacerOld.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, bz_result=bz_result, ez_result=ez_result, hz_result=hz_result)
+            return render_template('pacer/pacerOld.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, bz_result=bz_result, ez_result=ez_result, hz_result=hz_result)
             #else:
             #    return render_template('pacerOld.html', laenge=laenge, bz_sec=bz_sec, hz_sec=hz_sec, ez_sec=ez_sec, bz_min=bz_min, hz_min=hz_min, ez_min=ez_min, result=None)
 
         except Exception as e:
             return 'Error: ' + str(e)
     else:
-        return render_template('pacerOld.html', laenge=None, bz_sec=None, hz_sec=None, ez_sec=None, bz_min=None, hz_min=None, ez_min=None, result=None)
+        return render_template('pacer/pacerOld.html', laenge=None, bz_sec=None, hz_sec=None, ez_sec=None, bz_min=None, hz_min=None, ez_min=None, result=None)

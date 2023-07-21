@@ -161,11 +161,11 @@ cython_debug/
 
 
 
-.PACEr
+.tm
 node_modules/
 ```
 package.json
 package-lock.json
-PACEr/reports/*
+TurnierManager/reports/*
 .vscode/settings.json
-PACEr/stats.json
+TurnierManager/stats.json
