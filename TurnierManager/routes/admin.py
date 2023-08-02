@@ -47,7 +47,7 @@ def viewReports():
                     'date': date,
                     'name': report
                 })
-        return render_template('admin/viewReports.html', reports=reports)
+        return render_template('admin/reports/viewReports.html', reports=reports)
     except Exception as e:
         return 'Error: ' + str(e)
     
@@ -56,7 +56,7 @@ def displayReport():
     # get request for a specific report will be in the form of /displayReport?report=reportPath
     try:
         report = returnReport(reportPath=request.args.get('report'))
-        return render_template('admin/displayReport.html', report=report)
+        return render_template('admin/reports/displayReport.html', report=report)
     except Exception as e:
         return 'Error: ' + str(e)
 
@@ -67,7 +67,7 @@ def displayReport():
 @bp_admin.route('/viewQuestions', methods=['GET', 'POST'])
 def viewQuestions():
     try:
-        return render_template('admin/viewQuestions.html')
+        return render_template('admin/questions/viewQuestions.html')
     except Exception as e:
         return 'Error: ' + str(e)
     
