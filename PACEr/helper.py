@@ -152,7 +152,39 @@ def getDirPath():
 
 
 
-def generate_pdf_from_json(json_data, output_path):
+
+def generatePd(bz_result,ez_result,hz_result):
+    # PDF erstellen und speichern in nummerierter Reinfolge
+    dir_path = getDirPath() + '/tmp/'
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    output_path = dir_path + 'output.pdf'
+    count = 1
+    while os.path.isfile(output_path):
+        output_path = dir_path + f'output_{count}.pdf'
+        count += 1
+        
+
+
+
+
+
+
+
+
+
+
+def oldgeneratePdf(json_data):
+    dir_path = getDirPath() + '/tmp/'
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    output_path = dir_path + 'output.pdf'
+    count = 1
+    while os.path.isfile(output_path):
+        output_path = dir_path + f'output_{count}.pdf'
+        count += 1
     data = json.loads(json_data)
 
     # PDF erstellen
