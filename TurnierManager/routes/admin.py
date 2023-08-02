@@ -89,6 +89,6 @@ def editQuestion():
 
 @bp_admin.route('/addQuestion', methods=['GET', 'POST'])
 def addQuestion():
-    return
+    return render_template('admin/questions/addQuestion.html')
 
 #################### Question Section End ####################

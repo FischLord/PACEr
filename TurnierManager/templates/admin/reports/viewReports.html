@@ -1,7 +1,13 @@
 {% extends "admin/adminTools.html" %}
 
 {% block adminContent %}
-<div class="ml-4">
+<div class="px-4 py-8">
+    <!-- Überschrift in der Desktop-Ansicht -->
+    <div class="flex justify-between items-center mb-4 md:mb-8 text-center md:text-left">
+        <h1 class="text-orange-600 text-2xl font-bold">Aktelle Reports</h1>
+    </div>
+    <!-- Trennstrich nur für die Desktop-Ansicht -->
+    <hr class="border-gray-600 mb-8 hidden md:block">
     {% for date, reports_group in reports|groupby('date') %}
         <div class="my-4">
             <h2 class="text-2xl font-bold text-orange-600 mt-4 text-center">{{ date }}</h2>
