@@ -6,6 +6,67 @@
     </div>
     <!-- Trennstrich nur für die Desktop-Ansicht -->
     <hr class="border-gray-600 mb-8 hidden md:block">
+
+    <!--! Anfang des Formulars-->
+    <div class="bg-gray-900 text-gray-400 py-10">
+        <div class="max-w-lg mx-auto p-8">
+            <form id="questionForm">
+
+                <label class="block mt-4" for="question">Frage:</label>
+                <input class="w-full p-2 border rounded" type="text" id="question" name="question" required>
+                <label class="block mt-4" for="category">Kategorie:</label>
+                <select class="w-full p-2 border rounded" id="category" name="category" required>
+                    <option value="">Bitte wählen Sie eine Kategorie aus</option>
+                    <option value="Geographie">Geographie</option>
+                    <option value="Geschichte">Geschichte</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Kunst">Kunst</option>
+                    <option value="Wissenschaft">Wissenschaft</option>
+                </select>
+
+                <label class="block mt-4" for="difficulty">Schwierigkeit:</label>
+                <select class="w-full p-2 border rounded" id="difficulty" name="difficulty" required>
+                    <option value="">Bitte wählen Sie eine Schwierigkeitsstufe aus</option>
+                    <option value="1">Leicht (1)</option>
+                    <option value="2">Einfach (2)</option>
+                    <option value="3">Mittel (3)</option>
+                    <option value="4">Schwer (4)</option>
+                    <option value="5">Sehr schwer (5)</option>
+                </select>
+
+                <label class="block mt-4" for="image">Bild:</label>
+                <input class="w-full p-2 border rounded" type="file" id="image" name="image" accept=".jpg,.png,.gif">
+                <div class="mt-2 text-sm text-gray-500" id="image-info">Keine Datei ausgewählt</div>
+
+
+
+                <div id="answersContainer" class="mt-4">
+                    <label class="block mb-2" for="answers">Antworten:</label>
+                    <div class="flex items-center mb-4">
+                        <input class="w-full p-2 border rounded mr-2 text-gray-400" type="text" name="answers[]"
+                            required>
+                        <input class="mr-2" type="checkbox" name="correct_answers[0]" value="0">
+                        <span class="text-gray-400">Richtig</span>
+                    </div>
+                </div>
+
+                <button type="button" id="addAnswer"
+                    class="bg-orange-600 hover:bg-orange-500 text-white py-2 px-4 rounded mt-2">Antwort
+                    hinzufügen</button>
+                <label class="block mt-4" for="explanation">Erklärung:</label>
+                <textarea class="w-full p-2 border rounded" id="explanation" name="explanation" rows="4"
+                    required></textarea>
+
+                <input class="bg-orange-600 hover:bg-orange-500 text-white py-2 px-4 rounded mt-4" type="submit"
+                    value="Absenden">
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <script src="{{ url_for('static', filename='js/quiz/addQuestion.js') }}"></script>
 </div>
 
 {% endblock %}
