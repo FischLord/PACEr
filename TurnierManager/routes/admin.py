@@ -77,14 +77,15 @@ def loadQuestion():
     
 @bp_admin.route('/saveQuestion', methods=['GET', 'POST'])
 def saveQuestion():
-    question = request.form.get('question') # oder request.form['question']
-    category = request.form.get('category') # oder request.form['category']
-    difficulty = request.form.get('difficulty') # oder request.form['difficulty']
-    type = request.form.get('type') # oder request.form['type']
-    image = request.files.get('image') # oder request.files['image']
-    answers = request.form.getlist('answers[]') # oder request.form['answers[]']
-    correct_answers = request.form.getlist('correct_answers[]') # oder request.form['correct_answers[]']
-    explanation = request.form.get('explanation') # oder request.form['explanation']
+    question = request.form.get('question')
+    category = request.form.get('category')
+    difficulty = request.form.get('difficulty') 
+    type = request.form.get('type')
+    image = request.files.get('image')
+    answers = request.form.getlist('answers[]') 
+    correct_answers = request.form.getlist('correct_answers[]') 
+    explanation = request.form.get('explanation')
+    official = request.form.get('official')
     
     absPath = getDirPath()
     folderPath = absPath + '/questions/'
