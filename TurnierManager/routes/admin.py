@@ -91,17 +91,15 @@ def saveQuestion():
     if not os.path.exists(folderPath):
         os.makedirs(folderPath)
     # open the json document where all the questions are stored
+    jsonPath = folderPath + 'questions.json'
+    jsonFile = open(jsonPath, 'r')
+    data = json.load(jsonFile)
     # check for the highest id and increment it by 1
+    print(data)
     # save the question and the rest of the data in the json document / the image path
     # save the image in the folder under the subfolder with the id and the name of the image
-    print("Question: " + question)
-    print("Category: " + category)
-    print("Difficulty: " + difficulty)
-    print("Type: " + type)
-    print("Image: " + str(image))
-    print("Answers: " + str(answers))
-    print("Correct Answers: " + str(correct_answers))
-    print("Explanation: " + explanation)
+    image.save(folderPath + '/images/' + image.filename)
+    
     
     return render_template('admin/questions/viewQuestions.html')
 

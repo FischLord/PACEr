@@ -1,0 +1,33 @@
+{
+    "questions": [
+      {
+        "id": 1,
+        "category": "Geschichte",
+        "question": "Wann wurde die Berliner Mauer erbaut?",
+        "difficulty": 4,
+        "explanation": "Die Berliner Mauer wurde im Jahr 1961 errichtet.",
+        "image": "berlin_wall.jpg",
+        "answers": [
+          "1955",
+          "1961",
+          "1989",
+          "1995"
+        ],
+        "correct_answers": [1]
+      },
+      {
+        "id": 2,
+        "category": "Informatik",
+        "question": "Was steht für HTML?",
+        "difficulty": 2,
+        "explanation": "HTML steht für Hypertext Markup Language.",
+        "answers": [
+          "Hyper Text Markup Language",
+          "High Tech Machine Learning",
+          "Home Tool Management Language",
+          "Hyperlinks and Text Markup Language"
+        ],
+        "correct_answers": [0]
+      }
+    ]
+  }
