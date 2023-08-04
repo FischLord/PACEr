@@ -77,7 +77,33 @@ def loadQuestion():
     
 @bp_admin.route('/saveQuestion', methods=['GET', 'POST'])
 def saveQuestion():
-    return
+    question = request.form.get('question') # oder request.form['question']
+    category = request.form.get('category') # oder request.form['category']
+    difficulty = request.form.get('difficulty') # oder request.form['difficulty']
+    type = request.form.get('type') # oder request.form['type']
+    image = request.files.get('image') # oder request.files['image']
+    answers = request.form.getlist('answers[]') # oder request.form['answers[]']
+    correct_answers = request.form.getlist('correct_answers[]') # oder request.form['correct_answers[]']
+    explanation = request.form.get('explanation') # oder request.form['explanation']
+    
+    absPath = getDirPath()
+    folderPath = absPath + '/questions/'
+    if not os.path.exists(folderPath):
+        os.makedirs(folderPath)
+    # open the json document where all the questions are stored
+    # check for the highest id and increment it by 1
+    # save the question and the rest of the data in the json document / the image path
+    # save the image in the folder under the subfolder with the id and the name of the image
+    print("Question: " + question)
+    print("Category: " + category)
+    print("Difficulty: " + difficulty)
+    print("Type: " + type)
+    print("Image: " + str(image))
+    print("Answers: " + str(answers))
+    print("Correct Answers: " + str(correct_answers))
+    print("Explanation: " + explanation)
+    
+    return render_template('admin/questions/viewQuestions.html')
 
 @bp_admin.route('/deleteQuestion', methods=['GET', 'POST'])
 def deleteQuestion():

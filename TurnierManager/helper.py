@@ -139,6 +139,8 @@ def getDirPath():
     dirPath = dirPath.replace("\\", "/") # replace backslashes with forward slashes
     return dirPath
 
+print("helper.py liegt ind folgendem Ordner", getDirPath())
+
 # example call
 # result = oldPace(4900, 37, 14, 37, 16, 45, 19)
 # print(result)

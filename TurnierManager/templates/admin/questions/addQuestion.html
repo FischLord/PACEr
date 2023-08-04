@@ -10,18 +10,19 @@
     <!--! Anfang des Formulars-->
     <div class="bg-gray-900 text-gray-400 py-10">
         <div class="max-w-lg mx-auto p-8">
-            <form id="questionForm">
+            <form action="{{ url_for('admin.saveQuestion') }}" method="POST" id="questionForm" enctype="multipart/form-data">
 
                 <label class="block mt-4" for="question">Frage:</label>
                 <input class="w-full p-2 border rounded" type="text" id="question" name="question" required>
                 <label class="block mt-4" for="category">Kategorie:</label>
                 <select class="w-full p-2 border rounded" id="category" name="category" required>
                     <option value="">Bitte wählen Sie eine Kategorie aus</option>
-                    <option value="Geographie">Geographie</option>
-                    <option value="Geschichte">Geschichte</option>
-                    <option value="Sport">Sport</option>
-                    <option value="Kunst">Kunst</option>
-                    <option value="Wissenschaft">Wissenschaft</option>
+                    <option value="ausbildung">Ausbildung</option>
+                    <option value="fahrlehre">Fahrlehre</option>
+                    <option value="haltung_fütterung">Haltung / Fütterung</option>
+                    <option value="longieren">Longieren</option>
+                    <option value="lpo">LPO</option>
+                    <option value="basispass">Basispass</option>
                 </select>
 
                 <label class="block mt-4" for="difficulty">Schwierigkeit:</label>
@@ -32,6 +33,13 @@
                     <option value="3">Mittel (3)</option>
                     <option value="4">Schwer (4)</option>
                     <option value="5">Sehr schwer (5)</option>
+                </select>
+                
+                <label class="block mt-4" for="type">Art der Aufgabe:</label>
+                <select class="w-full p-2 border rounded" id="type" name="type" required>
+                    <option value="mode1">Ankreuzaufgabe</option>
+                    <option value="mode2">Zuordnungsaufgabe</option>
+                    <option value="mode3">Freitextaufgaben</option>
                 </select>
 
                 <label class="block mt-4" for="image">Bild:</label>
@@ -45,7 +53,7 @@
                     <div class="flex items-center mb-4">
                         <input class="w-full p-2 border rounded mr-2 text-gray-400" type="text" name="answers[]"
                             required>
-                        <input class="mr-2" type="checkbox" name="correct_answers[0]" value="0">
+                        <input class="mr-2" type="checkbox" name="correct_answers[]" value="0">
                         <span class="text-gray-400">Richtig</span>
                     </div>
                 </div>
@@ -53,9 +61,11 @@
                 <button type="button" id="addAnswer"
                     class="bg-orange-600 hover:bg-orange-500 text-white py-2 px-4 rounded mt-2">Antwort
                     hinzufügen</button>
+
+
                 <label class="block mt-4" for="explanation">Erklärung:</label>
-                <textarea class="w-full p-2 border rounded" id="explanation" name="explanation" rows="4"
-                    required></textarea>
+                <div class="text-sm text-gray-500" >Optional</div>
+                <textarea class="w-full p-2 border rounded" id="explanation" name="explanation" rows="4"></textarea>
 
                 <input class="bg-orange-600 hover:bg-orange-500 text-white py-2 px-4 rounded mt-4" type="submit"
                     value="Absenden">

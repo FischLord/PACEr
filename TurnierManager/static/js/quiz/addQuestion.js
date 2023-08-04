@@ -1,35 +1,38 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const answersContainer = document.getElementById("answersContainer");
-    const addAnswerButton = document.getElementById("addAnswer");
+  const answersContainer = document.getElementById("answersContainer");
+  const addAnswerButton = document.getElementById("addAnswer");
+  
+  let answerCount = 1;
+  
+  addAnswerButton.addEventListener("click", function() {
+    const newInput = document.createElement("input");
+    newInput.className = "w-full p-2 border rounded mb-2 mr-2";
+    newInput.type = "text";
+    newInput.name = "answers[]";
+    newInput.required = true;
     
-    let answerCount = 1;
+    const newCheckbox = document.createElement("input");
+    newCheckbox.className = "mr-2";
+    newCheckbox.type = "checkbox";
+    newCheckbox.name = "correct_answers[]";
+    // Setze den Wert der Checkbox auf die Nummer der Antwort
+    newCheckbox.value = answerCount;
     
-    addAnswerButton.addEventListener("click", function() {
-      const newInput = document.createElement("input");
-      newInput.className = "w-full p-2 border rounded mb-2 mr-2";
-      newInput.type = "text";
-      newInput.name = "answers[]";
-      newInput.required = true;
-      
-      const newCheckbox = document.createElement("input");
-      newCheckbox.className = "mr-2";
-      newCheckbox.type = "checkbox";
-      newCheckbox.name = `correct_answers[${answerCount}]`;
-      newCheckbox.value = answerCount;
-      
-      const answerWrapper = document.createElement("div");
-      answerWrapper.className = "flex items-center mb-2";
-      answerWrapper.appendChild(newInput);
-      
-      // Die Checkbox und das Label direkt nach dem Input platzieren
-      answerWrapper.appendChild(newCheckbox);
-      answerWrapper.appendChild(document.createTextNode("Richtig"));
-      
-      answersContainer.appendChild(answerWrapper);
-      
-      answerCount++;
-    });
+    const answerWrapper = document.createElement("div");
+    answerWrapper.className = "flex items-center mb-2";
+    answerWrapper.appendChild(newInput);
+    
+    // Die Checkbox und das Label direkt nach dem Input platzieren
+    answerWrapper.appendChild(newCheckbox);
+    answerWrapper.appendChild(document.createTextNode("Richtig"));
+    
+    answersContainer.appendChild(answerWrapper);
+    
+    // Erhöhe die Variable answerCount um eins
+    answerCount++;
   });
+});
+
 
 
   // Get the file input element
