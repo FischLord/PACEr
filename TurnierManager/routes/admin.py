@@ -63,13 +63,23 @@ def displayReport():
 #################### Reports Section End ####################
 
 #################### Question Section Start ####################
-
 @bp_admin.route('/viewQuestions', methods=['GET', 'POST'])
 def viewQuestions():
     try:
-        return render_template('admin/questions/viewQuestions.html')
+        absPath = getDirPath()
+        folderPath = absPath + '/questions/'
+        if not os.path.exists(folderPath):
+            os.makedirs(folderPath)
+        jsonPath = folderPath + 'questions.json'
+        # read the json file and get the questions list
+        with open(jsonPath, "r") as f:
+            json_data = json.load(f)
+            questions = json_data["questions"]
+        # render the template with the questions list
+        return render_template('admin/questions/viewQuestions.html', questions=questions)
     except Exception as e:
         return 'Error: ' + str(e)
+
     
 @bp_admin.route('/loadQuestion', methods=['GET', 'POST'])
 def loadQuestion():
@@ -77,6 +87,13 @@ def loadQuestion():
     
 @bp_admin.route('/saveQuestion', methods=['GET', 'POST'])
 def saveQuestion():
+    absPath = getDirPath()
+    folderPath = absPath + '/questions/'
+    if not os.path.exists(folderPath):
+        os.makedirs(folderPath)
+    jsonPath = folderPath + 'questions.json'
+    
+    
     question = request.form.get('question')
     category = request.form.get('category')
     difficulty = request.form.get('difficulty') 
@@ -86,23 +103,29 @@ def saveQuestion():
     correct_answers = request.form.getlist('correct_answers[]') 
     explanation = request.form.get('explanation')
     official = request.form.get('official')
-    
-    absPath = getDirPath()
-    folderPath = absPath + '/questions/'
-    if not os.path.exists(folderPath):
-        os.makedirs(folderPath)
-    # open the json document where all the questions are stored
-    jsonPath = folderPath + 'questions.json'
-    jsonFile = open(jsonPath, 'r')
-    data = json.load(jsonFile)
-    # check for the highest id and increment it by 1
-    print(data)
-    # save the question and the rest of the data in the json document / the image path
     # save the image in the folder under the subfolder with the id and the name of the image
-    image.save(folderPath + '/images/' + image.filename)
+    imageSavePath = folderPath + 'images/' + image.filename
+    image.save(imageSavePath)
     
+    # check for the highest id in the json document
+    newID = getHighestId(jsonPath)
+    # create dictionary with the new question
+    newQuestion = {"id": newID, "question": question, "category": category, "difficulty": difficulty, "type": type, "image": imageSavePath, "answers": answers, "correct_answers": correct_answers, "explanation": explanation, "official": official}
+    # open the json document where all the questions are stored
+    # call the checkAndInitJson function with the path to the json file and assign the result to a variable
+    json_data = checkAndInitJson(jsonPath)
+    # append the new question to the questions list
+    json_data["questions"].append(newQuestion)
+    # write the json file
+    with open(jsonPath, "w") as f:
+        json.dump(json_data, f)
     
-    return render_template('admin/questions/viewQuestions.html')
+    with open(jsonPath, "r") as f:
+            question_data = json.load(f)
+            questions = question_data["questions"]
+        # render the template with the questions list
+    return render_template('admin/questions/viewQuestions.html', questions=questions)
+
 
 @bp_admin.route('/deleteQuestion', methods=['GET', 'POST'])
 def deleteQuestion():

@@ -248,3 +248,43 @@ def writeStatistics():
         # Write the updated data to the file
         with open(file_path, "w") as f:
             json.dump(data, f)
+
+
+#helper function which reads the json and writes the new data to the end of it
+def writeJsonFile(data, filePath):
+    # read the json file
+    with open(filePath, "r") as f:
+        json_data = json.load(f)
+    # append the new data to the end of the questions list
+    json_data["questions"].append(data)
+    # write the json file
+    with open(filePath, "w") as f:
+        json.dump(json_data, f)
+        
+#helper function which reads the json file and returnes the highest id +1 in it
+def getHighestId(filePath):
+    # read the json file
+    highest_id = 0
+    try:    
+        with open(filePath, "r") as f:
+            json_data = json.load(f)
+        questions = json_data["questions"]
+        for question in questions:
+            if question["id"] > highest_id:
+                highest_id = question["id"]
+        # return the highest id +1
+        return highest_id + 1
+    except:
+        return 0
+
+#helper funtion which checks if the json file is empty and inits it if it is
+def checkAndInitJson(filePath):
+    # try to open and read the json file
+    try:
+        with open(filePath, "r") as f:
+            json_data = json.load(f)
+    # if the file is empty or invalid, create an empty dictionary with the key "questions"
+    except (json.decoder.JSONDecodeError, FileNotFoundError):
+        json_data = {"questions": []}
+    # return the json object
+    return json_data
