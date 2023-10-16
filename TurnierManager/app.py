@@ -2,6 +2,7 @@ from flask import Flask
 import secrets
 from routes import home, calculator, report, admin
 
+
 tm = Flask(__name__, static_folder='static', template_folder='templates')
 tm.secret_key = secrets.token_hex(16)
 

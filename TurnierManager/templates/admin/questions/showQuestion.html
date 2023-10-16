@@ -1,0 +1,40 @@
+{% extends "admin/adminTools.html" %} {% block adminContent %}
+<div class="container mx-auto">
+    <div class="my-4 p-4 bg-gray-900 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4 text-orange-600">{{ question['question'] }}</h1>
+        <p class="text-gray-400 mb-4">{{ question['category'] }} - Schwierigkeit: {{ question['difficulty'] }}</p>
+        {% if question['image'] %}
+        <img src="{{ question['image'] }}" alt="Bild zur Frage" class="mb-4">
+        {% endif %}
+        <form>
+            {% for answer in question['answers'] %}
+            <div class="flex items-center mb-2">
+                <input type="radio" id="answer{{ loop.index }}" name="answer" value="{{ loop.index }}" {% if loop.index
+                    in question['correct_answers'] %}checked{% endif %} disabled class="border border-orange-600">
+                <label for="answer{{ loop.index }}" class="ml-2 text-gray-400 hover:text-orange-600">{{ answer }}</label>
+            </div>
+            {% endfor %}
+            <div class="bg-gray-800 p-2 rounded-lg mb-4">
+                <p class="text-sm text-gray-400">Optional:</p>
+                <textarea class="w-full p-2 border rounded border-orange-600 bg-gray-900" id="explanation" name="explanation" rows="4"
+                    disabled>{{ question['explanation'] }}</textarea>
+            </div>
+
+            <div class="bg-gray-800 p-2 rounded-lg mb-4">
+                <label class="block text-gray-400" for="official">Offizielle Aufgabe:</label>
+                <select class="w-full p-2 border rounded border-orange-600 bg-gray-900" id="official" name="official" disabled>
+                    <option value="">Bitte wählen Sie aus, ob es sich um eine offizielle Aufgabe handelt</option>
+                    <option value="true" {% if question['official']=="true" %}selected{% endif %} class="text-orange-600">Ja</option>
+                    <option value="false" {% if question['official']=="false" %}selected{% endif %} class="text-orange-600">Nein</option>
+                </select>
+            </div>
+
+            <!-- disable the submit button -->
+            <input class="bg-orange-600 hover:bg-orange-500 text-white py-2 px-4 rounded mt-4 hidden" type="submit"
+                value="Absenden">
+        </form>
+
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/quiz/addQuestion.js') }}"></script>
+{% endblock %}

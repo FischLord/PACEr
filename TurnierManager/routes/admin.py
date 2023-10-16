@@ -81,12 +81,46 @@ def viewQuestions():
         return 'Error: ' + str(e)
 
     
-@bp_admin.route('/loadQuestion', methods=['GET', 'POST'])
-def loadQuestion():
-    return
-    
-@bp_admin.route('/saveQuestion', methods=['GET', 'POST'])
-def saveQuestion():
+@bp_admin.route('/loadQuestion/<int:id>', methods=['GET', 'POST'])
+def loadQuestion(id):
+    print(id)
+    # get the id of the question to load
+    # id = request.args.get('id')
+    # get the path to the json file
+    absPath = getDirPath()
+    folderPath = absPath + '/questions/'
+    if not os.path.exists(folderPath):
+        os.makedirs(folderPath)
+    jsonPath = folderPath + 'questions.json'
+    # read the json file and get the questions list
+    with open(jsonPath, "r") as f:
+        json_data = json.load(f)
+        questions = json_data["questions"]
+    # find the question with the id
+    # for question in questions:
+    #     if question["id"] == int(id):
+    #         # extract the information from the question and render the template with the information
+    #         # use a different variable to store the question text
+    #         question_text = question["question"]
+    #         category = question["category"]
+    #         difficulty = question["difficulty"]
+    #         type = question["type"]
+    #         imagepath = question["image"]
+    #         answers = question["answers"]
+    #         correct_answers = question["correct_answers"]
+    #         explanation = question["explanation"]
+    #         official = question["official"]
+    #         # load the image from the path and give it to the template
+    #         image = open(imagepath, 'rb')
+    #         image = image.read()
+    #         return render_template('admin/questions/showQuestion.html', id=id, question=question_text, category=category, difficulty=difficulty, type=type, image=image, answers=answers, correct_answers=correct_answers, explanation=explanation, official=official)
+        question = questions[id]
+        return render_template('admin/questions/showQuestion.html', question=question)
+
+
+
+@bp_admin.route('/newQuestion', methods=['GET', 'POST'])
+def newQuestion():
     absPath = getDirPath()
     folderPath = absPath + '/questions/'
     if not os.path.exists(folderPath):

@@ -28,13 +28,16 @@
                 </div>
                 <!-- Erstellen Sie ein div Element für den "Knopf" -->
                 <div class="col-span-1 flex justify-center items-center">
-                    <div class="bg-gray-900 text-gray-400 border border-orange-600 rounded py-2 px-4 hover:bg-gray-800 hover:text-orange-600 cursor-pointer w-min"
-                        onclick="">Ansehen</div>
+                    <!-- Ersetzen Sie den Knopf durch einen Link, der die URL für die loadQuestion Funktion mit der ID der Frage aufruft -->
+                    <!-- Fügen Sie das onclick Attribut hinzu, um eine JavaScript-Funktion auszuführen, wenn der Link angeklickt wird -->
+                    <a class="bg-gray-900 text-gray-400 border border-orange-600 rounded py-2 px-4 hover:bg-gray-800 hover:text-orange-600 cursor-pointer w-min"
+                        href="{{ url_for('admin.loadQuestion', id=question.id) }}" onclick="someFunction()">Ansehen</a>
                 </div>
             </div>
             <!-- Weitere Informationen zur Frage können hier angezeigt werden -->
         </div>
         {% endfor %}
+
     </div>
 
 

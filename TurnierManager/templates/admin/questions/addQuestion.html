@@ -10,7 +10,7 @@
     <!--! Anfang des Formulars-->
     <div class="bg-gray-900 text-gray-400 py-10">
         <div class="max-w-lg mx-auto p-8">
-            <form action="{{ url_for('admin.saveQuestion') }}" method="POST" id="questionForm" enctype="multipart/form-data">
+            <form action="{{ url_for('admin.newQuestion') }}" method="POST" id="questionForm" enctype="multipart/form-data">
 
                 <label class="block mt-4" for="question">Frage:</label>
                 <input class="w-full p-2 border rounded" type="text" id="question" name="question" required>
