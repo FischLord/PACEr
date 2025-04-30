@@ -1,4 +1,8 @@
-// Validierung des Formulars
+// Client-seitige Validierung der maximalen Streckenlänge
+const MAX_LENGTH = 100000; // 100 km in Metern
+
+// === pacer.js ===
+// Validierung des Formulars inklusive Max Length
 document
     .getElementById("form_calculator")
     .addEventListener("submit", function (event) {
@@ -7,31 +11,34 @@ document
         var laengeError = document.getElementById("laenge-error");
         var bestzeitError = document.getElementById("bestzeit-error");
 
-        var laengeValue = parseInt(laengeInput.value);
-        var kmhValue = parseInt(kmhInput.value);
+        var laengeValue = parseInt(laengeInput.value, 10);
+        var kmhValue = parseInt(kmhInput.value, 10);
 
         // Überprüfung der Streckenlänge
-        if (isNaN(laengeValue) || laengeValue <= 0) {
-            event.preventDefault(); // Verhindert das Absenden des Formulars
-            laengeError.classList.remove("hidden"); // Zeigt den Fehler an
+        if (isNaN(laengeValue) || laengeValue <= 0 || laengeValue > MAX_LENGTH) {
+            event.preventDefault();
+            laengeError.textContent = laengeValue > MAX_LENGTH
+                ? `Maximale Streckenlänge ${MAX_LENGTH} m überschritten.`
+                : "Es sollte eine positive ganze Zahl größer als 0 m sein.";
+            laengeError.classList.remove("hidden");
         } else {
-            laengeError.classList.add("hidden"); // Versteckt den Fehler
+            laengeError.classList.add("hidden");
         }
 
         // Überprüfung des Tempos
         if (isNaN(kmhValue) || kmhValue < 0) {
-            event.preventDefault(); // Verhindert das Absenden des Formulars
-            bestzeitError.classList.remove("hidden"); // Zeigt den Fehler an
+            event.preventDefault();
+            bestzeitError.classList.remove("hidden");
         } else {
-            bestzeitError.classList.add("hidden"); // Versteckt den Fehler
+            bestzeitError.classList.add("hidden");
         }
     });
 
-// Dynamische Auswahl der km/h Optionen
+// Dynamische Auswahl der km/h Optionen bleibt unverändert
 function updateKmhOptions(selectedValue) {
     var tempoInputField = document.getElementById("tempoInputField");
     var kmhSelect = document.getElementById("kmh");
-    kmhSelect.innerHTML = ""; // Clear existing options
+    kmhSelect.innerHTML = "";
 
     if (selectedValue === "hindernisstrecke") {
         addKmhOptions(8, 14);
@@ -41,15 +48,7 @@ function updateKmhOptions(selectedValue) {
         addKmhOptions(3, 7);
     }
 
-    if (
-        selectedValue === "hindernisstrecke" ||
-        selectedValue === "wegstrecke" ||
-        selectedValue === "schrittstrecke"
-    ) {
-        tempoInputField.style.display = "block";
-    } else {
-        tempoInputField.style.display = "none";
-    }
+    tempoInputField.style.display = (selectedValue ? "block" : "none");
 }
 
 function addKmhOptions(start, end) {

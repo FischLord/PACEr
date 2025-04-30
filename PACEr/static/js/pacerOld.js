@@ -1,17 +1,23 @@
+// === pacerOld.js ===
+const MAX_LENGTH_OLD = 100000;
+
 function validateInput(input, errorDiv) {
-    if (!Number.isInteger(Number(input.value)) || Number(input.value) <= 0) {
+    var value = Number(input.value);
+    if (!Number.isInteger(value) || value <= 0 || value > MAX_LENGTH_OLD) {
         errorDiv.innerHTML =
-            "Es sollte eine positive ganze Zahl die größer als 0m ist angegeben werden.";
+            value > MAX_LENGTH_OLD ?
+            `Maximale Streckenlänge ${MAX_LENGTH_OLD} m überschritten.` :
+            "Es sollte eine positive ganze Zahl größer als 0 m sein.";
         errorDiv.classList.remove("hidden");
         errorDiv.classList.add("block");
         input.classList.add("border-red-600");
-        document.getElementById("submit-button").disabled = true; // disable submit button
+        document.getElementById("submit-button").disabled = true;
         return false;
     } else {
         errorDiv.classList.remove("block");
         errorDiv.classList.add("hidden");
         input.classList.remove("border-red-600");
-        document.getElementById("submit-button").disabled = false; // enable submit button
+        document.getElementById("submit-button").disabled = false;
         return true;
     }
 }
