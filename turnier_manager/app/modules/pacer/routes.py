@@ -83,6 +83,111 @@ def calculate():
         return redirect(url_for('pacer.calculator'))
 
 
+@bp.route('/pacer/calculate-multi', methods=['POST'])
+def calculate_multi():
+    """Process multi-track calculation (Wegstrecke + optional Hindernis + optional Schritt)"""
+    try:
+        results = []
+
+        # Wegstrecke (required)
+        weg_distance = int(request.form.get('weg_distance', 0))
+        weg_speed = float(request.form.get('weg_speed', 14))
+
+        if weg_distance <= 0 or weg_distance > 100000:
+            flash('Wegstrecke: Distanz muss zwischen 1 und 100.000 Metern liegen.', 'error')
+            return redirect(url_for('pacer.calculator'))
+
+        weg_times = services.calculate_pace(weg_distance, weg_speed, TrackType.WEGSTRECKE)
+        weg_breakdown = services.generate_pace_breakdown(
+            weg_distance,
+            weg_times['bz_seconds'],
+            weg_times['ez_seconds'],
+            weg_times['hz_seconds']
+        )
+        results.append({
+            'type': 'wegstrecke',
+            'label': 'Wegstrecke',
+            'color': 'blue',
+            'distance_meters': weg_distance,
+            'distance_km': round(weg_distance / 1000, 2),
+            'speed_kmh': weg_speed,
+            'bz': services.format_time(weg_times['bz_seconds']),
+            'ez': services.format_time(weg_times['ez_seconds']),
+            'hz': services.format_time(weg_times['hz_seconds']),
+            'times': weg_times,
+            'breakdown': weg_breakdown
+        })
+
+        # Hindernisstrecke (optional)
+        if request.form.get('include_hindernis'):
+            hindernis_distance = int(request.form.get('hindernis_distance', 0))
+            hindernis_speed = float(request.form.get('hindernis_speed', 13))
+
+            if hindernis_distance > 0:
+                hindernis_times = services.calculate_pace(hindernis_distance, hindernis_speed, TrackType.HINDERNISSTRECKE)
+                hindernis_breakdown = services.generate_pace_breakdown(
+                    hindernis_distance,
+                    hindernis_times['bz_seconds'],
+                    hindernis_times['ez_seconds'],
+                    hindernis_times['hz_seconds']
+                )
+                results.append({
+                    'type': 'hindernisstrecke',
+                    'label': 'Hindernisstrecke',
+                    'color': 'amber',
+                    'distance_meters': hindernis_distance,
+                    'distance_km': round(hindernis_distance / 1000, 2),
+                    'speed_kmh': hindernis_speed,
+                    'bz': services.format_time(hindernis_times['bz_seconds']),
+                    'ez': services.format_time(hindernis_times['ez_seconds']),
+                    'hz': services.format_time(hindernis_times['hz_seconds']),
+                    'times': hindernis_times,
+                    'breakdown': hindernis_breakdown
+                })
+
+        # Schrittstrecke (optional)
+        if request.form.get('include_schritt'):
+            schritt_distance = int(request.form.get('schritt_distance', 0))
+            schritt_speed = float(request.form.get('schritt_speed', 6))
+
+            if schritt_distance > 0:
+                schritt_times = services.calculate_pace(schritt_distance, schritt_speed, TrackType.SCHRITTSTRECKE)
+                schritt_breakdown = services.generate_pace_breakdown(
+                    schritt_distance,
+                    schritt_times['bz_seconds'],
+                    schritt_times['ez_seconds'],
+                    schritt_times['hz_seconds']
+                )
+                results.append({
+                    'type': 'schrittstrecke',
+                    'label': 'Schrittstrecke',
+                    'color': 'green',
+                    'distance_meters': schritt_distance,
+                    'distance_km': round(schritt_distance / 1000, 2),
+                    'speed_kmh': schritt_speed,
+                    'bz': services.format_time(schritt_times['bz_seconds']),
+                    'ez': services.format_time(schritt_times['ez_seconds']),
+                    'hz': services.format_time(schritt_times['hz_seconds']),
+                    'times': schritt_times,
+                    'breakdown': schritt_breakdown
+                })
+
+        tournaments = Tournament.query.order_by(Tournament.date.desc()).all()
+
+        return render_template(
+            'pages/pacer/result_multi.html',
+            results=results,
+            tournaments=tournaments
+        )
+
+    except ValueError as e:
+        flash(f'Ungültige Eingabe: {str(e)}', 'error')
+        return redirect(url_for('pacer.calculator'))
+    except Exception as e:
+        flash('Ein Fehler ist aufgetreten. Bitte versuche es erneut.', 'error')
+        return redirect(url_for('pacer.calculator'))
+
+
 @bp.route('/pacer/save', methods=['POST'])
 def save():
     """Save calculation to database (optionally public)"""

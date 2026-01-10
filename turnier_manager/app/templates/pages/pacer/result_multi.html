@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Ergebnis - PACEr{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-lg px-4 py-6" x-data="{ activeTab: 0 }">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <a href="{{ url_for('pacer.calculator') }}"
+           class="flex items-center text-gray-600 hover:text-gray-900">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Zurück
+        </a>
+        <h1 class="text-xl font-bold text-gray-900">Ergebnis</h1>
+        <div class="w-16"></div>
+    </div>
+
+    <!-- Tab Navigation (if multiple tracks) -->
+    {% if results|length > 1 %}
+    <div class="flex rounded-xl bg-gray-100 p-1 mb-4">
+        {% for result in results %}
+        <button @click="activeTab = {{ loop.index0 }}"
+                :class="activeTab === {{ loop.index0 }} ? 'bg-white shadow text-gray-900' : 'text-gray-600'"
+                class="flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all">
+            {{ result.label[:3] }}
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% for result in results %}
+    <div x-show="activeTab === {{ loop.index0 }}" {% if loop.index0 != 0 %}x-cloak{% endif %}>
+
+        <!-- Track Info Header -->
+        <div class="bg-{{ result.color }}-50 rounded-2xl p-4 mb-4 border border-{{ result.color }}-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-bold text-{{ result.color }}-900 text-lg">{{ result.label }}</h2>
+                    <p class="text-{{ result.color }}-700 text-sm">{{ result.distance_meters }} m &middot; {{ result.speed_kmh }} km/h</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-{{ result.color }}-600 uppercase font-semibold">Gesamt</div>
+                    <div class="text-2xl font-bold text-{{ result.color }}-900">{{ result.ez.formatted }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Summary Cards -->
+        <div class="grid grid-cols-3 gap-2 mb-6">
+            {% if result.bz.formatted %}
+            <div class="bg-green-500 rounded-xl p-3 text-center text-white">
+                <div class="text-xs font-medium opacity-90">BZ</div>
+                <div class="text-2xl font-bold">{{ result.bz.formatted }}</div>
+            </div>
+            {% else %}
+            <div class="bg-gray-200 rounded-xl p-3 text-center text-gray-500">
+                <div class="text-xs font-medium">BZ</div>
+                <div class="text-lg font-bold">-</div>
+            </div>
+            {% endif %}
+            <div class="bg-amber-500 rounded-xl p-3 text-center text-white">
+                <div class="text-xs font-medium opacity-90">EZ</div>
+                <div class="text-2xl font-bold">{{ result.ez.formatted }}</div>
+            </div>
+            <div class="bg-red-500 rounded-xl p-3 text-center text-white">
+                <div class="text-xs font-medium opacity-90">HZ</div>
+                <div class="text-2xl font-bold">{{ result.hz.formatted }}</div>
+            </div>
+        </div>
+
+        <!-- Pace Table - Mobile Optimized (Cards instead of table) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+            <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                <h3 class="font-semibold text-gray-900">Zeittabelle</h3>
+            </div>
+
+            <!-- Table Header (sticky) -->
+            <div class="grid grid-cols-4 text-center text-xs font-bold uppercase py-2 bg-gray-100 border-b sticky top-0">
+                <div class="text-gray-500">Meter</div>
+                {% if result.bz.formatted %}
+                <div class="text-green-600">BZ</div>
+                {% endif %}
+                <div class="text-amber-600 {% if not result.bz.formatted %}col-span-2{% endif %}">EZ</div>
+                <div class="text-red-600">HZ</div>
+            </div>
+
+            <!-- Table Rows -->
+            <div class="divide-y divide-gray-100 max-h-[50vh] overflow-y-auto">
+                {% for i in range(result.breakdown.ez | length) %}
+                <div class="grid grid-cols-4 text-center py-3 {% if loop.last %}bg-gray-50 font-bold{% else %}hover:bg-gray-50{% endif %}">
+                    <div class="text-gray-900 font-semibold text-lg">
+                        {{ result.breakdown.ez[i].distance_m }}
+                    </div>
+                    {% if result.bz.formatted and result.breakdown.bz %}
+                    <div class="text-green-600 font-mono text-lg">
+                        {{ result.breakdown.bz[i].time_formatted }}
+                    </div>
+                    {% endif %}
+                    <div class="text-amber-600 font-mono text-lg {% if not result.bz.formatted %}col-span-2{% endif %}">
+                        {{ result.breakdown.ez[i].time_formatted }}
+                    </div>
+                    <div class="text-red-600 font-mono text-lg">
+                        {{ result.breakdown.hz[i].time_formatted }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Action Buttons -->
+    <div class="space-y-3">
+        <!-- PDF Export Button -->
+        <button onclick="window.print()"
+                class="w-full flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-6 py-4 text-lg font-bold text-white
+                       hover:bg-gray-800 active:scale-[0.98] transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+            Drucken / PDF
+        </button>
+
+        <!-- New Calculation -->
+        <a href="{{ url_for('pacer.calculator') }}"
+           class="w-full flex items-center justify-center gap-2 rounded-xl border-2 border-gray-300 bg-white px-6 py-4 text-lg font-bold text-gray-700
+                  hover:bg-gray-50 active:scale-[0.98] transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Neue Berechnung
+        </a>
+    </div>
+</div>
+
+<!-- Print Styles -->
+<style>
+@media print {
+    /* Hide navigation and buttons when printing */
+    nav, footer, button, a[href="{{ url_for('pacer.calculator') }}"] {
+        display: none !important;
+    }
+
+    /* Remove max-height scroll on table */
+    .max-h-\[50vh\] {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* Show all tabs */
+    [x-cloak], [x-show] {
+        display: block !important;
+    }
+
+    /* Better print layout */
+    body {
+        font-size: 14pt;
+    }
+
+    .rounded-2xl, .rounded-xl {
+        border-radius: 0 !important;
+    }
+
+    .shadow-sm {
+        box-shadow: none !important;
+    }
+
+    /* Ensure colors print */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Page breaks */
+    .mb-6 {
+        page-break-inside: avoid;
+    }
+}
+</style>
+{% endblock %}

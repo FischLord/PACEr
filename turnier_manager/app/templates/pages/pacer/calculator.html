@@ -2,99 +2,184 @@
 
 {% block title %}PACEr - Pace Rechner{% endblock %}
 
+{% block head %}
+<!-- Alpine.js Collapse Plugin -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}
+
 {% block content %}
-<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8">
+<div class="mx-auto max-w-lg px-4 py-6">
+    <!-- Header -->
+    <div class="text-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">PACEr</h1>
-        <p class="mt-1 text-gray-600">Berechne Bestzeit, Erlaubte Zeit und Höchstzeit für deine Strecke.</p>
+        <p class="text-sm text-gray-600 mt-1">Pace-Berechnung für Marathon</p>
     </div>
 
-    <form action="{{ url_for('pacer.calculate') }}" method="POST"
+    <form action="{{ url_for('pacer.calculate_multi') }}" method="POST"
           x-data="{
-              trackType: 'wegstrecke',
-              speedOptions: {{ speed_options | tojson }},
-              get currentSpeeds() {
-                  return this.speedOptions[this.trackType] || [];
-              }
+              includeHindernis: false,
+              includeSchritt: false
           }"
-          class="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
+          class="space-y-4">
 
-        <!-- Distance Input -->
-        <div class="mb-6">
-            <label for="distance" class="block text-sm font-medium text-gray-700 mb-2">
-                Streckenlänge (in Metern)
-            </label>
-            <input type="number" name="distance" id="distance"
-                   min="1" max="100000" required
-                   placeholder="z.B. 4500"
-                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-lg py-3 px-4 border">
-            <p class="mt-1 text-sm text-gray-500">Maximal 100.000 Meter (100 km)</p>
-        </div>
-
-        <!-- Track Type -->
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-                Streckenart
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {% for value, label in track_types %}
-                <label class="relative">
-                    <input type="radio" name="track_type" value="{{ value }}"
-                           x-model="trackType"
-                           {% if loop.first %}checked{% endif %}
-                           class="peer sr-only">
-                    <div class="cursor-pointer rounded-lg border border-gray-300 bg-white p-4 text-center
-                                peer-checked:border-primary-500 peer-checked:bg-primary-50 peer-checked:ring-1 peer-checked:ring-primary-500
-                                hover:border-gray-400 transition-colors">
-                        <span class="text-sm font-medium text-gray-900">{{ label }}</span>
+        <!-- ========== WEGSTRECKE ========== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-blue-50 px-4 py-3 border-b border-blue-100">
+                <h2 class="font-semibold text-blue-900 flex items-center">
+                    <span class="w-7 h-7 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center mr-2 font-bold">1</span>
+                    Wegstrecke
+                </h2>
+            </div>
+            <div class="p-4 space-y-4">
+                <div>
+                    <label for="weg_distance" class="block text-sm font-medium text-gray-700 mb-2">
+                        Länge in Metern
+                    </label>
+                    <input type="number" name="weg_distance" id="weg_distance"
+                           inputmode="numeric" pattern="[0-9]*"
+                           min="100" max="100000" required
+                           placeholder="z.B. 4500"
+                           class="block w-full rounded-xl border-2 border-gray-200 text-xl font-semibold py-4 px-4 text-center
+                                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Geschwindigkeit km/h
+                    </label>
+                    <div class="grid grid-cols-4 gap-2">
+                        {% for speed in [12, 13, 14, 15] %}
+                        <label class="relative">
+                            <input type="radio" name="weg_speed" value="{{ speed }}"
+                                   {% if speed == 14 %}checked{% endif %}
+                                   class="peer sr-only">
+                            <div class="cursor-pointer rounded-xl border-2 border-gray-200 bg-white py-4 text-center text-xl font-bold
+                                        peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white
+                                        active:scale-95 transition-all shadow-sm">
+                                {{ speed }}
+                            </div>
+                        </label>
+                        {% endfor %}
                     </div>
-                </label>
-                {% endfor %}
+                </div>
             </div>
         </div>
 
-        <!-- Speed Selection -->
-        <div class="mb-6">
-            <label for="speed" class="block text-sm font-medium text-gray-700 mb-2">
-                Geschwindigkeit (km/h)
+        <!-- ========== HINDERNISSTRECKE (Optional) ========== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <label class="flex items-center justify-between px-4 py-3 cursor-pointer bg-amber-50 border-b border-amber-100"
+                   @click="if(!includeHindernis) $nextTick(() => $refs.hindernisInput?.focus())">
+                <span class="font-semibold text-amber-900 flex items-center">
+                    <span class="w-7 h-7 rounded-full bg-amber-500 text-white text-sm flex items-center justify-center mr-2 font-bold">2</span>
+                    Hindernisstrecke
+                </span>
+                <div class="relative" @click.stop>
+                    <input type="checkbox" x-model="includeHindernis" name="include_hindernis"
+                           class="sr-only peer">
+                    <div class="w-12 h-7 bg-gray-300 rounded-full peer-checked:bg-amber-500 transition-colors cursor-pointer"
+                         @click="includeHindernis = !includeHindernis"></div>
+                    <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow peer-checked:translate-x-5 transition-transform pointer-events-none"></div>
+                </div>
             </label>
-            <select name="speed" id="speed" required
-                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-lg py-3 px-4 border">
-                <template x-for="option in currentSpeeds" :key="option.value">
-                    <option :value="option.value" x-text="option.label"></option>
-                </template>
-            </select>
+            <div x-show="includeHindernis" x-collapse class="p-4 space-y-4">
+                <div>
+                    <label for="hindernis_distance" class="block text-sm font-medium text-gray-700 mb-2">
+                        Länge in Metern
+                    </label>
+                    <input type="number" name="hindernis_distance" id="hindernis_distance"
+                           x-ref="hindernisInput"
+                           inputmode="numeric" pattern="[0-9]*"
+                           min="100" max="100000"
+                           placeholder="z.B. 800"
+                           class="block w-full rounded-xl border-2 border-gray-200 text-xl font-semibold py-4 px-4 text-center
+                                  focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Geschwindigkeit km/h
+                    </label>
+                    <div class="grid grid-cols-4 gap-2">
+                        {% for speed in [12, 13, 14, 15] %}
+                        <label class="relative">
+                            <input type="radio" name="hindernis_speed" value="{{ speed }}"
+                                   {% if speed == 13 %}checked{% endif %}
+                                   class="peer sr-only">
+                            <div class="cursor-pointer rounded-xl border-2 border-gray-200 bg-white py-4 text-center text-xl font-bold
+                                        peer-checked:border-amber-500 peer-checked:bg-amber-500 peer-checked:text-white
+                                        active:scale-95 transition-all shadow-sm">
+                                {{ speed }}
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Info Box -->
-        <div class="mb-6 rounded-md bg-blue-50 p-4">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                    </svg>
+        <!-- ========== SCHRITTSTRECKE (Optional) ========== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <label class="flex items-center justify-between px-4 py-3 cursor-pointer bg-green-50 border-b border-green-100"
+                   @click="if(!includeSchritt) $nextTick(() => $refs.schrittInput?.focus())">
+                <span class="font-semibold text-green-900 flex items-center">
+                    <span class="w-7 h-7 rounded-full bg-green-600 text-white text-sm flex items-center justify-center mr-2 font-bold">3</span>
+                    Schrittstrecke
+                </span>
+                <div class="relative" @click.stop>
+                    <input type="checkbox" x-model="includeSchritt" name="include_schritt"
+                           class="sr-only peer">
+                    <div class="w-12 h-7 bg-gray-300 rounded-full peer-checked:bg-green-600 transition-colors cursor-pointer"
+                         @click="includeSchritt = !includeSchritt"></div>
+                    <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow peer-checked:translate-x-5 transition-transform pointer-events-none"></div>
                 </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-blue-800">Berechnungsformeln</h3>
-                    <div class="mt-2 text-sm text-blue-700">
-                        <ul class="list-disc pl-5 space-y-1">
-                            <li><strong>EZ</strong> = Distanz / Geschwindigkeit</li>
-                            <li x-show="trackType === 'wegstrecke'"><strong>HZ</strong> = EZ × 1.2 | <strong>BZ</strong> = EZ - 2 Min</li>
-                            <li x-show="trackType === 'hindernisstrecke'"><strong>HZ</strong> = EZ × 2 | <strong>BZ</strong> = EZ - 3 Min</li>
-                            <li x-show="trackType === 'schrittstrecke'"><strong>HZ</strong> = EZ × 2 | <strong>BZ</strong> = keine</li>
-                        </ul>
+            </label>
+            <div x-show="includeSchritt" x-collapse class="p-4 space-y-4">
+                <div>
+                    <label for="schritt_distance" class="block text-sm font-medium text-gray-700 mb-2">
+                        Länge in Metern
+                    </label>
+                    <input type="number" name="schritt_distance" id="schritt_distance"
+                           x-ref="schrittInput"
+                           inputmode="numeric" pattern="[0-9]*"
+                           min="100" max="100000"
+                           placeholder="z.B. 200"
+                           class="block w-full rounded-xl border-2 border-gray-200 text-xl font-semibold py-4 px-4 text-center
+                                  focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Geschwindigkeit km/h
+                    </label>
+                    <div class="grid grid-cols-2 gap-3">
+                        {% for speed in [6, 7] %}
+                        <label class="relative">
+                            <input type="radio" name="schritt_speed" value="{{ speed }}"
+                                   {% if speed == 6 %}checked{% endif %}
+                                   class="peer sr-only">
+                            <div class="cursor-pointer rounded-xl border-2 border-gray-200 bg-white py-4 text-center text-xl font-bold
+                                        peer-checked:border-green-600 peer-checked:bg-green-600 peer-checked:text-white
+                                        active:scale-95 transition-all shadow-sm">
+                                {{ speed }}
+                            </div>
+                        </label>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Submit Button -->
-        <div>
-            <button type="submit"
-                    class="w-full rounded-md bg-primary-600 px-4 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
-                Berechnen
-            </button>
-        </div>
+        <button type="submit"
+                class="w-full rounded-2xl bg-blue-600 px-6 py-5 text-xl font-bold text-white shadow-lg
+                       hover:bg-blue-500 active:scale-[0.98] transition-all
+                       focus:outline-none focus:ring-4 focus:ring-blue-300">
+            Berechnen
+        </button>
     </form>
+
+    <!-- Info Link -->
+    <div class="mt-6 text-center">
+        <a href="{{ url_for('main.info') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
+            Wie funktioniert die Berechnung?
+        </a>
+    </div>
 </div>
 {% endblock %}
