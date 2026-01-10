@@ -1,0 +1,18 @@
+# TurnierManager Dependencies
+
+# Core Flask
+Flask>=3.0.0
+Werkzeug>=3.0.0
+
+# Database
+Flask-SQLAlchemy>=3.1.0
+Flask-Migrate>=4.0.0
+
+# Forms & Security (optional, for CSRF protection)
+# Flask-WTF>=1.2.0
+
+# Production server
+gunicorn>=21.0.0
+
+# Environment variables
+python-dotenv>=1.0.0

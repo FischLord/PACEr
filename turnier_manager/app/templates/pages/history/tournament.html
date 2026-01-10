@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tournament.name }} - TurnierManager{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <a href="{{ url_for('history.index') }}" class="text-primary-600 hover:text-primary-500 text-sm font-medium">
+            &larr; Zurück zum Verlauf
+        </a>
+        <h1 class="text-2xl font-bold text-gray-900 mt-2">{{ tournament.name }}</h1>
+        <div class="flex items-center space-x-4 mt-1 text-sm text-gray-500">
+            {% if tournament.location %}
+            <span>{{ tournament.location }}</span>
+            {% endif %}
+            {% if tournament.date %}
+            <span>{{ tournament.date.strftime('%d.%m.%Y') }}</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if calculations %}
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
+        <ul class="divide-y divide-gray-200">
+            {% for calc in calculations %}
+            <li>
+                <a href="{{ url_for('history.detail', calc_id=calc.id) }}" class="block hover:bg-gray-50 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-3">
+                                {% if calc.class_name %}
+                                <span class="inline-flex items-center rounded-full bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800">
+                                    {{ calc.class_name }}
+                                </span>
+                                {% endif %}
+                                {% if calc.test_name %}
+                                <span class="font-medium text-gray-900">{{ calc.test_name }}</span>
+                                {% endif %}
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">
+                                {{ calc.distance_meters }}m &middot;
+                                {{ calc.track_type | capitalize }} &middot;
+                                {{ calc.created_at.strftime('%d.%m.%Y') }}
+                            </p>
+                        </div>
+                        <div class="flex space-x-6 text-sm">
+                            {% if calc.bz_formatted %}
+                            <div class="text-center">
+                                <div class="font-semibold text-green-600">{{ calc.bz_formatted }}</div>
+                                <div class="text-xs text-gray-400">BZ</div>
+                            </div>
+                            {% endif %}
+                            <div class="text-center">
+                                <div class="font-semibold text-amber-600">{{ calc.ez_formatted }}</div>
+                                <div class="text-xs text-gray-400">EZ</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-semibold text-red-600">{{ calc.hz_formatted }}</div>
+                                <div class="text-xs text-gray-400">HZ</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if pagination.pages > 1 %}
+    <div class="mt-6 flex justify-center">
+        <nav class="flex items-center space-x-2">
+            {% if pagination.has_prev %}
+            <a href="{{ url_for('history.by_tournament', tournament_id=tournament.id, page=pagination.prev_num) }}"
+               class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+                &larr;
+            </a>
+            {% endif %}
+            <span class="text-sm text-gray-500">Seite {{ pagination.page }}/{{ pagination.pages }}</span>
+            {% if pagination.has_next %}
+            <a href="{{ url_for('history.by_tournament', tournament_id=tournament.id, page=pagination.next_num) }}"
+               class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+                &rarr;
+            </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-12">
+        <p class="text-gray-500">Noch keine Berechnungen für dieses Turnier.</p>
+        <a href="{{ url_for('pacer.calculator') }}" class="mt-4 inline-block text-primary-600 hover:text-primary-500 font-medium">
+            Erste Berechnung erstellen &rarr;
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

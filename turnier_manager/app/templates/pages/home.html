@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}TurnierManager - Pace Rechner für Fahrsport{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+            Turnier<span class="text-primary-600">Manager</span>
+        </h1>
+        <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            Präzise Pace-Berechnung für Fahrsport-Marathons.
+            Berechne Bestzeit, Erlaubte Zeit und Höchstzeit für deine Strecken.
+        </p>
+        <div class="mt-8">
+            <a href="{{ url_for('pacer.calculator') }}"
+               class="rounded-md bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                Jetzt berechnen
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Stats / Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+            <div class="text-3xl font-bold text-primary-600 mb-2">BZ / EZ / HZ</div>
+            <p class="text-gray-600">Alle drei Zeiten auf einen Blick</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+            <div class="text-3xl font-bold text-green-600 mb-2">Pro Kilometer</div>
+            <p class="text-gray-600">Detaillierte Pace-Tabelle</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+            <div class="text-3xl font-bold text-amber-600 mb-2">Teilen</div>
+            <p class="text-gray-600">Berechnungen öffentlich teilen</p>
+        </div>
+    </div>
+
+    <!-- Recent Calculations -->
+    {% if recent_calculations %}
+    <div class="mb-12">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">Aktuelle Berechnungen</h2>
+            <a href="{{ url_for('history.index') }}" class="text-primary-600 hover:text-primary-500 text-sm font-medium">
+                Alle anzeigen &rarr;
+            </a>
+        </div>
+        <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
+            <ul class="divide-y divide-gray-200">
+                {% for calc in recent_calculations %}
+                <li>
+                    <a href="{{ url_for('history.detail', calc_id=calc.id) }}" class="block hover:bg-gray-50 px-4 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center space-x-3">
+                                    {% if calc.tournament %}
+                                    <span class="font-medium text-gray-900">{{ calc.tournament.name }}</span>
+                                    {% endif %}
+                                    {% if calc.class_name %}
+                                    <span class="inline-flex items-center rounded-full bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800">
+                                        {{ calc.class_name }}
+                                    </span>
+                                    {% endif %}
+                                    {% if calc.test_name %}
+                                    <span class="text-gray-500 text-sm">{{ calc.test_name }}</span>
+                                    {% endif %}
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    {{ calc.distance_meters }}m &middot;
+                                    {{ calc.track_type | capitalize }}
+                                </p>
+                            </div>
+                            <div class="flex space-x-4 text-sm">
+                                {% if calc.bz_formatted %}
+                                <div class="text-center">
+                                    <div class="font-semibold text-green-600">{{ calc.bz_formatted }}</div>
+                                    <div class="text-xs text-gray-400">BZ</div>
+                                </div>
+                                {% endif %}
+                                <div class="text-center">
+                                    <div class="font-semibold text-amber-600">{{ calc.ez_formatted }}</div>
+                                    <div class="text-xs text-gray-400">EZ</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="font-semibold text-red-600">{{ calc.hz_formatted }}</div>
+                                    <div class="text-xs text-gray-400">HZ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Active Tournaments -->
+    {% if active_tournaments %}
+    <div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Aktuelle Turniere</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for tournament in active_tournaments %}
+            <a href="{{ url_for('history.by_tournament', tournament_id=tournament.id) }}"
+               class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:border-primary-300 transition-colors">
+                <h3 class="font-medium text-gray-900">{{ tournament.name }}</h3>
+                {% if tournament.location %}
+                <p class="text-sm text-gray-500">{{ tournament.location }}</p>
+                {% endif %}
+                {% if tournament.date %}
+                <p class="text-sm text-gray-400 mt-1">{{ tournament.date.strftime('%d.%m.%Y') }}</p>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

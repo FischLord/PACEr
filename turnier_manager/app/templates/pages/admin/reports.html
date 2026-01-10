@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Bug Reports - Admin{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Bug Reports</h1>
+            <p class="mt-1 text-gray-600">Gemeldete Probleme verwalten</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="text-primary-600 hover:text-primary-500 text-sm font-medium">
+            &larr; Dashboard
+        </a>
+    </div>
+
+    <!-- Filter -->
+    <div class="mb-6">
+        <div class="flex space-x-2">
+            <a href="{{ url_for('admin.reports') }}"
+               class="px-3 py-2 rounded-md text-sm font-medium {% if not current_status %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+                Alle
+            </a>
+            {% for value, label in statuses %}
+            <a href="{{ url_for('admin.reports', status=value) }}"
+               class="px-3 py-2 rounded-md text-sm font-medium {% if current_status == value %}bg-primary-100 text-primary-700{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
+        <ul class="divide-y divide-gray-200">
+            {% for report in reports %}
+            <li>
+                <a href="{{ url_for('admin.view_report', report_id=report.id) }}" class="block hover:bg-gray-50 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="flex items-center space-x-3">
+                                <span class="font-medium text-gray-900">{{ report.name }}</span>
+                                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium
+                                    {% if report.status == 'open' %}bg-red-100 text-red-800
+                                    {% elif report.status == 'in_progress' %}bg-amber-100 text-amber-800
+                                    {% else %}bg-green-100 text-green-800{% endif %}">
+                                    {{ dict(statuses).get(report.status, report.status) }}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1 line-clamp-1">{{ report.description }}</p>
+                        </div>
+                        <span class="text-sm text-gray-400">{{ report.created_at.strftime('%d.%m.%Y') }}</span>
+                    </div>
+                </a>
+            </li>
+            {% else %}
+            <li class="px-6 py-8 text-center text-gray-500">Keine Reports vorhanden</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Problem melden - TurnierManager{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">Problem melden</h1>
+        <p class="mt-2 text-gray-600">Hast du einen Bug gefunden oder einen Verbesserungsvorschlag?</p>
+    </div>
+
+    <form method="POST" class="bg-white shadow-sm rounded-lg border border-gray-200 p-6 space-y-6">
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Name *</label>
+            <input type="text" name="name" id="name" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3">
+        </div>
+
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">E-Mail (optional)</label>
+            <input type="email" name="email" id="email"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3">
+            <p class="mt-1 text-sm text-gray-500">Falls wir Rückfragen haben</p>
+        </div>
+
+        <div>
+            <label for="issue_type" class="block text-sm font-medium text-gray-700">Art des Problems</label>
+            <select name="issue_type" id="issue_type"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3">
+                <option value="">-- Bitte wählen --</option>
+                <option value="bug">Bug / Fehler</option>
+                <option value="feature">Feature-Wunsch</option>
+                <option value="calculation">Falsche Berechnung</option>
+                <option value="ui">Design / Darstellung</option>
+                <option value="other">Sonstiges</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Beschreibung *</label>
+            <textarea name="description" id="description" rows="5" required
+                      placeholder="Beschreibe das Problem so genau wie möglich..."
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3"></textarea>
+        </div>
+
+        <div>
+            <button type="submit"
+                    class="w-full rounded-md bg-primary-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">
+                Absenden
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

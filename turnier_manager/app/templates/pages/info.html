@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Info - TurnierManager{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+        <h1 class="text-3xl font-bold text-gray-900">Über TurnierManager</h1>
+        <p class="mt-4 text-lg text-gray-600">
+            Präzise Pace-Berechnung für Fahrsport-Marathons
+        </p>
+    </div>
+
+    <div class="prose prose-lg max-w-none">
+        <h2>Was ist PACEr?</h2>
+        <p>
+            PACEr (<strong>P</strong>räzise <strong>A</strong>bstands-<strong>C</strong>alculierung für ein <strong>E</strong>rfolgreiches <strong>R</strong>ennen)
+            ist ein Werkzeug zur Berechnung von Fahrzeiten im Fahrsport-Marathon.
+        </p>
+
+        <h2>Die drei Zeiten</h2>
+        <p>Im Fahrsport-Marathon gibt es drei wichtige Zeiten:</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 not-prose my-8">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                <h3 class="font-bold text-green-800 text-lg">Bestzeit (BZ)</h3>
+                <p class="text-green-700 mt-2">
+                    Die schnellste erlaubte Zeit. Wer schneller ist, erhält Strafpunkte.
+                </p>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+                <h3 class="font-bold text-amber-800 text-lg">Erlaubte Zeit (EZ)</h3>
+                <p class="text-amber-700 mt-2">
+                    Die Sollzeit basierend auf der vorgegebenen Geschwindigkeit.
+                </p>
+            </div>
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+                <h3 class="font-bold text-red-800 text-lg">Höchstzeit (HZ)</h3>
+                <p class="text-red-700 mt-2">
+                    Die maximale Zeit. Wer länger braucht, erhält Strafpunkte.
+                </p>
+            </div>
+        </div>
+
+        <h2>Streckenarten</h2>
+
+        <h3>Wegstrecke</h3>
+        <p>
+            Die normale Transferstrecke zwischen den Hindernissen. Hier gelten moderate Zeitvorgaben.
+        </p>
+        <ul>
+            <li>HZ = EZ × 1.2 (20% Aufschlag)</li>
+            <li>BZ = EZ - 2 Minuten</li>
+        </ul>
+
+        <h3>Hindernisstrecke</h3>
+        <p>
+            Die technisch anspruchsvollen Abschnitte durch die Hindernisse. Hier ist mehr Zeit erlaubt.
+        </p>
+        <ul>
+            <li>HZ = EZ × 2 (100% Aufschlag)</li>
+            <li>BZ = EZ - 3 Minuten</li>
+        </ul>
+
+        <h3>Schrittstrecke</h3>
+        <p>
+            Besondere Abschnitte, die im Schritt zu absolvieren sind. Hier gibt es keine Bestzeit.
+        </p>
+        <ul>
+            <li>HZ = EZ × 2</li>
+            <li>BZ = keine (Schritt ist Pflicht)</li>
+        </ul>
+
+        <h2>Öffentlicher Verlauf</h2>
+        <p>
+            Mit dem öffentlichen Verlauf können Berechnungen geteilt werden. So können andere Teilnehmer
+            eines Turniers schnell auf bereits berechnete Zeiten zugreifen und müssen nicht selbst rechnen.
+        </p>
+    </div>
+</div>
+{% endblock %}

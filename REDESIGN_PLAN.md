@@ -320,15 +320,18 @@ Error:       #EF4444 (Rot)
 
 ---
 
-## ❓ Offene Fragen
+## ✅ Entscheidungen (geklärt)
 
-1. **Benutzerkonten:** Sollen sich Nutzer registrieren können, oder reicht anonyme Nutzung mit optionalem Admin-Account?
+1. **Benutzerkonten:** Nur Admin-Accounts mit Hash-Login. Keine User-Registrierung, keine Personendaten. Einfach gehalten.
 
-2. **OCR-Umfang:** Welche Art von Dokumenten sollen erkannt werden? (Ausschreibungen, Startlisten, Ergebnislisten?)
+2. **OCR-Umfang:** Zeittabellen für PACEr-Berechnungen.
 
-3. **Hosting:** Wo soll die App gehostet werden? (PythonAnywhere, Heroku, eigener Server?)
+3. **Hosting:** Homelab auf Proxmox mit Nginx Proxy Manager davor.
 
-4. **Priorität:** Welches Feature ist am wichtigsten für den ersten Release?
+4. **Priorität:**
+   - **A (Hoch):** Neues UI + überarbeiteter Rechner
+   - **B (Mittel):** Öffentlicher Verlauf mit Turnier-Infos
+   - **C (Niedrig):** OCR-Funktion
 
 ---
 

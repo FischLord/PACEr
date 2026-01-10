@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}Ergebnis - PACEr{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Berechnung</h1>
+            <p class="mt-1 text-gray-600">
+                {{ result.distance_km }} km &middot; {{ result.track_type_label }} &middot; {{ result.speed_kmh }} km/h
+            </p>
+        </div>
+        <a href="{{ url_for('pacer.calculator') }}"
+           class="text-primary-600 hover:text-primary-500 font-medium">
+            &larr; Neue Berechnung
+        </a>
+    </div>
+
+    <!-- Time Results -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {% if result.bz.formatted %}
+        <div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+            <div class="text-sm font-medium text-green-800 mb-1">Bestzeit (BZ)</div>
+            <div class="text-4xl font-bold text-green-600">{{ result.bz.formatted }}</div>
+        </div>
+        {% endif %}
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center">
+            <div class="text-sm font-medium text-amber-800 mb-1">Erlaubte Zeit (EZ)</div>
+            <div class="text-4xl font-bold text-amber-600">{{ result.ez.formatted }}</div>
+        </div>
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <div class="text-sm font-medium text-red-800 mb-1">Höchstzeit (HZ)</div>
+            <div class="text-4xl font-bold text-red-600">{{ result.hz.formatted }}</div>
+        </div>
+    </div>
+
+    <!-- Pace Chart -->
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200 p-6 mb-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Pace-Verlauf</h2>
+        <div class="h-64">
+            <canvas id="paceChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Pace Table -->
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Pace-Tabelle</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Distanz</th>
+                        {% if result.bz.formatted %}
+                        <th class="px-6 py-3 text-center text-xs font-medium text-green-600 uppercase tracking-wider">BZ</th>
+                        {% endif %}
+                        <th class="px-6 py-3 text-center text-xs font-medium text-amber-600 uppercase tracking-wider">EZ</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-red-600 uppercase tracking-wider">HZ</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for i in range(result.breakdown.ez | length) %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ result.breakdown.ez[i].distance_m }} m
+                        </td>
+                        {% if result.bz.formatted and result.breakdown.bz %}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-green-600 font-medium">
+                            {{ result.breakdown.bz[i].time_formatted }}
+                        </td>
+                        {% endif %}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-amber-600 font-medium">
+                            {{ result.breakdown.ez[i].time_formatted }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-red-600 font-medium">
+                            {{ result.breakdown.hz[i].time_formatted }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Share Form -->
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Berechnung teilen</h2>
+        <form action="{{ url_for('pacer.save') }}" method="POST" x-data="{ isPublic: false }">
+            <!-- Hidden calculation data -->
+            <input type="hidden" name="distance" value="{{ result.distance_meters }}">
+            <input type="hidden" name="speed" value="{{ result.speed_kmh }}">
+            <input type="hidden" name="track_type" value="{{ result.track_type }}">
+            <input type="hidden" name="bz_seconds" value="{{ times.bz_seconds or '' }}">
+            <input type="hidden" name="ez_seconds" value="{{ times.ez_seconds }}">
+            <input type="hidden" name="hz_seconds" value="{{ times.hz_seconds }}">
+
+            <!-- Public toggle -->
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" name="is_public" x-model="isPublic"
+                           class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                    <span class="ml-2 text-sm text-gray-700">Öffentlich im Verlauf anzeigen</span>
+                </label>
+            </div>
+
+            <!-- Additional fields (shown when public) -->
+            <div x-show="isPublic" x-transition class="space-y-4 mb-4">
+                <div>
+                    <label for="tournament_id" class="block text-sm font-medium text-gray-700 mb-1">Turnier (optional)</label>
+                    <select name="tournament_id" id="tournament_id"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3">
+                        <option value="">-- Kein Turnier --</option>
+                        {% for tournament in tournaments %}
+                        <option value="{{ tournament.id }}">{{ tournament.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="class_name" class="block text-sm font-medium text-gray-700 mb-1">Klasse (optional)</label>
+                        <input type="text" name="class_name" id="class_name" placeholder="z.B. M, S, A"
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3">
+                    </div>
+                    <div>
+                        <label for="test_name" class="block text-sm font-medium text-gray-700 mb-1">Prüfung (optional)</label>
+                        <input type="text" name="test_name" id="test_name" placeholder="z.B. Marathon A"
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notizen (optional)</label>
+                    <textarea name="notes" id="notes" rows="2"
+                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border py-2 px-3"></textarea>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="rounded-md bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">
+                <span x-show="isPublic">Speichern & Teilen</span>
+                <span x-show="!isPublic">Speichern</span>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('paceChart').getContext('2d');
+
+    const labels = {{ result.breakdown.ez | map(attribute='distance_m') | list | tojson }};
+
+    const datasets = [
+        {
+            label: 'EZ',
+            data: {{ result.breakdown.ez | map(attribute='time_seconds') | list | tojson }},
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            fill: true,
+            tension: 0.1
+        },
+        {
+            label: 'HZ',
+            data: {{ result.breakdown.hz | map(attribute='time_seconds') | list | tojson }},
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            fill: true,
+            tension: 0.1
+        }
+    ];
+
+    {% if result.breakdown.bz %}
+    datasets.unshift({
+        label: 'BZ',
+        data: {{ result.breakdown.bz | map(attribute='time_seconds') | list | tojson }},
+        borderColor: '#22c55e',
+        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+        fill: true,
+        tension: 0.1
+    });
+    {% endif %}
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Distanz (m)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Zeit (Sekunden)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            const mins = Math.floor(value / 60);
+                            const secs = value % 60;
+                            return mins + ':' + String(secs).padStart(2, '0');
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

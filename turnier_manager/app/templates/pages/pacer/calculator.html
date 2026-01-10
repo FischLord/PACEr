@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}PACEr - Pace Rechner{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">PACEr</h1>
+        <p class="mt-1 text-gray-600">Berechne Bestzeit, Erlaubte Zeit und Höchstzeit für deine Strecke.</p>
+    </div>
+
+    <form action="{{ url_for('pacer.calculate') }}" method="POST"
+          x-data="{
+              trackType: 'wegstrecke',
+              speedOptions: {{ speed_options | tojson }},
+              get currentSpeeds() {
+                  return this.speedOptions[this.trackType] || [];
+              }
+          }"
+          class="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
+
+        <!-- Distance Input -->
+        <div class="mb-6">
+            <label for="distance" class="block text-sm font-medium text-gray-700 mb-2">
+                Streckenlänge (in Metern)
+            </label>
+            <input type="number" name="distance" id="distance"
+                   min="1" max="100000" required
+                   placeholder="z.B. 4500"
+                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-lg py-3 px-4 border">
+            <p class="mt-1 text-sm text-gray-500">Maximal 100.000 Meter (100 km)</p>
+        </div>
+
+        <!-- Track Type -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                Streckenart
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {% for value, label in track_types %}
+                <label class="relative">
+                    <input type="radio" name="track_type" value="{{ value }}"
+                           x-model="trackType"
+                           {% if loop.first %}checked{% endif %}
+                           class="peer sr-only">
+                    <div class="cursor-pointer rounded-lg border border-gray-300 bg-white p-4 text-center
+                                peer-checked:border-primary-500 peer-checked:bg-primary-50 peer-checked:ring-1 peer-checked:ring-primary-500
+                                hover:border-gray-400 transition-colors">
+                        <span class="text-sm font-medium text-gray-900">{{ label }}</span>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Speed Selection -->
+        <div class="mb-6">
+            <label for="speed" class="block text-sm font-medium text-gray-700 mb-2">
+                Geschwindigkeit (km/h)
+            </label>
+            <select name="speed" id="speed" required
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-lg py-3 px-4 border">
+                <template x-for="option in currentSpeeds" :key="option.value">
+                    <option :value="option.value" x-text="option.label"></option>
+                </template>
+            </select>
+        </div>
+
+        <!-- Info Box -->
+        <div class="mb-6 rounded-md bg-blue-50 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-blue-800">Berechnungsformeln</h3>
+                    <div class="mt-2 text-sm text-blue-700">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>EZ</strong> = Distanz / Geschwindigkeit</li>
+                            <li x-show="trackType === 'wegstrecke'"><strong>HZ</strong> = EZ × 1.2 | <strong>BZ</strong> = EZ - 2 Min</li>
+                            <li x-show="trackType === 'hindernisstrecke'"><strong>HZ</strong> = EZ × 2 | <strong>BZ</strong> = EZ - 3 Min</li>
+                            <li x-show="trackType === 'schrittstrecke'"><strong>HZ</strong> = EZ × 2 | <strong>BZ</strong> = keine</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit"
+                    class="w-full rounded-md bg-primary-600 px-4 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                Berechnen
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

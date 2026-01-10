@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TurnierManager{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js for interactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
+    {% block head %}{% endblock %}
+</head>
+<body class="h-full bg-gray-50" x-data="{ mobileMenuOpen: false }">
+    <div class="min-h-full">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm border-b border-gray-200">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 justify-between">
+                    <!-- Logo & Desktop Navigation -->
+                    <div class="flex">
+                        <div class="flex flex-shrink-0 items-center">
+                            <a href="{{ url_for('main.index') }}" class="text-xl font-bold text-primary-600">
+                                TurnierManager
+                            </a>
+                        </div>
+                        <div class="hidden sm:ml-8 sm:flex sm:space-x-4">
+                            <a href="{{ url_for('pacer.calculator') }}"
+                               class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium
+                                      {% if request.endpoint and 'pacer' in request.endpoint %}
+                                      border-primary-500 text-gray-900
+                                      {% else %}
+                                      border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700
+                                      {% endif %}">
+                                PACEr
+                            </a>
+                            <a href="{{ url_for('history.index') }}"
+                               class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium
+                                      {% if request.endpoint and 'history' in request.endpoint %}
+                                      border-primary-500 text-gray-900
+                                      {% else %}
+                                      border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700
+                                      {% endif %}">
+                                Verlauf
+                            </a>
+                            <a href="{{ url_for('main.info') }}"
+                               class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium
+                                      {% if request.endpoint == 'main.info' %}
+                                      border-primary-500 text-gray-900
+                                      {% else %}
+                                      border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700
+                                      {% endif %}">
+                                Info
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right side -->
+                    <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                        {% if session.get('is_admin') %}
+                        <a href="{{ url_for('admin.dashboard') }}"
+                           class="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">
+                            Admin
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <div class="flex items-center sm:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" type="button"
+                                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+                            <span class="sr-only">Menu</span>
+                            <svg x-show="!mobileMenuOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                            <svg x-show="mobileMenuOpen" x-cloak class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div x-show="mobileMenuOpen" x-cloak class="sm:hidden" x-transition>
+                <div class="space-y-1 pb-3 pt-2">
+                    <a href="{{ url_for('pacer.calculator') }}"
+                       class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium
+                              {% if request.endpoint and 'pacer' in request.endpoint %}
+                              border-primary-500 bg-primary-50 text-primary-700
+                              {% else %}
+                              border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700
+                              {% endif %}">
+                        PACEr
+                    </a>
+                    <a href="{{ url_for('history.index') }}"
+                       class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium
+                              {% if request.endpoint and 'history' in request.endpoint %}
+                              border-primary-500 bg-primary-50 text-primary-700
+                              {% else %}
+                              border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700
+                              {% endif %}">
+                        Verlauf
+                    </a>
+                    <a href="{{ url_for('main.info') }}"
+                       class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium
+                              {% if request.endpoint == 'main.info' %}
+                              border-primary-500 bg-primary-50 text-primary-700
+                              {% else %}
+                              border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700
+                              {% endif %}">
+                        Info
+                    </a>
+                    {% if session.get('is_admin') %}
+                    <a href="{{ url_for('admin.dashboard') }}"
+                       class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-primary-600 hover:border-gray-300 hover:bg-gray-50">
+                        Admin Dashboard
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4">
+            {% for category, message in messages %}
+            <div x-data="{ show: true }" x-show="show" x-transition
+                 class="rounded-md p-4 mb-2
+                        {% if category == 'error' %}bg-red-50 text-red-800
+                        {% elif category == 'success' %}bg-green-50 text-green-800
+                        {% else %}bg-blue-50 text-blue-800{% endif %}">
+                <div class="flex justify-between items-center">
+                    <p class="text-sm font-medium">{{ message }}</p>
+                    <button @click="show = false" class="ml-4">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
+                    <div class="mb-4 sm:mb-0">
+                        <span>&copy; {{ now().year if now is defined else '2024' }} TurnierManager</span>
+                    </div>
+                    <div class="flex space-x-6">
+                        <a href="{{ url_for('main.about') }}" class="hover:text-gray-700">Über uns</a>
+                        <a href="{{ url_for('main.impressum') }}" class="hover:text-gray-700">Impressum</a>
+                        <a href="{{ url_for('main.report_problem') }}" class="hover:text-gray-700">Problem melden</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
