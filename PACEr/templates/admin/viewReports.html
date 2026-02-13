@@ -6,23 +6,23 @@
         {% for date_group, reports_list in reports|groupby(attribute='created_at', default='') %}
         <div class="my-4 animate-slide-up">
             <h2 class="section-header mt-4 text-center">{{ date_group.strftime('%d.%m.%Y') if date_group else 'Unbekannt' }}</h2>
-            <hr class="border-gray-700 my-2">
+            <div class="accent-bar mx-auto mt-2 mb-4"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
                 {% for report in reports_list %}
                 <a href="/displayReport/{{ report.id }}"
-                   class="card p-4 hover:bg-gray-700 transition-colors duration-200 block">
+                   class="card-hover p-4 block">
                     <div class="flex items-center justify-between">
-                        <span class="text-gray-300">{{ report.vorname }} {{ report.name }}</span>
-                        <span class="text-gray-500 text-sm">{{ report.created_at.strftime('%H:%M') if report.created_at else '' }}</span>
+                        <span class="text-text-primary font-medium">{{ report.vorname }} {{ report.name }}</span>
+                        <span class="text-text-muted text-sm">{{ report.created_at.strftime('%H:%M') if report.created_at else '' }}</span>
                     </div>
-                    <p class="text-gray-500 text-sm mt-1 truncate">{{ report.issue[:80] }}{% if report.issue|length > 80 %}...{% endif %}</p>
+                    <p class="text-text-muted text-sm mt-1 truncate">{{ report.issue[:80] }}{% if report.issue|length > 80 %}...{% endif %}</p>
                 </a>
                 {% endfor %}
             </div>
         </div>
         {% endfor %}
     {% else %}
-        <p class="text-gray-500 text-center mt-8">Keine Reports vorhanden.</p>
+        <p class="text-text-muted text-center mt-8">Keine Reports vorhanden.</p>
     {% endif %}
 </div>
 {% endblock %}

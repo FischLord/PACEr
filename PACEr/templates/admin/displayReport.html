@@ -1,26 +1,26 @@
 {% extends "admin/adminTools.html" %}{% block adminContent %}
 <div class="container mx-auto px-4 py-8 animate-fade-in">
-    <h1 class="text-4xl font-bold text-orange-600 mb-4">Angezeigter Report</h1>
+    <h1 class="page-title mb-6">Angezeigter Report</h1>
     <div class="card">
         <div class="mb-4 flex flex-wrap gap-4">
             <div class="flex-1 min-w-[200px]">
-                <label class="block text-gray-500 text-sm mb-1">Name</label>
-                <p class="form-input bg-gray-700/50">{{ report.name }}</p>
+                <label class="form-label">Name</label>
+                <p class="form-input bg-surface-overlay/50">{{ report.name }}</p>
             </div>
             <div class="flex-1 min-w-[200px]">
-                <label class="block text-gray-500 text-sm mb-1">Vorname</label>
-                <p class="form-input bg-gray-700/50">{{ report.vorname }}</p>
+                <label class="form-label">Vorname</label>
+                <p class="form-input bg-surface-overlay/50">{{ report.vorname }}</p>
             </div>
         </div>
         <div class="mb-4">
-            <label class="block text-gray-500 text-sm mb-1">Email</label>
-            <p class="form-input bg-gray-700/50">{{ report.email }}</p>
+            <label class="form-label">Email</label>
+            <p class="form-input bg-surface-overlay/50">{{ report.email }}</p>
         </div>
         <div class="mb-4">
-            <label class="block text-gray-500 text-sm mb-1">Problembeschreibung</label>
-            <div class="form-input bg-gray-700/50 min-h-[120px] whitespace-pre-wrap">{{ report.issue }}</div>
+            <label class="form-label">Problembeschreibung</label>
+            <div class="form-input bg-surface-overlay/50 min-h-[120px] whitespace-pre-wrap">{{ report.issue }}</div>
         </div>
-        <div class="text-gray-500 text-sm">
+        <div class="text-text-muted text-sm">
             Erstellt: {{ report.created_at.strftime('%d.%m.%Y %H:%M') if report.created_at else 'Unbekannt' }}
         </div>
     </div>

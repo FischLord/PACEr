@@ -1,14 +1,19 @@
 {% extends "layout.html" %} {% block content %}
-<header class="page-header mb-6">
+<header class="page-header mb-8">
     <div class="flex items-center justify-between flex-wrap gap-4">
-        <h1 class="text-4xl font-bold text-orange-600">Rechner</h1>
-        <!-- Mode toggle -->
-        <div class="flex items-center gap-3 bg-gray-800 rounded-lg p-1">
-            <button id="btn-auto" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 {% if mode != 'manuell' %}bg-orange-600 text-white{% else %}text-gray-400 hover:text-gray-300{% endif %}"
+        <div>
+            <h1 class="page-title">Rechner</h1>
+            <p class="text-text-secondary mt-1">Split-Zeiten berechnen</p>
+        </div>
+        <!-- Mode toggle — segmented control -->
+        <div class="relative flex items-center bg-surface-raised rounded-xl p-1 border border-surface-border">
+            <div id="toggle-indicator" class="absolute top-1 bottom-1 rounded-lg bg-accent shadow-lg shadow-accent/20 transition-all duration-300 ease-out"
+                style="{% if mode != 'manuell' %}left: 4px; width: calc(50% - 4px);{% else %}left: calc(50%); width: calc(50% - 4px);{% endif %}"></div>
+            <button id="btn-auto" class="relative z-10 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 {% if mode != 'manuell' %}text-white{% else %}text-text-secondary hover:text-text-primary{% endif %}"
                 hx-get="/partials/form?mode=auto" hx-target="#form-area" hx-swap="innerHTML">
                 Automatisch
             </button>
-            <button id="btn-manuell" class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 {% if mode == 'manuell' %}bg-orange-600 text-white{% else %}text-gray-400 hover:text-gray-300{% endif %}"
+            <button id="btn-manuell" class="relative z-10 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 {% if mode == 'manuell' %}text-white{% else %}text-text-secondary hover:text-text-primary{% endif %}"
                 hx-get="/partials/form?mode=manuell" hx-target="#form-area" hx-swap="innerHTML">
                 Manuell
             </button>
@@ -27,18 +32,18 @@
 
     {% if show_ocr %}
     <!-- Photo upload area for OCR -->
-    <div class="card mt-6 border border-dashed border-gray-700">
+    <div class="card mt-6 border-dashed border-surface-border">
         <form hx-post="/api/ocr" hx-target="#ocr-result" hx-swap="innerHTML" hx-encoding="multipart/form-data"
               class="text-center py-4">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            <svg class="mx-auto h-10 w-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="mx-auto h-10 w-10 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
-            <p class="text-gray-400 text-sm mt-2 mb-3">Foto-Erkennung <span class="text-xs text-yellow-500">(Beta)</span></p>
+            <p class="text-text-secondary text-sm mt-2 mb-3">Foto-Erkennung <span class="text-xs text-yellow-500">(Beta)</span></p>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <input type="file" name="photo" accept="image/*" capture="environment"
-                    class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-700 file:text-gray-300 hover:file:bg-gray-600 file:cursor-pointer file:transition-colors">
+                    class="text-sm text-text-secondary file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-surface-overlay file:text-text-secondary hover:file:bg-surface-border file:cursor-pointer file:transition-colors">
                 <button type="submit" class="btn-secondary text-sm">Analysieren</button>
             </div>
         </form>
@@ -48,7 +53,13 @@
 </div>
 
 <!-- Result area for HTMX responses -->
-<div id="result-area" class="max-w-4xl mx-auto mt-6"></div>
+<div id="result-area" class="max-w-4xl mx-auto mt-6">
+    <!-- Loading skeleton (htmx-indicator) -->
+    <div id="calc-loading" class="htmx-indicator space-y-4">
+        <div class="loading-skeleton h-20 w-full"></div>
+        <div class="loading-skeleton h-64 w-full"></div>
+    </div>
+</div>
 {% else %}
 <!-- Show results -->
 <div class="max-w-4xl mx-auto">

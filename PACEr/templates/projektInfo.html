@@ -1,132 +1,152 @@
 {% extends "layout.html" %} {% block content %}
-<header class="page-header mb-8">
-    <h1 class="text-4xl font-bold text-orange-600">PACEr</h1>
-    <h2 class="text-2xl font-bold mt-1">
-        <span class="text-orange-600">P</span>räzise
-        <span class="text-orange-600">A</span>bstands
-        <span class="text-orange-600">C</span>alculierung für ein
-        <span class="text-orange-600">E</span>rfolgreiches Ma<span class="text-orange-600">r</span>athon
-    </h2>
-</header>
 
-<section class="mb-12 animate-slide-up">
-    <div class="card">
-        <p class="text-orange-600 font-bold">Formel:</p>
-        <code class="text-orange-400 block mt-1">Pace_1km = (Zeit_in_Sekunden / Streckenlänge_in_Metern) * 1000</code>
-        <p class="text-orange-600 font-bold mt-4">Beispielrechnung:</p>
-        <p class="text-orange-400">Streckenlänge: 4900m<br>
-            Bestzeit (bz): 16:37 (997 Sekunden)<br>
-            Erlaubte Zeit (ez): 19:37 (1177 Sekunden)<br>
-            Höchstzeit (hz): 45:14 (2714 Sekunden)</p>
-        <p class="text-orange-600 font-bold mt-4">Berechnung der Pace für den ersten Kilometer:</p>
-        <p class="text-orange-400">bz_Pace_1km = (997 / 4900) * 1000 = 203,47 Sekunden (03:23)<br>
-            ez_Pace_1km = (1177 / 4900) * 1000 = 240,20 Sekunden (04:00)<br>
-            hz_Pace_1km = (2714 / 4900) * 1000 = 553,88 Sekunden (09:13)</p>
-        <p class="text-orange-600 font-bold mt-4">Berechnung der Zeiten für jede Etappe:</p>
-        <p class="text-orange-400">Für jede Etappe (km) multiplizieren Sie den Pace für den ersten Kilometer mit der
-            Etappennummer:</p>
-        <ul class="list-disc pl-8 mt-2">
-            <li class="text-orange-600 font-bold">Bestzeit:</li>
-            <ul class="list-disc pl-8 text-orange-400">
-                <li>Zeit für 1 km: bz_Pace_1km</li>
-                <li>Zeit für 2 km: 2 * bz_Pace_1km</li>
-                <li>Zeit für 3 km: 3 * bz_Pace_1km</li>
-            </ul>
-            <li class="text-orange-600 font-bold">Erlaubte Zeit:</li>
-            <ul class="list-disc pl-8 text-orange-400">
-                <li>Zeit für 1 km: ez_Pace_1km</li>
-                <li>Zeit für 2 km: 2 * ez_Pace_1km</li>
-                <li>Zeit für 3 km: 3 * ez_Pace_1km</li>
-            </ul>
-            <li class="text-orange-600 font-bold">Höchstzeit:</li>
-            <ul class="list-disc pl-8 text-orange-400">
-                <li>Zeit für 1 km: hz_Pace_1km</li>
-                <li>Zeit für 2 km: 2 * hz_Pace_1km</li>
-                <li>Zeit für 3 km: 3 * hz_Pace_1km</li>
-            </ul>
-        </ul>
+<!-- Hero Section -->
+<section class="relative -mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-16 overflow-hidden">
+    <div class="relative h-[70vh] min-h-[500px] max-h-[700px]">
+        <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport Marathon"
+            class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/70 to-surface/30"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-surface/50 to-transparent"></div>
+        <div class="relative h-full flex items-end">
+            <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-16">
+                <div class="accent-bar mb-6"></div>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-text-primary leading-[1.1]">
+                    Dein<br>Marathon-Timer
+                </h1>
+                <p class="text-text-secondary text-lg md:text-xl mt-4 max-w-lg">
+                    Berechne Split-Zeiten für Bestzeit, Erlaubte Zeit und Höchstzeit — präzise, schnell und mobil-optimiert.
+                </p>
+                <div class="flex flex-wrap gap-4 mt-8">
+                    <a href="/rechner" class="btn-primary text-lg px-8 py-4">
+                        Jetzt berechnen
+                        <svg class="inline w-5 h-5 ml-2 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </a>
+                    <a href="/projektInfo" class="btn-secondary text-lg px-8 py-4">Mehr erfahren</a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="mb-12 animate-slide-up" style="animation-delay: 0.1s">
-    <div class="flex flex-wrap items-center gap-8">
-        <div class="w-full md:w-5/12">
+<!-- Feature Highlights -->
+<section class="mb-20">
+    <div class="text-center mb-12">
+        <div class="accent-bar mx-auto mb-4"></div>
+        <h2 class="section-header">Alles was du brauchst</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card-hover text-center stagger-item" style="transition-delay: 0s">
+            <div class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-accent/10 flex items-center justify-center">
+                <svg class="w-7 h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-text-primary mb-2">Automatisch</h3>
+            <p class="text-text-secondary text-sm">Strecke, Art und Tempo eingeben — BZ, EZ und HZ werden sofort berechnet.</p>
+        </div>
+        <div class="card-hover text-center stagger-item" style="transition-delay: 0.1s">
+            <div class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-accent/10 flex items-center justify-center">
+                <svg class="w-7 h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-text-primary mb-2">Manuell</h3>
+            <p class="text-text-secondary text-sm">Eigene Zeiten direkt eingeben — für maximale Kontrolle über deine Berechnungen.</p>
+        </div>
+        <div class="card-hover text-center stagger-item" style="transition-delay: 0.2s">
+            <div class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-accent/10 flex items-center justify-center">
+                <svg class="w-7 h-7 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-text-primary mb-2">PDF Export</h3>
+            <p class="text-text-secondary text-sm">Ergebnisse als PDF herunterladen und direkt am Turnier nutzen.</p>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="mb-20">
+    <div class="text-center mb-12">
+        <div class="accent-bar mx-auto mb-4"></div>
+        <h2 class="section-header">So funktioniert's</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center stagger-item" style="transition-delay: 0s">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent text-white font-bold text-xl flex items-center justify-center shadow-lg shadow-accent/20">1</div>
+            <h3 class="font-bold text-text-primary mb-2">Strecke eingeben</h3>
+            <p class="text-text-secondary text-sm">Streckenlänge in Metern und die Art (Weg-, Hindernis- oder Schrittstrecke) wählen.</p>
+        </div>
+        <div class="text-center stagger-item" style="transition-delay: 0.15s">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent text-white font-bold text-xl flex items-center justify-center shadow-lg shadow-accent/20">2</div>
+            <h3 class="font-bold text-text-primary mb-2">Parameter wählen</h3>
+            <p class="text-text-secondary text-sm">Tempo per Slider einstellen oder im manuellen Modus eigene Zeiten eingeben.</p>
+        </div>
+        <div class="text-center stagger-item" style="transition-delay: 0.3s">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent text-white font-bold text-xl flex items-center justify-center shadow-lg shadow-accent/20">3</div>
+            <h3 class="font-bold text-text-primary mb-2">Ergebnis erhalten</h3>
+            <p class="text-text-secondary text-sm">BZ, EZ und HZ Split-Zeiten pro Kilometer — als Tabelle oder PDF.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Sport Showcase -->
+<section class="mb-20">
+    <div class="text-center mb-12">
+        <div class="accent-bar mx-auto mb-4"></div>
+        <h2 class="section-header">Die Disziplinen</h2>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0s">
             <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport"
-                class="w-full rounded-lg shadow-lg">
-        </div>
-        <div class="w-full md:flex-1">
-            <h2 class="section-header text-center md:text-left">Der Fahrsport</h2>
-            <p class="text-gray-400 mt-4">
-                Der Fahrsport besteht grundsätzlich aus 3 Disziplinen (Vollprüfung). Wenn alle
-                Disziplinen bestritten wurden, d.h. die Dressur, das Geländefahren (oder Marathon) und
-                das Hindernisfahren, werden alle drei Disziplinen gewertet und man erhält eine Punktzahl
-                aus welcher die Rangierung der Teilnehmer eruiert wird. Auch gibt es reduzierte
-                Prüfungen respektive Kurzprüfungen bei welchen eine Auswahl der Disziplinen – zum
-                Beispiel Dressur mit Hindernisfahren oder Dressur mit kombinierter Geländeprüfung
-                (Derby) – gefahren und gewertet werden.
-            </p>
-        </div>
-    </div>
-</section>
-
-<section class="mb-12 animate-slide-up" style="animation-delay: 0.2s">
-    <div class="flex flex-wrap items-center gap-8 flex-row-reverse">
-        <div class="w-full md:w-5/12">
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <h3 class="text-text-primary font-bold text-lg">Fahrsport</h3>
+            </div>
+        </a>
+        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0.1s">
             <img src="{{ url_for('static', filename='img/projektInfo/dressur.webp') }}" alt="Dressur"
-                class="w-full rounded-lg shadow-lg">
-        </div>
-        <div class="w-full md:flex-1">
-            <h2 class="section-header text-center md:text-left">Dressur</h2>
-            <p class="text-gray-400 mt-4">
-                Bei der Dressur geht es darum, sein Gespann von seiner besten Seite zu präsentieren.
-                Dabei geht es aber nicht nur um das Erscheinungsbild der Pferde und Kutsche, sondern
-                auch des Fahrers. Außerdem muss ein vorgeschriebener Parcours abgefahren werden, der von
-                der FEI bzw. vom SVPS vorgeschrieben wird. Das Ganze ergibt am Schluss eine Note, die
-                aus der Präsentation des Gespannes, der Präzision des gefahrenen Dressurprogramms sowie
-                der Durchlässigkeit der Pferde gewertet wird.
-            </p>
-        </div>
-    </div>
-</section>
-
-<section class="mb-12 animate-slide-up" style="animation-delay: 0.3s">
-    <div class="flex flex-wrap items-center gap-8">
-        <div class="w-full md:w-5/12">
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <h3 class="text-text-primary font-bold text-lg">Dressur</h3>
+            </div>
+        </a>
+        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0.2s">
             <img src="{{ url_for('static', filename='img/projektInfo/marathon.webp') }}" alt="Gelände"
-                class="w-full rounded-lg shadow-lg">
-        </div>
-        <div class="w-full md:flex-1">
-            <h2 class="section-header text-center md:text-left">Gelände</h2>
-            <p class="text-gray-400 mt-4">
-                Die Geländeprüfung gilt für den Zuschauer als der spannendste Teil des Fahrens. Mit viel
-                Geschick und Wendigkeit müssen sowohl die Pferde als auch die Fahrer beweisen, wie
-                schnell sie um die Hindernisse fahren können. Dabei zählt aber meist nicht nur
-                ausschließlich die Geschwindigkeit, sondern auch die Wendigkeit der Pferde ist ein
-                wichtiges Element. Die Geländeprüfung besteht aus 3 Phasen: der A-Phase, der D-Phase und
-                der E-Phase. Dabei gibt es vorgeschriebene Geschwindigkeiten, die je nach Gespannsart
-                (1-Spänner, 2-Spänner oder 4-Spänner) und Pferdegröße (Pony oder Großpferde) eingehalten
-                werden müssen.
-            </p>
-        </div>
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <h3 class="text-text-primary font-bold text-lg">Gelände</h3>
+            </div>
+        </a>
+        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0.3s">
+            <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}" alt="Hindernisfahren"
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <h3 class="text-text-primary font-bold text-lg">Hindernis</h3>
+            </div>
+        </a>
     </div>
 </section>
 
-<section class="mb-12 animate-slide-up" style="animation-delay: 0.4s">
-    <div class="flex flex-wrap items-center gap-8 flex-row-reverse">
-        <div class="w-full md:w-5/12">
-            <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}"
-                alt="Hindernisfahren" class="w-full rounded-lg shadow-lg">
-        </div>
-        <div class="w-full md:flex-1">
-            <h2 class="section-header text-center md:text-left">Hindernisfahren</h2>
-            <p class="text-gray-400 mt-4">
-                Im Hindernisfahren gilt es, einen abgesteckten Parcours, der aus maximal 20 Hindernissen
-                (meist Pylonen) besteht, abzufahren. Dabei geht es darum, das Gespann geschickt und mit
-                einer vorgeschriebenen Geschwindigkeit fehlerlos durch den Parcours zu bringen. Je nach
-                Qualifikation des Fahrers (L, M oder S) haben die Gespanne eine Spannweite von maximal
-                40 cm bis 20 cm zwischen Wagen und dem Hindernis zur Verfügung.
-            </p>
-        </div>
+<!-- Final CTA -->
+<section class="mb-8">
+    <div class="card text-center py-12 px-6">
+        <div class="accent-bar mx-auto mb-6"></div>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-text-primary mb-4">Bereit?</h2>
+        <p class="text-text-secondary text-lg mb-8 max-w-md mx-auto">Berechne deine Split-Zeiten und starte optimal vorbereitet in den Marathon.</p>
+        <a href="/rechner" class="btn-primary text-lg px-10 py-4 inline-block">
+            Jetzt berechnen
+            <svg class="inline w-5 h-5 ml-2 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+        </a>
     </div>
 </section>
+
 {% endblock %}

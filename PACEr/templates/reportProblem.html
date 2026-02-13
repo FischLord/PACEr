@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
 <header class="page-header mb-8">
-    <h1 class="text-4xl font-bold text-orange-600">Problem Melden</h1>
+    <h1 class="page-title">Feedback</h1>
+    <p class="text-text-secondary mt-1">Anregungen, Verbesserungsvorschläge oder Fehler melden</p>
 </header>
 
 <div class="max-w-2xl mx-auto animate-slide-up">
@@ -9,24 +10,28 @@
         <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
         <div class="mb-5 flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <label for="name" class="block text-gray-400 text-sm mb-2">Name:</label>
+                <label for="name" class="form-label">Name</label>
                 <input type="text" id="name" name="name" required class="form-input">
             </div>
             <div class="flex-1">
-                <label for="vorname" class="block text-gray-400 text-sm mb-2">Vorname:</label>
+                <label for="vorname" class="form-label">Vorname</label>
                 <input type="text" id="vorname" name="vorname" required class="form-input">
             </div>
         </div>
 
         <div class="mb-5">
-            <label for="email" class="block text-gray-400 text-sm mb-2">Email Adresse:</label>
+            <label for="email" class="form-label">Email Adresse</label>
             <input type="email" id="email" name="email" required class="form-input">
-            <span id="email-error" class="text-red-500 text-sm mt-1 block"></span>
+            <span id="email-error" class="text-red-400 text-sm mt-1.5 block"></span>
         </div>
 
         <div class="mb-6">
-            <label for="issue" class="block text-gray-400 text-sm mb-2">Problembeschreibung:</label>
-            <textarea id="issue" name="issue" rows="8" maxlength="1000" required class="form-input resize-y"></textarea>
+            <label for="issue" class="form-label">Beschreibung</label>
+            <textarea id="issue" name="issue" rows="8" maxlength="1000" required class="form-input resize-y"
+                oninput="document.getElementById('char-count').textContent = this.value.length"></textarea>
+            <div class="flex justify-end mt-1.5">
+                <span class="text-text-muted text-xs"><span id="char-count">0</span> / 1000</span>
+            </div>
         </div>
 
         <input type="hidden" id="bot-field" name="bot-field">

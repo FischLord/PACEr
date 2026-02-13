@@ -1,44 +1,60 @@
 <!-- Auto-mode form partial -->
-<form {% if use_htmx %}hx-post="/api/calculate" hx-target="#result-area" hx-swap="innerHTML"{% else %}action="/rechner" method="POST"{% endif %}
+<form {% if use_htmx %}hx-post="/api/calculate" hx-target="#result-area" hx-swap="innerHTML" hx-indicator="#calc-loading"{% else %}action="/rechner" method="POST"{% endif %}
       id="form_calculator" class="card">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="mode" value="auto">
 
-    <div class="mb-5">
-        <label for="laenge" class="block text-gray-400 text-sm mb-2">Streckenlänge (m)</label>
+    <div class="mb-6">
+        <label for="laenge" class="form-label">Streckenlänge (m)</label>
         <input type="number" id="laenge" name="laenge" class="form-input"
             placeholder="z.B. 4900" required min="1" max="100000" />
-        <div id="laenge-error" class="text-red-500 text-sm mt-1 hidden">
+        <div id="laenge-error" class="text-red-400 text-sm mt-1.5 hidden">
             Bitte eine Länge zwischen 1 und 100.000 m angeben.
         </div>
     </div>
 
-    <div class="mb-5">
-        <label for="art" class="block text-gray-400 text-sm mb-2">Art der Strecke</label>
-        <select id="art" name="art" class="form-select" required onchange="updateKmhOptions(this.value)">
-            <option value="" disabled selected>Bitte wählen</option>
-            <option value="hindernisstrecke">Hindernisstrecke</option>
-            <option value="wegstrecke">Wegstrecke</option>
-            <option value="schrittstrecke">Schrittstrecke</option>
-        </select>
+    <div class="mb-6">
+        <label class="form-label">Art der Strecke</label>
+        <div class="flex flex-wrap gap-2">
+            <label>
+                <input type="radio" name="art" value="hindernisstrecke" class="hidden peer" required>
+                <span class="chip">Hindernisstrecke</span>
+            </label>
+            <label>
+                <input type="radio" name="art" value="wegstrecke" class="hidden peer" required>
+                <span class="chip">Wegstrecke</span>
+            </label>
+            <label>
+                <input type="radio" name="art" value="schrittstrecke" class="hidden peer" required>
+                <span class="chip">Schrittstrecke</span>
+            </label>
+        </div>
     </div>
 
     <div class="mb-6" id="tempoInputField" style="display: none">
-        <label for="kmh" class="block text-gray-400 text-sm mb-2">Tempo (km/h)</label>
-        <select id="kmh" name="kmh" class="form-select" required>
-            <option value="" disabled selected>Bitte wählen</option>
-        </select>
+        <label for="kmh" class="form-label">Tempo (km/h)</label>
+        <div class="flex items-center gap-4">
+            <input type="range" id="kmh" name="kmh" class="range-slider flex-1" min="8" max="14" value="11" required>
+            <span id="kmh-value" class="text-accent font-bold text-xl min-w-[4ch] text-center">11</span>
+        </div>
+        <div class="flex justify-between text-xs text-text-muted mt-1.5 px-0.5">
+            <span id="kmh-min-label">8 km/h</span>
+            <span id="kmh-max-label">14 km/h</span>
+        </div>
     </div>
 
     <!-- Tournament assignment (optional) -->
     {% if tournaments %}
-    <details class="mb-6 border border-gray-700 rounded-lg">
-        <summary class="px-4 py-3 text-gray-400 text-sm cursor-pointer hover:text-gray-300 transition-colors">
+    <details class="mb-6 border border-surface-border rounded-xl">
+        <summary class="px-4 py-3 text-text-secondary text-sm cursor-pointer hover:text-text-primary transition-colors">
             Turnier zuordnen (optional)
         </summary>
         <div class="px-4 pb-4 pt-2 space-y-4">
+            <p class="text-text-muted text-xs">
+                Ordne deine Berechnung einem Turnier zu, damit die Ergebnisse auf der Turnierseite gesammelt angezeigt werden.
+            </p>
             <div>
-                <label for="tournament_id" class="block text-gray-400 text-sm mb-2">Turnier</label>
+                <label for="tournament_id" class="form-label">Turnier</label>
                 <select id="tournament_id" name="tournament_id" class="form-select"
                     hx-get="/api/tournament-klassen" hx-target="#klasse-container" hx-trigger="change"
                     hx-include="this">
@@ -54,6 +70,11 @@
     {% endif %}
 
     <button type="submit" class="btn-primary w-full sm:w-auto" id="submit-button">
-        Berechnen
+        <span class="inline-flex items-center gap-2">
+            Berechnen
+            <svg class="w-4 h-4 animate-spin-slow hidden htmx-indicator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+        </span>
     </button>
 </form>

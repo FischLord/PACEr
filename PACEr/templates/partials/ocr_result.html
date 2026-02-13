@@ -1,13 +1,13 @@
 <!-- OCR result partial — shows detected values with confidence -->
 <div class="card animate-slide-up">
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-medium text-gray-200">Erkannte Werte</h3>
+        <h3 class="text-lg font-semibold text-text-primary">Erkannte Werte</h3>
         {% if ocr.confidence < 70 %}
-        <span class="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-1 rounded">
-            Vertrauen: {{ ocr.confidence }}% — Bitte Werte prüfen
+        <span class="text-xs bg-yellow-900/30 text-yellow-400 px-2.5 py-1 rounded-lg">
+            Vertrauen: {{ ocr.confidence }}% — Bitte prüfen
         </span>
         {% else %}
-        <span class="text-xs bg-green-900/30 text-green-400 px-2 py-1 rounded">
+        <span class="text-xs bg-time-bz/10 text-time-bz px-2.5 py-1 rounded-lg">
             Vertrauen: {{ ocr.confidence }}%
         </span>
         {% endif %}
@@ -15,44 +15,44 @@
 
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
         {% if ocr.laenge %}
-        <div class="bg-gray-700/30 rounded-lg p-3">
-            <span class="text-gray-500 block text-xs">Strecke</span>
-            <span class="text-gray-200 font-medium">{{ ocr.laenge }} m</span>
+        <div class="bg-surface-overlay rounded-xl p-3">
+            <span class="text-text-muted block text-xs font-medium uppercase tracking-wide">Strecke</span>
+            <span class="text-text-primary font-semibold">{{ ocr.laenge }} m</span>
         </div>
         {% endif %}
         {% if ocr.kmh %}
-        <div class="bg-gray-700/30 rounded-lg p-3">
-            <span class="text-gray-500 block text-xs">Tempo</span>
-            <span class="text-gray-200 font-medium">{{ ocr.kmh }} km/h</span>
+        <div class="bg-surface-overlay rounded-xl p-3">
+            <span class="text-text-muted block text-xs font-medium uppercase tracking-wide">Tempo</span>
+            <span class="text-text-primary font-semibold">{{ ocr.kmh }} km/h</span>
         </div>
         {% endif %}
         {% if ocr.art %}
-        <div class="bg-gray-700/30 rounded-lg p-3">
-            <span class="text-gray-500 block text-xs">Art</span>
-            <span class="text-gray-200 font-medium capitalize">{{ ocr.art }}</span>
+        <div class="bg-surface-overlay rounded-xl p-3">
+            <span class="text-text-muted block text-xs font-medium uppercase tracking-wide">Art</span>
+            <span class="text-text-primary font-semibold capitalize">{{ ocr.art }}</span>
         </div>
         {% endif %}
         {% if ocr.bz_min is not none %}
-        <div class="bg-green-900/20 rounded-lg p-3">
-            <span class="text-green-500 block text-xs">Bestzeit</span>
-            <span class="text-green-400 font-medium font-mono">{{ ocr.bz_min }}:{{ '{:02}'.format(ocr.bz_sec or 0) }}</span>
+        <div class="bg-time-bz/10 rounded-xl p-3">
+            <span class="text-time-bz block text-xs font-medium uppercase tracking-wide">Bestzeit</span>
+            <span class="text-time-bz font-semibold font-mono">{{ ocr.bz_min }}:{{ '{:02}'.format(ocr.bz_sec or 0) }}</span>
         </div>
         {% endif %}
         {% if ocr.ez_min is not none %}
-        <div class="bg-orange-900/20 rounded-lg p-3">
-            <span class="text-orange-500 block text-xs">Erlaubte Zeit</span>
-            <span class="text-orange-400 font-medium font-mono">{{ ocr.ez_min }}:{{ '{:02}'.format(ocr.ez_sec or 0) }}</span>
+        <div class="bg-time-ez/10 rounded-xl p-3">
+            <span class="text-time-ez block text-xs font-medium uppercase tracking-wide">Erlaubte Zeit</span>
+            <span class="text-time-ez font-semibold font-mono">{{ ocr.ez_min }}:{{ '{:02}'.format(ocr.ez_sec or 0) }}</span>
         </div>
         {% endif %}
         {% if ocr.hz_min is not none %}
-        <div class="bg-red-900/20 rounded-lg p-3">
-            <span class="text-red-500 block text-xs">Höchstzeit</span>
-            <span class="text-red-400 font-medium font-mono">{{ ocr.hz_min }}:{{ '{:02}'.format(ocr.hz_sec or 0) }}</span>
+        <div class="bg-time-hz/10 rounded-xl p-3">
+            <span class="text-time-hz block text-xs font-medium uppercase tracking-wide">Höchstzeit</span>
+            <span class="text-time-hz font-semibold font-mono">{{ ocr.hz_min }}:{{ '{:02}'.format(ocr.hz_sec or 0) }}</span>
         </div>
         {% endif %}
     </div>
 
-    <p class="text-gray-500 text-xs mt-4">Die Werte werden automatisch in das Formular übernommen.</p>
+    <p class="text-text-muted text-xs mt-4">Die Werte werden automatisch in das Formular übernommen.</p>
 </div>
 
 <script>

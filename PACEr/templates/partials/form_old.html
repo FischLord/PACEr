@@ -1,60 +1,81 @@
 <!-- Manual-mode form partial -->
-<form {% if use_htmx %}hx-post="/api/calculate" hx-target="#result-area" hx-swap="innerHTML"{% else %}action="/rechner" method="POST"{% endif %}
+<form {% if use_htmx %}hx-post="/api/calculate" hx-target="#result-area" hx-swap="innerHTML" hx-indicator="#calc-loading"{% else %}action="/rechner" method="POST"{% endif %}
       id="form_calculator" class="card">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="mode" value="manuell">
 
-    <div class="mb-5">
-        <label for="laenge" class="block text-gray-400 text-sm mb-2">Streckenlänge (m)</label>
+    <div class="mb-6">
+        <label for="laenge" class="form-label">Streckenlänge (m)</label>
         <input type="number" id="laenge" name="laenge" class="form-input"
             placeholder="z.B. 4900" required min="1" max="100000" />
-        <div id="laenge-error" class="text-red-500 text-sm mt-1 hidden">
+        <div id="laenge-error" class="text-red-400 text-sm mt-1.5 hidden">
             Bitte eine Länge zwischen 1 und 100.000 m angeben.
         </div>
     </div>
 
-    <div class="mb-5">
-        <label class="block text-gray-400 text-sm mb-2">Bestzeit</label>
-        <div class="flex gap-2">
-            <input type="number" name="bz_min" class="form-input" placeholder="Min" required min="0" />
-            <input type="number" name="bz_sec" class="form-input" placeholder="Sek" required min="0" max="59" />
+    <div class="mb-6">
+        <label class="form-label">Bestzeit</label>
+        <div class="flex items-center gap-2">
+            <div class="flex-1 relative">
+                <input type="number" name="bz_min" class="form-input pr-12" placeholder="0" required min="0" />
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted text-sm">Min</span>
+            </div>
+            <span class="text-text-muted text-xl font-bold">:</span>
+            <div class="flex-1 relative">
+                <input type="number" name="bz_sec" class="form-input pr-12" placeholder="00" required min="0" max="59" />
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted text-sm">Sek</span>
+            </div>
         </div>
-        <div id="bestzeit-error" class="text-red-500 text-sm mt-1 hidden">
-            Sekunden dürfen maximal 59 betragen.
-        </div>
-    </div>
-
-    <div class="mb-5">
-        <label class="block text-gray-400 text-sm mb-2">Erlaubte Zeit</label>
-        <div class="flex gap-2">
-            <input type="number" name="ez_min" class="form-input" placeholder="Min" required min="0" />
-            <input type="number" name="ez_sec" class="form-input" placeholder="Sek" required min="0" max="59" />
-        </div>
-        <div id="erlaubtezeit-error" class="text-red-500 text-sm mt-1 hidden">
+        <div id="bestzeit-error" class="text-red-400 text-sm mt-1.5 hidden">
             Sekunden dürfen maximal 59 betragen.
         </div>
     </div>
 
     <div class="mb-6">
-        <label class="block text-gray-400 text-sm mb-2">Höchstzeit</label>
-        <div class="flex gap-2">
-            <input type="number" name="hz_min" class="form-input" placeholder="Min" required min="0" />
-            <input type="number" name="hz_sec" class="form-input" placeholder="Sek" required min="0" max="59" />
+        <label class="form-label">Erlaubte Zeit</label>
+        <div class="flex items-center gap-2">
+            <div class="flex-1 relative">
+                <input type="number" name="ez_min" class="form-input pr-12" placeholder="0" required min="0" />
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted text-sm">Min</span>
+            </div>
+            <span class="text-text-muted text-xl font-bold">:</span>
+            <div class="flex-1 relative">
+                <input type="number" name="ez_sec" class="form-input pr-12" placeholder="00" required min="0" max="59" />
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted text-sm">Sek</span>
+            </div>
         </div>
-        <div id="hoechstzeit-error" class="text-red-500 text-sm mt-1 hidden">
+        <div id="erlaubtezeit-error" class="text-red-400 text-sm mt-1.5 hidden">
+            Sekunden dürfen maximal 59 betragen.
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <label class="form-label">Höchstzeit</label>
+        <div class="flex items-center gap-2">
+            <div class="flex-1 relative">
+                <input type="number" name="hz_min" class="form-input pr-12" placeholder="0" required min="0" />
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted text-sm">Min</span>
+            </div>
+            <span class="text-text-muted text-xl font-bold">:</span>
+            <div class="flex-1 relative">
+                <input type="number" name="hz_sec" class="form-input pr-12" placeholder="00" required min="0" max="59" />
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted text-sm">Sek</span>
+            </div>
+        </div>
+        <div id="hoechstzeit-error" class="text-red-400 text-sm mt-1.5 hidden">
             Sekunden dürfen maximal 59 betragen.
         </div>
     </div>
 
     <!-- Tournament assignment (optional) -->
     {% if tournaments %}
-    <details class="mb-6 border border-gray-700 rounded-lg">
-        <summary class="px-4 py-3 text-gray-400 text-sm cursor-pointer hover:text-gray-300 transition-colors">
+    <details class="mb-6 border border-surface-border rounded-xl">
+        <summary class="px-4 py-3 text-text-secondary text-sm cursor-pointer hover:text-text-primary transition-colors">
             Turnier zuordnen (optional)
         </summary>
         <div class="px-4 pb-4 pt-2 space-y-4">
             <div>
-                <label for="tournament_id" class="block text-gray-400 text-sm mb-2">Turnier</label>
+                <label for="tournament_id" class="form-label">Turnier</label>
                 <select id="tournament_id" name="tournament_id" class="form-select"
                     hx-get="/api/tournament-klassen" hx-target="#klasse-container" hx-trigger="change"
                     hx-include="this">
@@ -70,6 +91,11 @@
     {% endif %}
 
     <button type="submit" class="btn-primary w-full sm:w-auto" id="submit-button">
-        Berechnen
+        <span class="inline-flex items-center gap-2">
+            Berechnen
+            <svg class="w-4 h-4 animate-spin-slow hidden htmx-indicator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+        </span>
     </button>
 </form>

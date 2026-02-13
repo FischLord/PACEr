@@ -1,33 +1,50 @@
 // Unified calculator validation
 var MAX_LENGTH = 100000;
 
+var kmhRanges = {
+    'hindernisstrecke': { min: 8, max: 14 },
+    'wegstrecke': { min: 8, max: 15 },
+    'schrittstrecke': { min: 3, max: 7 }
+};
+
 function updateKmhOptions(art) {
-    var kmhSelect = document.getElementById('kmh');
+    var kmhSlider = document.getElementById('kmh');
+    var kmhValue = document.getElementById('kmh-value');
+    var kmhMinLabel = document.getElementById('kmh-min-label');
+    var kmhMaxLabel = document.getElementById('kmh-max-label');
     var tempoField = document.getElementById('tempoInputField');
-    if (!kmhSelect || !tempoField) return;
+    if (!kmhSlider || !tempoField) return;
 
-    // Clear existing options
-    kmhSelect.innerHTML = '<option value="" disabled selected>Bitte wählen</option>';
-
-    var ranges = {
-        'hindernisstrecke': { min: 8, max: 14 },
-        'wegstrecke': { min: 8, max: 15 },
-        'schrittstrecke': { min: 3, max: 7 }
-    };
-
-    var range = ranges[art];
+    var range = kmhRanges[art];
     if (range) {
-        for (var i = range.min; i <= range.max; i++) {
-            var opt = document.createElement('option');
-            opt.value = i;
-            opt.textContent = i + ' km/h';
-            kmhSelect.appendChild(opt);
-        }
+        kmhSlider.min = range.min;
+        kmhSlider.max = range.max;
+        // Set default to middle of range
+        var mid = Math.round((range.min + range.max) / 2);
+        kmhSlider.value = mid;
+        if (kmhValue) kmhValue.textContent = mid;
+        if (kmhMinLabel) kmhMinLabel.textContent = range.min + ' km/h';
+        if (kmhMaxLabel) kmhMaxLabel.textContent = range.max + ' km/h';
         tempoField.style.display = '';
     } else {
         tempoField.style.display = 'none';
     }
 }
+
+// Radio button change handler for art chips
+document.addEventListener('change', function(e) {
+    if (e.target.name === 'art' && e.target.type === 'radio') {
+        updateKmhOptions(e.target.value);
+    }
+});
+
+// Slider live value display
+document.addEventListener('input', function(e) {
+    if (e.target.id === 'kmh' && e.target.type === 'range') {
+        var kmhValue = document.getElementById('kmh-value');
+        if (kmhValue) kmhValue.textContent = e.target.value;
+    }
+});
 
 // Validate length input
 document.addEventListener('input', function(e) {
@@ -59,17 +76,35 @@ document.addEventListener('input', function(e) {
     }
 });
 
-// Mode toggle button styling
+// Mode toggle — segmented control with sliding indicator
 document.addEventListener('htmx:afterSwap', function(e) {
     if (e.detail.target.id === 'form-area') {
-        // Update button styles
         var trigger = e.detail.requestConfig.elt;
-        var btns = document.querySelectorAll('#btn-auto, #btn-manuell');
-        btns.forEach(function(btn) {
-            btn.classList.remove('bg-orange-600', 'text-white');
-            btn.classList.add('text-gray-400', 'hover:text-gray-300');
-        });
-        trigger.classList.add('bg-orange-600', 'text-white');
-        trigger.classList.remove('text-gray-400', 'hover:text-gray-300');
+        var btnAuto = document.getElementById('btn-auto');
+        var btnManuell = document.getElementById('btn-manuell');
+        var indicator = document.getElementById('toggle-indicator');
+
+        if (btnAuto && btnManuell) {
+            // Reset both buttons
+            btnAuto.classList.remove('text-white');
+            btnAuto.classList.add('text-text-secondary');
+            btnManuell.classList.remove('text-white');
+            btnManuell.classList.add('text-text-secondary');
+
+            // Activate triggered button
+            trigger.classList.add('text-white');
+            trigger.classList.remove('text-text-secondary');
+        }
+
+        // Slide the indicator
+        if (indicator) {
+            if (trigger.id === 'btn-auto') {
+                indicator.style.left = '4px';
+                indicator.style.width = 'calc(50% - 4px)';
+            } else {
+                indicator.style.left = 'calc(50%)';
+                indicator.style.width = 'calc(50% - 4px)';
+            }
+        }
     }
 });

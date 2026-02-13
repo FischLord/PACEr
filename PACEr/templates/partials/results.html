@@ -1,22 +1,22 @@
 <!-- Results partial — loaded via HTMX or included in page -->
 <div class="animate-slide-up">
-    <!-- Meta info -->
+    <!-- Meta info card -->
     <div class="card mb-6">
-        <div class="flex flex-wrap gap-4 justify-center md:justify-between text-sm">
+        <div class="flex flex-wrap gap-6 justify-center md:justify-start">
             <div>
-                <span class="text-gray-500">Streckenlänge:</span>
-                <span class="text-gray-300 font-medium">{{ laenge }} m</span>
+                <span class="text-text-muted text-xs uppercase tracking-wide block">Strecke</span>
+                <span class="text-text-primary font-bold text-2xl">{{ laenge }}<span class="text-text-muted text-base font-normal ml-1">m</span></span>
             </div>
             {% if kmh %}
             <div>
-                <span class="text-gray-500">Geschwindigkeit:</span>
-                <span class="text-gray-300 font-medium">{{ kmh }} km/h</span>
+                <span class="text-text-muted text-xs uppercase tracking-wide block">Tempo</span>
+                <span class="text-text-primary font-bold text-2xl">{{ kmh }}<span class="text-text-muted text-base font-normal ml-1">km/h</span></span>
             </div>
             {% endif %}
             {% if art %}
             <div>
-                <span class="text-gray-500">Streckenart:</span>
-                <span class="text-gray-300 font-medium capitalize">{{ art }}</span>
+                <span class="text-text-muted text-xs uppercase tracking-wide block">Streckenart</span>
+                <span class="text-text-primary font-bold text-2xl capitalize">{{ art }}</span>
             </div>
             {% endif %}
         </div>
@@ -25,37 +25,37 @@
     <!-- Desktop table (hidden on mobile) -->
     <div class="hidden md:block">
         <div class="card overflow-hidden p-0">
-            <table class="w-full text-sm">
+            <table class="w-full">
                 <thead>
-                    <tr class="bg-gray-700/50">
-                        <th class="px-4 py-3 text-left text-gray-400 font-medium">Strecke (m)</th>
+                    <tr class="bg-surface-overlay/50">
+                        <th class="px-5 py-3.5 text-left text-text-muted text-xs font-semibold uppercase tracking-wide">Strecke (m)</th>
                         {% if bz_result %}
-                        <th class="px-4 py-3 text-center font-medium">
-                            <span class="text-green-400">Bestzeit</span>
+                        <th class="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide">
+                            <span class="time-bz">Bestzeit</span>
                         </th>
                         {% endif %}
-                        <th class="px-4 py-3 text-center font-medium">
-                            <span class="text-orange-400">Erlaubte Zeit</span>
+                        <th class="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide">
+                            <span class="time-ez">Erlaubte Zeit</span>
                         </th>
-                        <th class="px-4 py-3 text-center font-medium">
-                            <span class="text-red-400">Höchstzeit</span>
+                        <th class="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide">
+                            <span class="time-hz">Höchstzeit</span>
                         </th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-700/50">
+                <tbody class="divide-y divide-surface-border/50">
                     {% for key, value in ez_result.items() %}
-                    <tr class="hover:bg-gray-800/50 transition-colors">
-                        <td class="px-4 py-3 text-gray-300 font-medium">{{ key }}</td>
+                    <tr class="hover:bg-surface-overlay/30 transition-colors">
+                        <td class="px-5 py-3.5 text-text-secondary font-medium">{{ key }}</td>
                         {% if bz_result %}
-                        <td class="px-4 py-3 text-center">
-                            <span class="text-green-400 font-mono">{{ bz_result[key].min }}:{{ '{:02}'.format(bz_result[key].sec) }}</span>
+                        <td class="px-5 py-3.5 text-center">
+                            <span class="time-bz font-mono font-bold text-lg">{{ bz_result[key].min }}:{{ '{:02}'.format(bz_result[key].sec) }}</span>
                         </td>
                         {% endif %}
-                        <td class="px-4 py-3 text-center">
-                            <span class="text-orange-400 font-mono">{{ value.min }}:{{ '{:02}'.format(value.sec) }}</span>
+                        <td class="px-5 py-3.5 text-center">
+                            <span class="time-ez font-mono font-bold text-lg">{{ value.min }}:{{ '{:02}'.format(value.sec) }}</span>
                         </td>
-                        <td class="px-4 py-3 text-center">
-                            <span class="text-red-400 font-mono">{{ hz_result[key].min }}:{{ '{:02}'.format(hz_result[key].sec) }}</span>
+                        <td class="px-5 py-3.5 text-center">
+                            <span class="time-hz font-mono font-bold text-lg">{{ hz_result[key].min }}:{{ '{:02}'.format(hz_result[key].sec) }}</span>
                         </td>
                     </tr>
                     {% endfor %}
@@ -68,21 +68,21 @@
     <div class="md:hidden space-y-3">
         {% for key, value in ez_result.items() %}
         <div class="card p-4">
-            <div class="text-gray-400 text-sm font-medium mb-2">{{ key }} m</div>
-            <div class="grid grid-cols-{% if bz_result %}3{% else %}2{% endif %} gap-2">
+            <div class="text-text-muted text-sm font-semibold mb-2">{{ key }} m</div>
+            <div class="grid {% if bz_result %}grid-cols-3{% else %}grid-cols-2{% endif %} gap-2">
                 {% if bz_result %}
-                <div class="bg-green-900/20 border border-green-800/30 rounded-lg p-2 text-center">
-                    <div class="text-green-500 text-xs mb-1">BZ</div>
-                    <div class="text-green-400 font-mono font-medium">{{ bz_result[key].min }}:{{ '{:02}'.format(bz_result[key].sec) }}</div>
+                <div class="bg-time-bz/10 border border-time-bz/20 rounded-xl p-2.5 text-center">
+                    <div class="text-time-bz text-xs font-semibold mb-1">BZ</div>
+                    <div class="time-bz font-mono font-bold">{{ bz_result[key].min }}:{{ '{:02}'.format(bz_result[key].sec) }}</div>
                 </div>
                 {% endif %}
-                <div class="bg-orange-900/20 border border-orange-800/30 rounded-lg p-2 text-center">
-                    <div class="text-orange-500 text-xs mb-1">EZ</div>
-                    <div class="text-orange-400 font-mono font-medium">{{ value.min }}:{{ '{:02}'.format(value.sec) }}</div>
+                <div class="bg-time-ez/10 border border-time-ez/20 rounded-xl p-2.5 text-center">
+                    <div class="text-time-ez text-xs font-semibold mb-1">EZ</div>
+                    <div class="time-ez font-mono font-bold">{{ value.min }}:{{ '{:02}'.format(value.sec) }}</div>
                 </div>
-                <div class="bg-red-900/20 border border-red-800/30 rounded-lg p-2 text-center">
-                    <div class="text-red-500 text-xs mb-1">HZ</div>
-                    <div class="text-red-400 font-mono font-medium">{{ hz_result[key].min }}:{{ '{:02}'.format(hz_result[key].sec) }}</div>
+                <div class="bg-time-hz/10 border border-time-hz/20 rounded-xl p-2.5 text-center">
+                    <div class="text-time-hz text-xs font-semibold mb-1">HZ</div>
+                    <div class="time-hz font-mono font-bold">{{ hz_result[key].min }}:{{ '{:02}'.format(hz_result[key].sec) }}</div>
                 </div>
             </div>
         </div>
@@ -90,15 +90,23 @@
     </div>
 
     <!-- Actions -->
-    <div class="flex flex-wrap gap-3 mt-6 justify-center">
-        {% if calculation_id %}
-        <a href="/api/export/pdf/{{ calculation_id }}" class="btn-primary inline-flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
-            PDF herunterladen
-        </a>
-        {% endif %}
-        <a href="/rechner" class="btn-secondary">Neue Berechnung</a>
+    <div class="mt-8">
+        <div class="accent-bar mb-6"></div>
+        <div class="flex flex-wrap gap-3 justify-center">
+            {% if calculation_id %}
+            <a href="/api/export/pdf/{{ calculation_id }}" class="btn-primary inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                PDF herunterladen
+            </a>
+            {% endif %}
+            <a href="/rechner" class="btn-secondary inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Neue Berechnung
+            </a>
+        </div>
     </div>
 </div>

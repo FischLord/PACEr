@@ -6,32 +6,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/pacerWhiteMid.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='build/theme.css') }}" />
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <title>PACEr {{ title if title else '' }}</title>
 </head>
 
-<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
+<body class="bg-surface text-text-primary min-h-screen flex flex-col">
     <!-- Sticky Navbar -->
-    <nav class="sticky top-0 z-50 backdrop-blur-lg bg-gray-900/80 border-b border-gray-800">
+    <nav class="sticky top-0 z-50 glass border-b border-surface-border/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <a class="font-bold text-xl tracking-tight text-orange-600 hover:text-orange-500 transition-colors" href="/">
-                    PACEr
+                <a class="flex items-center gap-2.5 group" href="/">
+                    <img src="{{ url_for('static', filename='img/pacerWhiteMid.png') }}" alt="PACEr" class="h-8 w-8">
+                    <span class="font-extrabold text-xl tracking-tight text-accent group-hover:text-accent-hover transition-colors">PACEr</span>
                 </a>
                 <!-- Desktop nav -->
-                <div class="hidden lg:flex items-center space-x-6">
-                    <a href="/rechner" class="nav-link">Rechner</a>
-                    <a href="/turniere" class="nav-link">Turniere</a>
-                    <a href="/reportProblem" class="nav-link">Probleme melden</a>
-                    <a href="/aboutUs" class="nav-link">Über uns</a>
-                    <a href="/impressum" class="nav-link">Impressum</a>
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="/rechner" class="nav-link {% if request.path == '/rechner' %}nav-link-active{% endif %}">Rechner</a>
+                    <a href="/turniere" class="nav-link {% if '/turnier' in request.path %}nav-link-active{% endif %}">Turniere</a>
+                    <a href="/reportProblem" class="nav-link {% if request.path == '/reportProblem' %}nav-link-active{% endif %}">Feedback</a>
+                    <a href="/aboutUs" class="nav-link {% if request.path == '/aboutUs' %}nav-link-active{% endif %}">Über uns</a>
+                    <a href="/impressum" class="nav-link {% if request.path == '/impressum' %}nav-link-active{% endif %}">Impressum</a>
                     {% if current_user.is_authenticated %}
-                    <a href="/adminTools" class="nav-link text-orange-500">Admin</a>
+                    <a href="/adminTools" class="nav-link text-accent {% if '/admin' in request.path %}nav-link-active{% endif %}">Admin</a>
                     {% endif %}
                 </div>
                 <!-- Mobile hamburger -->
-                <button id="nav-toggle" class="lg:hidden flex items-center px-3 py-2 rounded-lg text-orange-600 hover:bg-gray-800 transition-colors">
+                <button id="nav-toggle" aria-expanded="false" aria-controls="nav-overlay"
+                    class="lg:hidden flex items-center p-2.5 rounded-xl text-accent hover:bg-surface-overlay transition-colors">
                     <svg class="fill-current h-5 w-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <title>Menu</title>
                         <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
@@ -39,23 +45,38 @@
                 </button>
             </div>
         </div>
-        <!-- Mobile menu -->
-        <div id="nav-content" class="lg:hidden hidden overflow-hidden transition-all duration-300 ease-in-out">
-            <div class="px-4 pb-4 space-y-2 border-t border-gray-800">
-                <a href="/rechner" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Rechner</a>
-                <a href="/turniere" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Turniere</a>
-                <a href="/reportProblem" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Probleme melden</a>
-                <a href="/aboutUs" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Über uns</a>
-                <a href="/impressum" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Impressum</a>
+    </nav>
+
+    <!-- Mobile menu overlay -->
+    <div id="nav-overlay" class="fixed inset-0 z-40 lg:hidden pointer-events-none" aria-hidden="true">
+        <!-- Backdrop -->
+        <div id="nav-backdrop" class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300"></div>
+        <!-- Slide-in panel -->
+        <div id="nav-panel" class="absolute top-0 right-0 h-full w-72 max-w-[80vw] bg-surface-raised border-l border-surface-border
+                    transform translate-x-full transition-transform duration-300 ease-out">
+            <div class="flex items-center justify-between p-4 border-b border-surface-border">
+                <span class="font-bold text-accent text-lg">Menu</span>
+                <button id="nav-close" class="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-surface-overlay transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 space-y-1">
+                <a href="/rechner" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/rechner' %}text-accent bg-surface-overlay{% endif %}">Rechner</a>
+                <a href="/turniere" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if '/turnier' in request.path %}text-accent bg-surface-overlay{% endif %}">Turniere</a>
+                <a href="/reportProblem" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/reportProblem' %}text-accent bg-surface-overlay{% endif %}">Feedback</a>
+                <a href="/aboutUs" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/aboutUs' %}text-accent bg-surface-overlay{% endif %}">Über uns</a>
+                <a href="/impressum" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/impressum' %}text-accent bg-surface-overlay{% endif %}">Impressum</a>
                 {% if current_user.is_authenticated %}
-                <a href="/adminTools" class="block py-2 text-orange-500 hover:text-orange-400 transition-colors">Admin</a>
+                <a href="/adminTools" class="block py-3 px-4 rounded-xl text-accent hover:bg-surface-overlay transition-all">Admin</a>
                 {% endif %}
             </div>
         </div>
-    </nav>
+    </div>
 
     <!-- Toast container -->
-    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2"></div>
+    <div id="toast-container" class="fixed top-20 left-4 right-4 sm:left-auto sm:right-4 z-50 flex flex-col gap-2"></div>
 
     {% if notification %}
     <script>
@@ -67,42 +88,46 @@
     </script>
     {% endif %}
 
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
         {% block content %} {% endblock %}
     </main>
 
-    <footer class="bg-gray-800/50 border-t border-gray-800 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <footer class="bg-surface-raised border-t border-surface-border mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="accent-bar mb-8"></div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <a class="text-orange-600 font-bold text-2xl" href="/">PACEr</a>
-                    <p class="text-gray-500 text-sm mt-2">&copy; {{ current_year }} | All rights reserved</p>
+                    <a class="flex items-center gap-2 group" href="/">
+                        <img src="{{ url_for('static', filename='img/pacerWhiteMid.png') }}" alt="PACEr" class="h-7 w-7">
+                        <span class="text-accent font-bold text-xl">PACEr</span>
+                    </a>
+                    <p class="text-text-muted text-sm mt-3">&copy; {{ current_year }} | All rights reserved</p>
                 </div>
                 <div>
-                    <p class="uppercase text-gray-500 text-sm font-medium mb-3">Navigation</p>
-                    <ul class="space-y-2">
-                        <li><a href="/rechner" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Rechner</a></li>
-                        <li><a href="/turniere" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Turniere</a></li>
-                        <li><a href="/reportProblem" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Probleme Melden</a></li>
-                        <li><a href="/aboutUs" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Über uns</a></li>
+                    <p class="uppercase text-text-muted text-xs font-semibold tracking-wider mb-4">Navigation</p>
+                    <ul class="space-y-2.5">
+                        <li><a href="/rechner" class="text-text-secondary hover:text-accent text-sm transition-colors">Rechner</a></li>
+                        <li><a href="/turniere" class="text-text-secondary hover:text-accent text-sm transition-colors">Turniere</a></li>
+                        <li><a href="/reportProblem" class="text-text-secondary hover:text-accent text-sm transition-colors">Feedback</a></li>
+                        <li><a href="/aboutUs" class="text-text-secondary hover:text-accent text-sm transition-colors">Über uns</a></li>
                     </ul>
                 </div>
                 <div>
-                    <p class="uppercase text-gray-500 text-sm font-medium mb-3">Legal</p>
-                    <ul class="space-y-2">
-                        <li><a href="/impressum" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Impressum</a></li>
+                    <p class="uppercase text-text-muted text-xs font-semibold tracking-wider mb-4">Legal</p>
+                    <ul class="space-y-2.5">
+                        <li><a href="/impressum" class="text-text-secondary hover:text-accent text-sm transition-colors">Impressum</a></li>
                         {% if current_user.is_authenticated %}
-                        <li><a href="/adminLogout" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Abmelden</a></li>
+                        <li><a href="/adminLogout" class="text-text-secondary hover:text-accent text-sm transition-colors">Abmelden</a></li>
                         {% else %}
-                        <li><a href="/adminLogin" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Admin</a></li>
+                        <li><a href="/adminLogin" class="text-text-secondary hover:text-accent text-sm transition-colors">Admin</a></li>
                         {% endif %}
                     </ul>
                 </div>
                 <div>
-                    <p class="uppercase text-gray-500 text-sm font-medium mb-3">Social</p>
-                    <ul class="space-y-2">
-                        <li><a href="https://www.facebook.com/profile.php?id=100012000550092" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Facebook</a></li>
-                        <li><a href="https://www.instagram.com/dark4doener/" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Instagram</a></li>
+                    <p class="uppercase text-text-muted text-xs font-semibold tracking-wider mb-4">Social</p>
+                    <ul class="space-y-2.5">
+                        <li><a href="https://www.facebook.com/profile.php?id=100012000550092" class="text-text-secondary hover:text-accent text-sm transition-colors">Facebook</a></li>
+                        <li><a href="https://www.instagram.com/dark4doener/" class="text-text-secondary hover:text-accent text-sm transition-colors">Instagram</a></li>
                     </ul>
                 </div>
             </div>
@@ -111,13 +136,21 @@
 
     <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
-    <!-- HTMX CSRF header for all requests -->
+    <!-- HTMX CSRF header + lifecycle -->
     <script>
         document.body.addEventListener('htmx:configRequest', function(event) {
             var token = document.querySelector('meta[name="csrf-token"]');
             if (token) {
                 event.detail.headers['X-CSRFToken'] = token.getAttribute('content');
             }
+        });
+        document.body.addEventListener('htmx:beforeRequest', function(event) {
+            var target = event.detail.target;
+            if (target) target.style.opacity = '0.6';
+        });
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            var target = event.detail.target;
+            if (target) target.style.opacity = '1';
         });
     </script>
 </body>

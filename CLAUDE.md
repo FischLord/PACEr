@@ -29,8 +29,8 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 - **Auth:** Flask-Login with `User` model, session-based, CSRF protection
 - `PACEr/routes/` — Five blueprints:
   - `calculator.py` — Pace calculator (`/rechner`), HTMX API (`/api/calculate`), PDF export, OCR
-  - `home.py` — Static pages (`/`, `/projectInfo`, `/aboutUs`, `/impressum`)
-  - `report.py` — Bug reporting (`/reportProblem`)
+  - `home.py` — Landing page (`/`), Projekt-Info (`/projektInfo`), About (`/aboutUs`), Impressum (`/impressum`)
+  - `report.py` — Feedback form (`/reportProblem`)
   - `admin.py` — Admin panel (`/adminLogin`, `/adminTools`, `/viewReports`, `/changePassword`)
   - `tournament.py` — Tournament CRUD (admin) + public views (`/turniere`)
 - `PACEr/helper.py` — Core business logic: `calculatePace`, `pace`, `oldPace`, `writeStatistics`
@@ -42,6 +42,31 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 - `PACEr/models.py` — User, Report, UsageStatistic, Calculation, Tournament, AdminConfig
 - `PACEr/templates/` — Jinja2 + HTMX, base template `layout.html`, partials in `partials/`
 - `PACEr/static/css/theme.css` — Tailwind v3 source (built to `static/build/theme.css`)
+- `PACEr/static/js/` — `layout.js` (mobile menu, stagger animations), `calculator.js` (validation, mode toggle), `notification.js` (toasts), `reportProblem.js`
+
+## Design System
+
+**Theme:** Dark, sporty (Strava/Nike-Run-Club-inspired). Inter font via Google Fonts.
+
+### Color Tokens (defined in `tailwind.config.js`)
+- **Surface:** `surface` (#0a0a0f), `surface-raised` (#141419), `surface-overlay` (#1c1c24), `surface-border` (#2a2a35)
+- **Accent:** `accent` (#f97316 orange), `accent-hover` (#fb923c)
+- **Time colors:** `time-bz` (#4ade80 green), `time-ez` (#f97316 orange), `time-hz` (#f87171 red)
+- **Text:** `text-primary` (#f5f5f5), `text-secondary` (#a1a1aa), `text-muted` (#71717a)
+
+### Component Classes (defined in `theme.css`)
+- **Surfaces:** `.card`, `.card-hover` (lift + accent glow), `.glass` (backdrop-blur)
+- **Forms:** `.form-input`, `.form-select`, `.form-label` (uppercase, tracking-wide)
+- **Buttons:** `.btn-primary` (accent, shadow-glow), `.btn-secondary`, `.btn-icon`, `.btn-danger`
+- **Typography:** `.page-title` (text-4xl md:5xl, extrabold), `.section-header` (text-2xl, bold)
+- **Chips:** `.chip` with `.peer:checked ~ .chip` auto-activation (no JS needed)
+- **Slider:** `.range-slider` (w-6 h-6 thumb, accent shadow)
+- **Timer:** `.time-display`, `.time-bz`, `.time-ez`, `.time-hz`
+- **Decorative:** `.accent-bar`, `.clip-angle`, `.loading-skeleton`, `.stagger-item`
+- **Nav:** `.nav-link`, `.nav-link-active`
+
+### Tailwind Safelist
+`grid-cols-2`, `grid-cols-3`, `grid-cols-4` are safelisted for dynamic Jinja classes.
 
 ## Auth System
 
@@ -57,11 +82,24 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 ## Key Conventions
 
 - UI text, variable names, and comments are in **German**
-- Tailwind CSS: gray-900 bg, gray-800 header/footer, orange-600 accent, gray-400 text
-- Component classes: `.card`, `.form-input`, `.btn-primary`, `.btn-secondary`, `.page-header`, `.section-header`
+- "Probleme melden" renamed to **"Feedback"** in nav/footer
 - Python: snake_case; JavaScript: camelCase
 - Dependencies: Flask >=3.0, Flask-Login >=0.6, Flask-SQLAlchemy, ReportLab, Werkzeug >=3.0
 - No test suite — verify manually after changes
+
+## Template Structure
+
+- `layout.html` — Base: glass navbar (logo + Inter font), slide-in mobile overlay, footer with accent-bar, HTMX lifecycle (opacity transitions)
+- `projektInfo.html` — Landing page (hero, features, how-it-works, sport showcase, CTA). Also serves as `/`
+- `calculator/rechner.html` — Segmented control toggle (auto/manuell), loading skeleton
+- `partials/form_new.html` — Auto mode: chips for Streckenart, range slider for Tempo
+- `partials/form_old.html` — Manual mode: timer-style Min:Sek inputs
+- `partials/results.html` — Meta card with large numbers, color-coded timer table, PDF/new-calc actions
+- `tournaments/index.html` — Card grid with hover-lift, date badges
+- `tournaments/detail.html` — Accordion with BZ/EZ/HZ pill badges
+- `admin/` — 5 templates extending `adminTools.html` sidebar layout
+- `reportProblem.html` — Feedback form with character counter
+- `aboutUs.html`, `impressum.html` — Info pages with accent-bar separators
 
 ## Gotchas
 
@@ -69,3 +107,5 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 - Tailwind v4 installed by default with `npm install -D tailwindcss` — use `tailwindcss@3` for config-based setup
 - SQLite needs write permissions on both the `.db` file AND its parent directory (for journal files)
 - When deleting `pacer.db` to reset, restart the server so `create_all()` + seed runs again
+- `peer-checked:` variant cannot apply to custom `@apply`-based component classes — use CSS selector `.peer:checked ~ .chip` instead
+- AdminConfig model exists in `models.py` but is unused (legacy from pre-auth migration)

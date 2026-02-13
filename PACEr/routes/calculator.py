@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from flask import Blueprint, render_template, request, redirect, url_for, send_file
 from helper import pace, calculatePace, oldPace, writeStatistics
 from models import db, Calculation, Tournament
@@ -17,7 +18,7 @@ def rechner():
         return _handle_calculation()
 
     mode = request.args.get('mode', 'auto')
-    tournaments = Tournament.query.filter_by(is_active=True).order_by(Tournament.datum.desc()).all()
+    tournaments = Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all()
     return render_template(
         'calculator/rechner.html',
         mode=mode,
@@ -54,7 +55,7 @@ def api_calculate():
 def partials_form():
     """Returns form partial for mode switching via HTMX."""
     mode = request.args.get('mode', 'auto')
-    tournaments = Tournament.query.filter_by(is_active=True).order_by(Tournament.datum.desc()).all()
+    tournaments = Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all()
     template = 'partials/form_old.html' if mode == 'manuell' else 'partials/form_new.html'
     return render_template(template, use_htmx=True, tournaments=tournaments)
 
@@ -133,7 +134,7 @@ def _handle_calculation(partial=False):
             return render_template(
                 'calculator/rechner.html', mode=mode, has_result=False,
                 notification=error, notificationName='Fehler',
-                tournaments=Tournament.query.filter_by(is_active=True).all(),
+                tournaments=Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all(),
             )
 
         if mode == 'manuell':
@@ -211,5 +212,5 @@ def _handle_calculation(partial=False):
         return render_template(
             'calculator/rechner.html', mode=request.form.get('mode', 'auto'),
             has_result=False, notification=error, notificationName='Fehler',
-            tournaments=Tournament.query.filter_by(is_active=True).all(),
+            tournaments=Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all(),
         )
