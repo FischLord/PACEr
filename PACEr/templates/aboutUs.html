@@ -1,50 +1,58 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<header class="page-header mb-8">
-    <h1 class="page-title">Über uns</h1>
-</header>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
-    <div class="card">
-        <img src="{{ url_for('static', filename='img/aboutUs/janneck.webp') }}" alt="Bild von Janneck Lehmann"
-            class="w-full h-auto rounded-xl mb-4">
-        <h2 class="section-header mb-2">Janneck Lehmann</h2>
-        <p class="text-text-secondary">Seit dem 15. August 2022 absolviere ich eine Ausbildung zum Fachinformatiker für
-            Systemintegration beim Zentralen IT-Dienstleister Brandenburg.
-            Darüber hinaus bin ich seit 2016 leidenschaftlicher Fahrer im Turniersport. Projekte wie dieses nutze ich,
-            um meine Fähigkeiten zu erweitern und gleichzeitig etwas Sinnvolles zu erschaffen.</p>
-    </div>
-</div>
-
-<section class="mt-8 animate-slide-up" style="animation-delay: 0.1s">
-    <div class="card">
-        <h2 class="section-header mb-3">Weitere Informationen</h2>
-        <p class="text-text-secondary">Ich möchte diesen Textblock nutzen, um jeden Nutzer des Rechners darauf hinzuweisen,
-            dass Anregungen oder Verbesserungsvorschläge gerne über das Feedback-Kontaktformular weitergegeben
-            werden können.
-            Ich freue mich über jede Nachricht und werde versuchen, diese schnellstmöglich zu bearbeiten.</p>
-        <p class="text-text-secondary my-4">PS: Da ich weit davon entfernt bin ein Mediendesigner zu werden, bin ich auch
-            über jede Design Idee erfreut.</p>
-        <div class="accent-bar my-4"></div>
-        <p class="text-text-secondary">
-            Aktuell kann es zu unregelmäßigen Onlinezeiten kommen, da sich die Webapplikation PACEr noch in der
-            Entwicklung befindet. Weiterhin läuft die Website auf einem Server, der mir durch meinen Dozenten zur
-            Verfügung gestellt wurde.
-            Das Rechenzentrum, in dem sich der Server befindet, wird von den Azubis des ZIT-BB betreut. Sollte es zu
-            Ausfällen kommen, bitte ich um Verständnis.
-            Solange ich keine Kosten durch das Hosting der Webapplikation habe, wird keine Werbung auf der Website
-            geschaltet.
-        </p>
+<!-- Hero / Profile -->
+<section class="flex flex-col items-center text-center mb-12 stagger-item">
+    <div class="relative inline-flex flex-col items-center">
+        <img src="{{ url_for('static', filename='img/aboutUs/janneck.webp') }}" alt="Janneck Lehmann"
+            class="rounded-full w-32 h-32 md:w-48 md:h-48 object-cover border-2 border-accent shadow-lg shadow-accent/20 relative z-10">
+        <div class="-mt-8 md:-mt-12 pt-10 md:pt-14 pb-4 px-10 md:px-14 rounded-2xl backdrop-blur-xl bg-surface-raised/60 border border-surface-border/50 shadow-lg">
+            <h1 class="page-title mb-1">Janneck Lehmann</h1>
+            <p class="text-text-secondary text-lg">Fachinformatiker, Turniersport-Fahrer &amp; Entwickler von PACEr</p>
+        </div>
     </div>
 </section>
 
-<section class="mt-8 animate-slide-up" style="animation-delay: 0.2s">
+<div class="accent-bar mx-auto mb-12"></div>
+
+<!-- Über mich -->
+<section class="max-w-2xl mx-auto mb-12 stagger-item" style="transition-delay: 0.1s">
     <div class="card">
-        <h2 class="section-header mb-3">Kontakt</h2>
-        <p class="text-text-secondary">Name: Janneck Lehmann<br>E-Mail: <a href="mailto:info@j-rz.de"
-                class="text-accent hover:text-accent-hover transition-colors">info@j-rz.de</a></p>
+        <h2 class="section-header mb-4">Über mich</h2>
+        <div class="space-y-4 text-text-secondary leading-relaxed">
+            <p>
+                Ich habe meine Ausbildung zum Fachinformatiker für Systemintegration erfolgreich abgeschlossen
+                und plane, im Laufe des Jahres Medieninformatik zu studieren.
+            </p>
+            <p>
+                Seit 2016 bin ich leidenschaftlicher Fahrer im Turniersport und genau aus dieser Kombination
+                von IT und Fahrsport ist PACEr entstanden. Statt die Split-Zeiten für den Marathon von Hand
+                auszurechnen, übernimmt jetzt eine App die Arbeit.
+            </p>
+            <p>
+                Design-Tipps nehme ich übrigens dankbar an, meine Stärken liegen definitiv eher im Backend.
+            </p>
+        </div>
     </div>
+</section>
+
+<!-- Feedback CTA -->
+<section class="max-w-2xl mx-auto mb-12 stagger-item" style="transition-delay: 0.2s">
+    <div class="card text-center">
+        <h2 class="section-header mb-3">Feedback willkommen</h2>
+        <p class="text-text-secondary mb-6">
+            Anregungen, Verbesserungsvorschläge oder Fehler gefunden? Ich freue mich über jede Nachricht.
+        </p>
+        <a href="/reportProblem" class="btn-primary inline-block">Feedback senden</a>
+    </div>
+</section>
+
+<!-- Kontakt -->
+<section class="max-w-2xl mx-auto mb-8 stagger-item" style="transition-delay: 0.3s">
+    <p class="text-center text-text-secondary">
+        Kontakt:
+        <a href="mailto:info@j-rz.de" class="text-accent hover:text-accent-hover transition-colors">info@j-rz.de</a>
+    </p>
 </section>
 
 {% endblock %}

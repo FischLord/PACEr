@@ -11,7 +11,7 @@
                 style="{% if mode != 'manuell' %}left: 4px; width: calc(50% - 4px);{% else %}left: calc(50%); width: calc(50% - 4px);{% endif %}"></div>
             <button id="btn-auto" class="relative z-10 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 {% if mode != 'manuell' %}text-white{% else %}text-text-secondary hover:text-text-primary{% endif %}"
                 hx-get="/partials/form?mode=auto" hx-target="#form-area" hx-swap="innerHTML">
-                Automatisch
+                Auto
             </button>
             <button id="btn-manuell" class="relative z-10 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 {% if mode == 'manuell' %}text-white{% else %}text-text-secondary hover:text-text-primary{% endif %}"
                 hx-get="/partials/form?mode=manuell" hx-target="#form-area" hx-swap="innerHTML">

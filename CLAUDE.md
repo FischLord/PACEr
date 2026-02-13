@@ -62,6 +62,7 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 - **Chips:** `.chip` with `.peer:checked ~ .chip` auto-activation (no JS needed)
 - **Slider:** `.range-slider` (w-6 h-6 thumb, accent shadow)
 - **Timer:** `.time-display`, `.time-bz`, `.time-ez`, `.time-hz`
+- **Flip Cards:** `.flip-card`, `.flip-card-inner`, `.flip-card-front`, `.flip-card-back` (CSS 3D flip), `.flip-card-backdrop` (mobile overlay). Mobile uses JS FLIP animation (position capture → fixed → animate expand/collapse) with `transitionend` + `setTimeout` fallback for cleanup
 - **Decorative:** `.accent-bar`, `.clip-angle`, `.loading-skeleton`, `.stagger-item`
 - **Nav:** `.nav-link`, `.nav-link-active`
 
@@ -82,7 +83,7 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 ## Key Conventions
 
 - UI text, variable names, and comments are in **German**
-- "Probleme melden" renamed to **"Feedback"** in nav/footer
+- "Probleme melden" renamed to **"Feedback"** in nav/footer, "Über uns" renamed to **"Über mich"**
 - Python: snake_case; JavaScript: camelCase
 - Dependencies: Flask >=3.0, Flask-Login >=0.6, Flask-SQLAlchemy, ReportLab, Werkzeug >=3.0
 - No test suite — verify manually after changes
@@ -90,16 +91,17 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 ## Template Structure
 
 - `layout.html` — Base: glass navbar (logo + Inter font), slide-in mobile overlay, footer with accent-bar, HTMX lifecycle (opacity transitions)
-- `projektInfo.html` — Landing page (hero, features, how-it-works, sport showcase, CTA). Also serves as `/`
-- `calculator/rechner.html` — Segmented control toggle (auto/manuell), loading skeleton
-- `partials/form_new.html` — Auto mode: chips for Streckenart, range slider for Tempo
+- `projektInfo.html` — Landing page (hero, features, how-it-works, flip-card sport showcase, CTA). Also serves as `/`. Flip cards use FLIP animation on mobile (expand to overlay with backdrop, animate back on close)
+- `calculator/rechner.html` — Segmented control toggle (Auto/Manuell), loading skeleton
+- `partials/form_new.html` — Auto mode: chips for Streckenart, range slider for Tempo (slider + ticks + labels share one `flex-1` container for alignment)
 - `partials/form_old.html` — Manual mode: timer-style Min:Sek inputs
 - `partials/results.html` — Meta card with large numbers, color-coded timer table, PDF/new-calc actions
 - `tournaments/index.html` — Card grid with hover-lift, date badges
 - `tournaments/detail.html` — Accordion with BZ/EZ/HZ pill badges
 - `admin/` — 5 templates extending `adminTools.html` sidebar layout
 - `reportProblem.html` — Feedback form with character counter
-- `aboutUs.html`, `impressum.html` — Info pages with accent-bar separators
+- `aboutUs.html` — Profile page with glass-card overlay on profile image (backdrop-blur + semi-transparent bg), "Über mich" text section
+- `impressum.html` — Legal info page with accent-bar separators
 
 ## Gotchas
 
@@ -109,3 +111,5 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 - When deleting `pacer.db` to reset, restart the server so `create_all()` + seed runs again
 - `peer-checked:` variant cannot apply to custom `@apply`-based component classes — use CSS selector `.peer:checked ~ .chip` instead
 - AdminConfig model exists in `models.py` but is unused (legacy from pre-auth migration)
+- Flip card mobile overlay: `transitionend` is unreliable for cleanup — always pair with a `setTimeout` fallback to remove inline styles, placeholder, and backdrop
+- Slider tick alignment: ticks container must share the exact same parent as the `<input type="range">` (same `flex-1` wrapper) — separate flex rows cause progressive misalignment

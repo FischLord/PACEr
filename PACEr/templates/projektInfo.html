@@ -92,47 +92,214 @@
     </div>
 </section>
 
-<!-- Sport Showcase -->
+<!-- Sport Showcase — Flip Cards -->
 <section class="mb-20">
     <div class="text-center mb-12">
         <div class="accent-bar mx-auto mb-4"></div>
         <h2 class="section-header">Die Disziplinen</h2>
     </div>
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0s">
-            <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport"
-                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-4">
-                <h3 class="text-text-primary font-bold text-lg">Fahrsport</h3>
+        <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0s">
+            <div class="flip-card-inner rounded-2xl">
+                <div class="flip-card-front rounded-2xl overflow-hidden">
+                    <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-text-primary font-bold text-lg">Fahrsport</h3>
+                    </div>
+                </div>
+                <div class="flip-card-back rounded-2xl overflow-hidden bg-surface-raised border border-surface-border/50 p-5 lg:p-5 flex flex-col justify-center">
+                    <h3 class="text-accent font-bold text-lg mb-3">Fahrsport</h3>
+                    <p class="text-text-secondary text-sm leading-relaxed">Der Fahrsport wird im Leistungssport vom Einspänner bis zum Vierspänner gefahren, mit Ponys oder Pferden. Die Klassen reichen von E über A und M bis S. Jeder Wettbewerb besteht aus Dressur, Marathon und Hindernisfahren.</p>
+                </div>
             </div>
-        </a>
-        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0.1s">
-            <img src="{{ url_for('static', filename='img/projektInfo/dressur.webp') }}" alt="Dressur"
-                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-4">
-                <h3 class="text-text-primary font-bold text-lg">Dressur</h3>
+        </div>
+        <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.1s">
+            <div class="flip-card-inner rounded-2xl">
+                <div class="flip-card-front rounded-2xl overflow-hidden">
+                    <img src="{{ url_for('static', filename='img/projektInfo/dressur.webp') }}" alt="Dressur"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-text-primary font-bold text-lg">Dressur</h3>
+                    </div>
+                </div>
+                <div class="flip-card-back rounded-2xl overflow-hidden bg-surface-raised border border-surface-border/50 p-5 lg:p-5 flex flex-col justify-center">
+                    <h3 class="text-accent font-bold text-lg mb-3">Dressur</h3>
+                    <p class="text-text-secondary text-sm leading-relaxed">In der Dressurprüfung wird eine Aufgabe nach Klasse gefahren, die der Skala der Ausbildung folgt. Die Lektionen müssen von Pferd und Fahrer zeitaufwendig erarbeitet werden.</p>
+                </div>
             </div>
-        </a>
-        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0.2s">
-            <img src="{{ url_for('static', filename='img/projektInfo/marathon.webp') }}" alt="Gelände"
-                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-4">
-                <h3 class="text-text-primary font-bold text-lg">Gelände</h3>
+        </div>
+        <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.2s">
+            <div class="flip-card-inner rounded-2xl">
+                <div class="flip-card-front rounded-2xl overflow-hidden">
+                    <img src="{{ url_for('static', filename='img/projektInfo/marathon.webp') }}" alt="Gelände"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-text-primary font-bold text-lg">Gelände</h3>
+                    </div>
+                </div>
+                <div class="flip-card-back rounded-2xl overflow-hidden bg-surface-raised border border-surface-border/50 p-5 lg:p-5 flex flex-col justify-center">
+                    <h3 class="text-accent font-bold text-lg mb-3">Gelände (Marathon)</h3>
+                    <p class="text-text-secondary text-sm leading-relaxed">Im Marathon gibt es mehrere feste Hindernisse, die durch Streckenabschnitte miteinander verbunden sind. Das genaue Timing ist entscheidend, denn es gibt ein Zeitfenster, in dem man ins Ziel kommen muss. Genau dafür ist PACEr da.</p>
+                </div>
             </div>
-        </a>
-        <a href="/projektInfo" class="group relative aspect-[3/4] rounded-2xl overflow-hidden stagger-item" style="transition-delay: 0.3s">
-            <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}" alt="Hindernisfahren"
-                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-4">
-                <h3 class="text-text-primary font-bold text-lg">Hindernis</h3>
+        </div>
+        <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.3s">
+            <div class="flip-card-inner rounded-2xl">
+                <div class="flip-card-front rounded-2xl overflow-hidden">
+                    <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}" alt="Hindernisfahren"
+                        class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-text-primary font-bold text-lg">Hindernis</h3>
+                    </div>
+                </div>
+                <div class="flip-card-back rounded-2xl overflow-hidden bg-surface-raised border border-surface-border/50 p-5 lg:p-5 flex flex-col justify-center">
+                    <h3 class="text-accent font-bold text-lg mb-3">Hindernisfahren</h3>
+                    <p class="text-text-secondary text-sm leading-relaxed">Beim Hindernisfahren geht es darum, eine bestimmte Anzahl an Kegelpaaren in verschiedenen Formationen innerhalb einer vorgegebenen Zeit zu passieren. Es zählen Fehler vor Zeit.</p>
+                </div>
             </div>
-        </a>
+        </div>
     </div>
 </section>
+
+<!-- Flip Card JS -->
+<script>
+(function() {
+    var isMobile = function() { return window.innerWidth < 1024; };
+    var activeCard = null;
+    var backdrop = null;
+    var placeholder = null;
+    var animating = false;
+
+    function cleanupCard(card) {
+        card.style.position = '';
+        card.style.left = '';
+        card.style.top = '';
+        card.style.width = '';
+        card.style.height = '';
+        card.style.zIndex = '';
+        card.style.aspectRatio = '';
+        card.style.transition = '';
+        if (placeholder) { placeholder.remove(); placeholder = null; }
+        if (backdrop) { backdrop.remove(); backdrop = null; }
+        animating = false;
+    }
+
+    function closeCard() {
+        if (!activeCard || animating) return;
+        var card = activeCard;
+        activeCard = null;
+
+        if (isMobile() && placeholder) {
+            animating = true;
+            var rect = placeholder.getBoundingClientRect();
+
+            // Animate back to grid position
+            card.style.left = rect.left + 'px';
+            card.style.top = rect.top + 'px';
+            card.style.width = rect.width + 'px';
+            card.style.height = rect.height + 'px';
+
+            // Flip back
+            card.classList.remove('is-flipped');
+
+            // Fade backdrop
+            if (backdrop) backdrop.style.opacity = '0';
+
+            // Cleanup after transition, with fallback timeout
+            var cleaned = false;
+            var doCleanup = function() {
+                if (cleaned) return;
+                cleaned = true;
+                card.removeEventListener('transitionend', onEnd);
+                cleanupCard(card);
+            };
+            var onEnd = function(e) {
+                if (e.propertyName !== 'left') return;
+                doCleanup();
+            };
+            card.addEventListener('transitionend', onEnd);
+            setTimeout(doCleanup, 500);
+        } else {
+            card.classList.remove('is-flipped');
+            if (backdrop) { backdrop.remove(); backdrop = null; }
+        }
+    }
+
+    function flipCard(card) {
+        if (animating) return;
+
+        if (card.classList.contains('is-flipped')) {
+            closeCard();
+            return;
+        }
+
+        if (activeCard && activeCard !== card) {
+            closeCard();
+        }
+
+        if (isMobile()) {
+            var rect = card.getBoundingClientRect();
+
+            // Placeholder keeps grid space
+            placeholder = document.createElement('div');
+            placeholder.style.width = rect.width + 'px';
+            placeholder.style.height = rect.height + 'px';
+            placeholder.style.borderRadius = '1rem';
+            card.parentNode.insertBefore(placeholder, card);
+
+            // Fix card at its current grid position
+            card.style.position = 'fixed';
+            card.style.left = rect.left + 'px';
+            card.style.top = rect.top + 'px';
+            card.style.width = rect.width + 'px';
+            card.style.height = rect.height + 'px';
+            card.style.zIndex = '50';
+            card.style.aspectRatio = 'auto';
+
+            // Backdrop
+            backdrop = document.createElement('div');
+            backdrop.className = 'flip-card-backdrop';
+            backdrop.style.opacity = '0';
+            backdrop.addEventListener('click', closeCard);
+            document.body.appendChild(backdrop);
+
+            // Force reflow
+            card.offsetHeight;
+
+            // Enable transitions
+            var ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.transition = 'left 0.4s ' + ease + ', top 0.4s ' + ease + ', width 0.4s ' + ease + ', height 0.4s ' + ease;
+
+            // Flip + expand
+            card.classList.add('is-flipped');
+            activeCard = card;
+
+            requestAnimationFrame(function() {
+                var m = 16;
+                card.style.left = m + 'px';
+                card.style.top = m + 'px';
+                card.style.width = (window.innerWidth - 2 * m) + 'px';
+                card.style.height = (window.innerHeight - 2 * m) + 'px';
+                backdrop.style.opacity = '1';
+            });
+        } else {
+            card.classList.add('is-flipped');
+        }
+    }
+
+    document.querySelectorAll('.flip-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            if (e.target.classList.contains('flip-card-backdrop')) return;
+            flipCard(card);
+        });
+    });
+})();
+</script>
 
 <!-- Final CTA -->
 <section class="mb-8">

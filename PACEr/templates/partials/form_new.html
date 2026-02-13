@@ -33,13 +33,16 @@
 
     <div class="mb-6" id="tempoInputField" style="display: none">
         <label for="kmh" class="form-label">Tempo (km/h)</label>
-        <div class="flex items-center gap-4">
-            <input type="range" id="kmh" name="kmh" class="range-slider flex-1" min="8" max="14" value="11" required>
-            <span id="kmh-value" class="text-accent font-bold text-xl min-w-[4ch] text-center">11</span>
-        </div>
-        <div class="flex justify-between text-xs text-text-muted mt-1.5 px-0.5">
-            <span id="kmh-min-label">8 km/h</span>
-            <span id="kmh-max-label">14 km/h</span>
+        <div class="flex items-start gap-4">
+            <div class="flex-1">
+                <input type="range" id="kmh" name="kmh" class="range-slider w-full" min="8" max="14" step="1" value="11" required>
+                <div id="kmh-ticks" class="flex justify-between px-[12px] mt-1"></div>
+                <div class="flex justify-between text-xs text-text-muted mt-1">
+                    <span id="kmh-min-label">8 km/h</span>
+                    <span id="kmh-max-label">14 km/h</span>
+                </div>
+            </div>
+            <span id="kmh-value" class="text-accent font-bold text-xl min-w-[4ch] text-center pt-0.5">11</span>
         </div>
     </div>
 

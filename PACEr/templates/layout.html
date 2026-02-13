@@ -29,7 +29,7 @@
                     <a href="/rechner" class="nav-link {% if request.path == '/rechner' %}nav-link-active{% endif %}">Rechner</a>
                     <a href="/turniere" class="nav-link {% if '/turnier' in request.path %}nav-link-active{% endif %}">Turniere</a>
                     <a href="/reportProblem" class="nav-link {% if request.path == '/reportProblem' %}nav-link-active{% endif %}">Feedback</a>
-                    <a href="/aboutUs" class="nav-link {% if request.path == '/aboutUs' %}nav-link-active{% endif %}">Über uns</a>
+                    <a href="/aboutUs" class="nav-link {% if request.path == '/aboutUs' %}nav-link-active{% endif %}">Über mich</a>
                     <a href="/impressum" class="nav-link {% if request.path == '/impressum' %}nav-link-active{% endif %}">Impressum</a>
                     {% if current_user.is_authenticated %}
                     <a href="/adminTools" class="nav-link text-accent {% if '/admin' in request.path %}nav-link-active{% endif %}">Admin</a>
@@ -66,7 +66,7 @@
                 <a href="/rechner" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/rechner' %}text-accent bg-surface-overlay{% endif %}">Rechner</a>
                 <a href="/turniere" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if '/turnier' in request.path %}text-accent bg-surface-overlay{% endif %}">Turniere</a>
                 <a href="/reportProblem" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/reportProblem' %}text-accent bg-surface-overlay{% endif %}">Feedback</a>
-                <a href="/aboutUs" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/aboutUs' %}text-accent bg-surface-overlay{% endif %}">Über uns</a>
+                <a href="/aboutUs" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/aboutUs' %}text-accent bg-surface-overlay{% endif %}">Über mich</a>
                 <a href="/impressum" class="block py-3 px-4 rounded-xl text-text-secondary hover:text-accent hover:bg-surface-overlay transition-all {% if request.path == '/impressum' %}text-accent bg-surface-overlay{% endif %}">Impressum</a>
                 {% if current_user.is_authenticated %}
                 <a href="/adminTools" class="block py-3 px-4 rounded-xl text-accent hover:bg-surface-overlay transition-all">Admin</a>
@@ -109,7 +109,7 @@
                         <li><a href="/rechner" class="text-text-secondary hover:text-accent text-sm transition-colors">Rechner</a></li>
                         <li><a href="/turniere" class="text-text-secondary hover:text-accent text-sm transition-colors">Turniere</a></li>
                         <li><a href="/reportProblem" class="text-text-secondary hover:text-accent text-sm transition-colors">Feedback</a></li>
-                        <li><a href="/aboutUs" class="text-text-secondary hover:text-accent text-sm transition-colors">Über uns</a></li>
+                        <li><a href="/aboutUs" class="text-text-secondary hover:text-accent text-sm transition-colors">Über mich</a></li>
                     </ul>
                 </div>
                 <div>

@@ -7,6 +7,17 @@ var kmhRanges = {
     'schrittstrecke': { min: 3, max: 7 }
 };
 
+function updateKmhTicks(min, max) {
+    var container = document.getElementById('kmh-ticks');
+    if (!container) return;
+    container.innerHTML = '';
+    for (var i = min; i <= max; i++) {
+        var tick = document.createElement('div');
+        tick.className = 'slider-tick';
+        container.appendChild(tick);
+    }
+}
+
 function updateKmhOptions(art) {
     var kmhSlider = document.getElementById('kmh');
     var kmhValue = document.getElementById('kmh-value');
@@ -19,12 +30,14 @@ function updateKmhOptions(art) {
     if (range) {
         kmhSlider.min = range.min;
         kmhSlider.max = range.max;
+        kmhSlider.step = 1;
         // Set default to middle of range
         var mid = Math.round((range.min + range.max) / 2);
         kmhSlider.value = mid;
         if (kmhValue) kmhValue.textContent = mid;
         if (kmhMinLabel) kmhMinLabel.textContent = range.min + ' km/h';
         if (kmhMaxLabel) kmhMaxLabel.textContent = range.max + ' km/h';
+        updateKmhTicks(range.min, range.max);
         tempoField.style.display = '';
     } else {
         tempoField.style.display = 'none';
