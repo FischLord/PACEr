@@ -1,39 +1,50 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<!-- Überschrift -->
-<header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8 mb-8">
-    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">Über uns!</h1>
+<header class="page-header mb-8">
+    <h1 class="text-4xl font-bold text-orange-600">Über uns!</h1>
 </header>
-<!-- R von Bildern und Beschreibungen -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <!-- Element 1 -->
-    <div class="bg-gray-800 rounded-lg p-4">
-        <img src="{{ url_for('static', filename='img/aboutUs/janneck.webp') }}" alt="Bild von Janneck Lehmann" class="w-full h-auto rounded-lg mb-4">
-        <h2 class="text-2xl font-bold text-600 mb-2 text-orange-600">Janneck Lehmann</h2>
-        <p class="text-gray-400">Seit dem 15. August 2022 absolviere ich eine Ausbildung zum Fachinformatiker für Systemintegration beim Zentralen IT-Dienstleister Brandenburg.
-            Darüber hinaus bin ich seit 2016 leidenschaftlicher Fahrer im Turniersport. Projekte wie dieses nutze ich, um meine Fähigkeiten zu erweitern und gleichzeitig etwas Sinnvolles zu erschaffen.</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
+    <div class="card">
+        <img src="{{ url_for('static', filename='img/aboutUs/janneck.webp') }}" alt="Bild von Janneck Lehmann"
+            class="w-full h-auto rounded-lg mb-4">
+        <h2 class="section-header mb-2">Janneck Lehmann</h2>
+        <p class="text-gray-400">Seit dem 15. August 2022 absolviere ich eine Ausbildung zum Fachinformatiker für
+            Systemintegration beim Zentralen IT-Dienstleister Brandenburg.
+            Darüber hinaus bin ich seit 2016 leidenschaftlicher Fahrer im Turniersport. Projekte wie dieses nutze ich,
+            um meine Fähigkeiten zu erweitern und gleichzeitig etwas Sinnvolles zu erschaffen.</p>
     </div>
 </div>
 
-<!-- Textblock -->
-<div class="my-8">
-    <h2 class="text-2xl font-bold text-orange-600">Weitere Informationen</h2>
-    <p class="text-gray-400">Ich möchte diesen Textblock nutzen, um jeden Nutzer des Rechners darauf hinzuweisen, dass Anregungen oder Verbesserungsvorschläge gerne über das Problem-Melden-Kontaktformular weitergegeben werden können.
-        Ich freue mich über jede Nachricht und werde versuchen, diese schnellstmöglich zu bearbeiten. </p> 
-    <p class="text-gray-400 my-4"> PS: Da ich weit davon entfernt bin ein Mediendesigner zu werden, bin ich auch über jede Design Idee erfreut.</p>
-    <hr class="border-t border-orange-400 m-3">
-    <p class="text-gray-400 my-4">
-        Aktuell kann es zu unregelmäßigen Onlinezeiten kommen, da sich die Webapplikation PACEr noch in der Entwicklung befindet. Weiterhin läuft die Website auf einem Server, der mir durch meinen Dozenten zur Verfügung gestellt wurde.
-        Das Rechenzentrum, in dem sich der Server befindet, wird von den Azubis des ZIT-BB betreut. Sollte es zu Ausfällen kommen, bitte ich um Verständnis.
-        Solange ich keine Kosten durch das Hosting der Webapplikation habe, wird keine Werbung auf der Website geschaltet. Sollte sich dies ändern, werde ich dies an dieser Stelle bekannt geben.  
-    </p>
-</div>
+<section class="mt-8 animate-slide-up" style="animation-delay: 0.1s">
+    <div class="card">
+        <h2 class="section-header mb-3">Weitere Informationen</h2>
+        <p class="text-gray-400">Ich möchte diesen Textblock nutzen, um jeden Nutzer des Rechners darauf hinzuweisen,
+            dass Anregungen oder Verbesserungsvorschläge gerne über das Problem-Melden-Kontaktformular weitergegeben
+            werden können.
+            Ich freue mich über jede Nachricht und werde versuchen, diese schnellstmöglich zu bearbeiten.</p>
+        <p class="text-gray-400 my-4">PS: Da ich weit davon entfernt bin ein Mediendesigner zu werden, bin ich auch
+            über jede Design Idee erfreut.</p>
+        <hr class="border-gray-700 my-4">
+        <p class="text-gray-400">
+            Aktuell kann es zu unregelmäßigen Onlinezeiten kommen, da sich die Webapplikation PACEr noch in der
+            Entwicklung befindet. Weiterhin läuft die Website auf einem Server, der mir durch meinen Dozenten zur
+            Verfügung gestellt wurde.
+            Das Rechenzentrum, in dem sich der Server befindet, wird von den Azubis des ZIT-BB betreut. Sollte es zu
+            Ausfällen kommen, bitte ich um Verständnis.
+            Solange ich keine Kosten durch das Hosting der Webapplikation habe, wird keine Werbung auf der Website
+            geschaltet.
+        </p>
+    </div>
+</section>
 
-<!-- Kontaktinformationen -->
-<div class="my-8">
-    <h2 class="text-2xl font-bold text-orange-600">Kontakt</h2>
-    <p class="text-gray-400">Name: Janneck Lehmann<br>E-Mail: info@j-rz.de</p>
-</div>
+<section class="mt-8 animate-slide-up" style="animation-delay: 0.2s">
+    <div class="card">
+        <h2 class="section-header mb-3">Kontakt</h2>
+        <p class="text-gray-400">Name: Janneck Lehmann<br>E-Mail: <a href="mailto:info@j-rz.de"
+                class="text-orange-500 hover:text-orange-400 transition-colors">info@j-rz.de</a></p>
+    </div>
+</section>
 
 {% endblock %}

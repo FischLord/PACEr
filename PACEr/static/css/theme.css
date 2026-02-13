@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .card {
+    @apply bg-gray-800 rounded-lg p-6 shadow-lg;
+  }
+
+  .form-input {
+    @apply bg-gray-800 text-gray-300 rounded-lg w-full py-2.5 px-4 leading-tight
+           border border-gray-700 focus:outline-none focus:border-orange-500
+           focus:ring-1 focus:ring-orange-500 transition-colors duration-200
+           placeholder-gray-500;
+  }
+
+  .form-select {
+    @apply bg-gray-800 text-gray-300 rounded-lg w-full py-2.5 px-4 leading-tight
+           border border-gray-700 focus:outline-none focus:border-orange-500
+           focus:ring-1 focus:ring-orange-500 transition-colors duration-200
+           appearance-none cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply bg-orange-600 text-white font-medium rounded-lg px-6 py-2.5
+           hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500
+           focus:ring-offset-2 focus:ring-offset-gray-900
+           transition-all duration-200 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-700 text-gray-300 font-medium rounded-lg px-6 py-2.5
+           hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500
+           focus:ring-offset-2 focus:ring-offset-gray-900
+           transition-all duration-200 cursor-pointer;
+  }
+
+  .section-header {
+    @apply text-2xl font-bold text-orange-600;
+  }
+
+  .nav-link {
+    @apply block mt-4 lg:inline-block lg:mt-0 text-gray-400
+           hover:text-orange-500 transition-colors duration-200;
+  }
+
+  .page-header {
+    @apply bg-gray-800/80 backdrop-blur-sm py-4 px-4 md:px-6 lg:px-8 rounded-lg;
+  }
+}

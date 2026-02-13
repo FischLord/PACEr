@@ -1,0 +1,75 @@
+<!-- Manual-mode form partial -->
+<form {% if use_htmx %}hx-post="/api/calculate" hx-target="#result-area" hx-swap="innerHTML"{% else %}action="/rechner" method="POST"{% endif %}
+      id="form_calculator" class="card">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="mode" value="manuell">
+
+    <div class="mb-5">
+        <label for="laenge" class="block text-gray-400 text-sm mb-2">Streckenlänge (m)</label>
+        <input type="number" id="laenge" name="laenge" class="form-input"
+            placeholder="z.B. 4900" required min="1" max="100000" />
+        <div id="laenge-error" class="text-red-500 text-sm mt-1 hidden">
+            Bitte eine Länge zwischen 1 und 100.000 m angeben.
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <label class="block text-gray-400 text-sm mb-2">Bestzeit</label>
+        <div class="flex gap-2">
+            <input type="number" name="bz_min" class="form-input" placeholder="Min" required min="0" />
+            <input type="number" name="bz_sec" class="form-input" placeholder="Sek" required min="0" max="59" />
+        </div>
+        <div id="bestzeit-error" class="text-red-500 text-sm mt-1 hidden">
+            Sekunden dürfen maximal 59 betragen.
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <label class="block text-gray-400 text-sm mb-2">Erlaubte Zeit</label>
+        <div class="flex gap-2">
+            <input type="number" name="ez_min" class="form-input" placeholder="Min" required min="0" />
+            <input type="number" name="ez_sec" class="form-input" placeholder="Sek" required min="0" max="59" />
+        </div>
+        <div id="erlaubtezeit-error" class="text-red-500 text-sm mt-1 hidden">
+            Sekunden dürfen maximal 59 betragen.
+        </div>
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-gray-400 text-sm mb-2">Höchstzeit</label>
+        <div class="flex gap-2">
+            <input type="number" name="hz_min" class="form-input" placeholder="Min" required min="0" />
+            <input type="number" name="hz_sec" class="form-input" placeholder="Sek" required min="0" max="59" />
+        </div>
+        <div id="hoechstzeit-error" class="text-red-500 text-sm mt-1 hidden">
+            Sekunden dürfen maximal 59 betragen.
+        </div>
+    </div>
+
+    <!-- Tournament assignment (optional) -->
+    {% if tournaments %}
+    <details class="mb-6 border border-gray-700 rounded-lg">
+        <summary class="px-4 py-3 text-gray-400 text-sm cursor-pointer hover:text-gray-300 transition-colors">
+            Turnier zuordnen (optional)
+        </summary>
+        <div class="px-4 pb-4 pt-2 space-y-4">
+            <div>
+                <label for="tournament_id" class="block text-gray-400 text-sm mb-2">Turnier</label>
+                <select id="tournament_id" name="tournament_id" class="form-select"
+                    hx-get="/api/tournament-klassen" hx-target="#klasse-container" hx-trigger="change"
+                    hx-include="this">
+                    <option value="">Kein Turnier</option>
+                    {% for t in tournaments %}
+                    <option value="{{ t.id }}">{{ t.name }} ({{ t.datum.strftime('%d.%m.%Y') }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="klasse-container"></div>
+        </div>
+    </details>
+    {% endif %}
+
+    <button type="submit" class="btn-primary w-full sm:w-auto" id="submit-button">
+        Berechnen
+    </button>
+</form>

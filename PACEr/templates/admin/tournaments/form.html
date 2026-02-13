@@ -1,0 +1,81 @@
+{% extends "admin/adminTools.html" %}
+
+{% block adminContent %}
+<div class="ml-0 md:ml-4 max-w-2xl">
+    <h2 class="section-header mb-6">{{ 'Turnier bearbeiten' if tournament else 'Neues Turnier' }}</h2>
+
+    <form method="POST" class="card">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-5">
+            <label for="name" class="block text-gray-400 text-sm mb-2">Name</label>
+            <input type="text" id="name" name="name" class="form-input" required
+                value="{{ tournament.name if tournament else '' }}" placeholder="z.B. Landesmeisterschaft Brandenburg">
+        </div>
+
+        <div class="mb-5">
+            <label for="datum" class="block text-gray-400 text-sm mb-2">Datum</label>
+            <input type="date" id="datum" name="datum" class="form-input" required
+                value="{{ tournament.datum.strftime('%Y-%m-%d') if tournament else '' }}">
+        </div>
+
+        <div class="mb-5">
+            <label for="ort" class="block text-gray-400 text-sm mb-2">Ort</label>
+            <input type="text" id="ort" name="ort" class="form-input" required
+                value="{{ tournament.ort if tournament else '' }}" placeholder="z.B. Potsdam">
+        </div>
+
+        <!-- Structured klassen selection -->
+        <div class="mb-6">
+            <label class="block text-gray-400 text-sm mb-3">Klassen</label>
+            <p class="text-gray-500 text-xs mb-4">Kombinationen aus Tierart, Gespann und Leistungsklasse auswählen.</p>
+
+            <div class="space-y-4">
+                {% set tierarten = ['Pony', 'Pferd'] %}
+                {% set gespanne = ['Einspänner', 'Zweispänner', 'Vierspänner'] %}
+                {% set leistungsklassen = ['E', 'A', 'M', 'S'] %}
+
+                {% for tier in tierarten %}
+                <div class="bg-gray-800/50 rounded-lg p-4">
+                    <h3 class="text-orange-500 text-sm font-medium mb-3">{{ tier }}</h3>
+                    <div class="space-y-3">
+                        {% for gespann in gespanne %}
+                        <div>
+                            <p class="text-gray-400 text-xs mb-2">{{ gespann }}</p>
+                            <div class="flex flex-wrap gap-2">
+                                {% for klasse in leistungsklassen %}
+                                {% set value = tier ~ ' ' ~ gespann ~ ' ' ~ klasse %}
+                                <label class="klasse-chip">
+                                    <input type="checkbox" name="klassen" value="{{ value }}"
+                                        class="hidden peer"
+                                        {% if value in existing_klassen %}checked{% endif %}>
+                                    <span class="inline-block px-3 py-1.5 rounded-lg text-xs font-medium border cursor-pointer transition-all
+                                        peer-checked:bg-orange-600 peer-checked:border-orange-600 peer-checked:text-white
+                                        border-gray-600 text-gray-400 hover:border-gray-500 hover:text-gray-300">
+                                        {{ klasse }}
+                                    </span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" name="is_active" class="w-4 h-4 rounded border-gray-600 text-orange-600 focus:ring-orange-500"
+                    {% if not tournament or tournament.is_active %}checked{% endif %}>
+                <span class="text-gray-400 text-sm">Aktiv (öffentlich sichtbar)</span>
+            </label>
+        </div>
+
+        <div class="flex gap-3">
+            <button type="submit" class="btn-primary">Speichern</button>
+            <a href="/admin/turniere" class="btn-secondary">Abbrechen</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

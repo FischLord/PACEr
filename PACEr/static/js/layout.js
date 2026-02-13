@@ -1,15 +1,18 @@
-//? Javascript to toggle the Burger menu
-document.getElementById("nav-toggle").onclick = function () {
-    document.getElementById("nav-content").classList.toggle("hidden");
-};
+// Nav toggle with smooth animation
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('nav-toggle');
+    const content = document.getElementById('nav-content');
 
-// Get viewport height
-let vh = window.innerHeight * 0.01;
-// Set document variable
-document.documentElement.style.setProperty("--vh", `${vh}px`);
-// On window resize, recalculate viewport height
-window.addEventListener("resize", () => {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
+    if (toggle && content) {
+        toggle.addEventListener('click', function() {
+            content.classList.toggle('hidden');
+        });
+    }
+
+    // Viewport height for mobile
+    const setVh = () => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
 });
-

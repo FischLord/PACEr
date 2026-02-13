@@ -1,80 +1,142 @@
-from flask import Blueprint, render_template, request
-from helper import pace, calculatePace, writeStatistics
+import json
+from flask import Blueprint, render_template, request, redirect, url_for, send_file
+from helper import pace, calculatePace, oldPace, writeStatistics
+from models import db, Calculation, Tournament
+from services.pdf_generator import PacerPdfGenerator
+from services.csrf import validate_csrf
 
 bp_calculator = Blueprint('calculator', __name__)
 
-# Maximal erlaubte Streckenlänge in Metern, um Server-Überlastung zu vermeiden
-MAX_LENGTH = 100000  # z.B. 100 km
+MAX_LENGTH = 100000
+
+
+@bp_calculator.route('/rechner', methods=['GET', 'POST'])
+@validate_csrf
+def rechner():
+    if request.method == 'POST':
+        return _handle_calculation()
+
+    mode = request.args.get('mode', 'auto')
+    tournaments = Tournament.query.filter_by(is_active=True).order_by(Tournament.datum.desc()).all()
+    return render_template(
+        'calculator/rechner.html',
+        mode=mode,
+        has_result=False,
+        tournaments=tournaments,
+        show_ocr=False,
+    )
+
 
 @bp_calculator.route('/pacer', methods=['GET', 'POST'])
+@validate_csrf
 def pacer():
     if request.method == 'POST':
-        try:
-            laenge = int(request.form['laenge'])
-            # Validierung der Streckenlänge
-            if laenge <= 0 or laenge > MAX_LENGTH:
-                notification = f"Bitte geben Sie eine Streckenlänge zwischen 1 und {MAX_LENGTH} Metern ein."
-                return render_template(
-                    'pacer.html',
-                    laenge=None,
-                    kmh=None,
-                    art=None,
-                    notification=notification,
-                    notificationName='Fehler'
-                )
+        return _handle_calculation()
+    return redirect(url_for('calculator.rechner'))
 
-            kmh = int(request.form['kmh'])
-            art = request.form['art']
-
-            # Berechnung
-            bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min = calculatePace(laenge, kmh, art)
-            ez_result = pace(laenge, ez_min, ez_sec)
-            hz_result = pace(laenge, hz_min, hz_sec)
-            bz_result = pace(laenge, bz_min, bz_sec) if bz_min is not None else None
-
-            writeStatistics()
-            return render_template(
-                'pacer.html',
-                laenge=laenge,
-                kmh=kmh,
-                art=art,
-                bz_result=bz_result,
-                ez_result=ez_result,
-                hz_result=hz_result
-            )
-        except Exception as e:
-            return 'Error: ' + str(e)
-    else:
-        return render_template(
-            'pacer.html',
-            laenge=None,
-            kmh=None,
-            art=None,
-            bz_sec=None,
-            hz_sec=None,
-            ez_sec=None,
-            bz_min=None,
-            hz_min=None,
-            ez_min=None,
-            result=None
-        )
 
 @bp_calculator.route('/pacerOld', methods=['GET', 'POST'])
-def pacerOld():
+@validate_csrf
+def pacer_old():
     if request.method == 'POST':
-        try:
-            laenge = int(request.form['laenge'])
-            # Validierung der Streckenlänge
-            if laenge <= 0 or laenge > MAX_LENGTH:
-                notification = f"Bitte geben Sie eine Streckenlänge zwischen 1 und {MAX_LENGTH} Metern ein."
-                return render_template(
-                    'pacerOld.html',
-                    laenge=None,
-                    notification=notification,
-                    notificationName='Fehler'
-                )
+        return _handle_calculation()
+    return redirect(url_for('calculator.rechner', mode='manuell'))
 
-            # Eingabezeiten
+
+@bp_calculator.route('/api/calculate', methods=['POST'])
+@validate_csrf
+def api_calculate():
+    """HTMX endpoint — returns result partial."""
+    return _handle_calculation(partial=True)
+
+
+@bp_calculator.route('/partials/form')
+def partials_form():
+    """Returns form partial for mode switching via HTMX."""
+    mode = request.args.get('mode', 'auto')
+    tournaments = Tournament.query.filter_by(is_active=True).order_by(Tournament.datum.desc()).all()
+    template = 'partials/form_old.html' if mode == 'manuell' else 'partials/form_new.html'
+    return render_template(template, use_htmx=True, tournaments=tournaments)
+
+
+@bp_calculator.route('/api/tournament-klassen')
+def api_tournament_klassen():
+    """Returns klasse select partial for a given tournament."""
+    tournament_id = request.args.get('tournament_id')
+    if not tournament_id:
+        return ''
+    tournament = Tournament.query.get(tournament_id)
+    if not tournament:
+        return ''
+    klassen = json.loads(tournament.klassen) if tournament.klassen else []
+    return render_template('partials/klasse_select.html', klassen=klassen)
+
+
+@bp_calculator.route('/api/export/pdf/<int:calculation_id>')
+def export_pdf(calculation_id):
+    """Generate and download PDF for a calculation."""
+    calc = Calculation.query.get_or_404(calculation_id)
+    generator = PacerPdfGenerator(calc)
+    pdf_buffer = generator.generate()
+
+    filename = f'pacer_{calc.laenge}m'
+    if calc.art:
+        filename += f'_{calc.art}'
+    filename += '.pdf'
+
+    return send_file(
+        pdf_buffer,
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=filename,
+    )
+
+
+@bp_calculator.route('/api/ocr', methods=['POST'])
+@validate_csrf
+def api_ocr():
+    """Analyze uploaded photo and return pre-filled form partial."""
+    from services.ocr_service import get_ocr_service
+
+    if 'photo' not in request.files:
+        return render_template('partials/error.html', error='Kein Foto hochgeladen.')
+
+    file = request.files['photo']
+    if not file.filename:
+        return render_template('partials/error.html', error='Kein Foto ausgewählt.')
+
+    image_data = file.read()
+    mime_type = file.content_type or 'image/jpeg'
+
+    service = get_ocr_service()
+    if not service:
+        return render_template('partials/error.html',
+                               error='OCR-Service nicht verfügbar. Bitte ANTHROPIC_API_KEY setzen oder Tesseract installieren.')
+
+    result = service.analyze(image_data, mime_type)
+    if not result:
+        return render_template('partials/error.html', error='Foto konnte nicht analysiert werden.')
+
+    return render_template('partials/ocr_result.html', ocr=result)
+
+
+def _handle_calculation(partial=False):
+    """Core calculation handler for all modes."""
+    try:
+        mode = request.form.get('mode', 'auto')
+        laenge = int(request.form['laenge'])
+
+        if laenge <= 0 or laenge > MAX_LENGTH:
+            error = f"Bitte eine Streckenlänge zwischen 1 und {MAX_LENGTH} m angeben."
+            if partial:
+                return render_template('partials/error.html', error=error)
+            return render_template(
+                'calculator/rechner.html', mode=mode, has_result=False,
+                notification=error, notificationName='Fehler',
+                tournaments=Tournament.query.filter_by(is_active=True).all(),
+            )
+
+        if mode == 'manuell':
             bz_min = int(request.form['bz_min'])
             bz_sec = int(request.form['bz_sec'])
             ez_min = int(request.form['ez_min'])
@@ -82,30 +144,72 @@ def pacerOld():
             hz_min = int(request.form['hz_min'])
             hz_sec = int(request.form['hz_sec'])
 
-            # Berechnung
             ez_result = pace(laenge, ez_min, ez_sec)
             hz_result = pace(laenge, hz_min, hz_sec)
             bz_result = pace(laenge, bz_min, bz_sec)
 
-            writeStatistics()
-            return render_template(
-                'pacerOld.html',
-                laenge=laenge,
-                bz_result=bz_result,
-                ez_result=ez_result,
-                hz_result=hz_result
-            )
-        except Exception as e:
-            return 'Error: ' + str(e)
-    else:
+            art = None
+            kmh = None
+        else:
+            kmh = int(request.form['kmh'])
+            art = request.form['art']
+
+            bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min = calculatePace(laenge, kmh, art)
+            ez_result = pace(laenge, ez_min, ez_sec)
+            hz_result = pace(laenge, hz_min, hz_sec)
+            bz_result = pace(laenge, bz_min, bz_sec) if bz_min is not None else None
+
+        writeStatistics()
+
+        # Save calculation to DB
+        result_data = {
+            'ez': {str(k): v for k, v in ez_result.items()},
+            'hz': {str(k): v for k, v in hz_result.items()},
+        }
+        if bz_result:
+            result_data['bz'] = {str(k): v for k, v in bz_result.items()}
+
+        calc = Calculation(
+            laenge=laenge,
+            art=art,
+            kmh=kmh,
+            bz_min=bz_min, bz_sec=bz_sec,
+            ez_min=ez_min, ez_sec=ez_sec,
+            hz_min=hz_min, hz_sec=hz_sec,
+            result_json=json.dumps(result_data),
+            mode=mode,
+        )
+
+        # Tournament assignment
+        tournament_id = request.form.get('tournament_id')
+        if tournament_id:
+            calc.tournament_id = int(tournament_id)
+            calc.klasse = request.form.get('klasse', '')
+
+        db.session.add(calc)
+        db.session.commit()
+
+        template_vars = dict(
+            laenge=laenge, kmh=kmh, art=art,
+            bz_result=bz_result, ez_result=ez_result, hz_result=hz_result,
+            calculation_id=calc.id,
+        )
+
+        if partial:
+            return render_template('partials/results.html', **template_vars)
+
         return render_template(
-            'pacerOld.html',
-            laenge=None,
-            bz_sec=None,
-            hz_sec=None,
-            ez_sec=None,
-            bz_min=None,
-            hz_min=None,
-            ez_min=None,
-            result=None
+            'calculator/rechner.html',
+            mode=mode, has_result=True,
+            **template_vars,
+        )
+
+    except (ValueError, KeyError) as e:
+        error = f"Ungültige Eingabe: {e}"
+        if partial:
+            return render_template('partials/error.html', error=error)
+        return render_template(
+            'calculator/rechner.html', mode=request.form.get('mode', 'auto'),
+            has_result=False, notification=error, notificationName='Fehler',
+            tournaments=Tournament.query.filter_by(is_active=True).all(),
         )

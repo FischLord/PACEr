@@ -1,0 +1,90 @@
+<!-- OCR result partial — shows detected values with confidence -->
+<div class="card animate-slide-up">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-medium text-gray-200">Erkannte Werte</h3>
+        {% if ocr.confidence < 70 %}
+        <span class="text-xs bg-yellow-900/30 text-yellow-400 px-2 py-1 rounded">
+            Vertrauen: {{ ocr.confidence }}% — Bitte Werte prüfen
+        </span>
+        {% else %}
+        <span class="text-xs bg-green-900/30 text-green-400 px-2 py-1 rounded">
+            Vertrauen: {{ ocr.confidence }}%
+        </span>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+        {% if ocr.laenge %}
+        <div class="bg-gray-700/30 rounded-lg p-3">
+            <span class="text-gray-500 block text-xs">Strecke</span>
+            <span class="text-gray-200 font-medium">{{ ocr.laenge }} m</span>
+        </div>
+        {% endif %}
+        {% if ocr.kmh %}
+        <div class="bg-gray-700/30 rounded-lg p-3">
+            <span class="text-gray-500 block text-xs">Tempo</span>
+            <span class="text-gray-200 font-medium">{{ ocr.kmh }} km/h</span>
+        </div>
+        {% endif %}
+        {% if ocr.art %}
+        <div class="bg-gray-700/30 rounded-lg p-3">
+            <span class="text-gray-500 block text-xs">Art</span>
+            <span class="text-gray-200 font-medium capitalize">{{ ocr.art }}</span>
+        </div>
+        {% endif %}
+        {% if ocr.bz_min is not none %}
+        <div class="bg-green-900/20 rounded-lg p-3">
+            <span class="text-green-500 block text-xs">Bestzeit</span>
+            <span class="text-green-400 font-medium font-mono">{{ ocr.bz_min }}:{{ '{:02}'.format(ocr.bz_sec or 0) }}</span>
+        </div>
+        {% endif %}
+        {% if ocr.ez_min is not none %}
+        <div class="bg-orange-900/20 rounded-lg p-3">
+            <span class="text-orange-500 block text-xs">Erlaubte Zeit</span>
+            <span class="text-orange-400 font-medium font-mono">{{ ocr.ez_min }}:{{ '{:02}'.format(ocr.ez_sec or 0) }}</span>
+        </div>
+        {% endif %}
+        {% if ocr.hz_min is not none %}
+        <div class="bg-red-900/20 rounded-lg p-3">
+            <span class="text-red-500 block text-xs">Höchstzeit</span>
+            <span class="text-red-400 font-medium font-mono">{{ ocr.hz_min }}:{{ '{:02}'.format(ocr.hz_sec or 0) }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <p class="text-gray-500 text-xs mt-4">Die Werte werden automatisch in das Formular übernommen.</p>
+</div>
+
+<script>
+// Auto-fill form with OCR values
+(function() {
+    var values = {{ ocr.to_dict() | tojson }};
+    var fieldMap = {
+        'laenge': 'laenge',
+        'bz_min': 'bz_min', 'bz_sec': 'bz_sec',
+        'ez_min': 'ez_min', 'ez_sec': 'ez_sec',
+        'hz_min': 'hz_min', 'hz_sec': 'hz_sec',
+    };
+    for (var key in fieldMap) {
+        if (values[key] !== undefined && values[key] !== null) {
+            var el = document.querySelector('[name="' + fieldMap[key] + '"]');
+            if (el) el.value = values[key];
+        }
+    }
+    // Set art dropdown
+    if (values.art) {
+        var artEl = document.getElementById('art');
+        if (artEl) {
+            artEl.value = values.art;
+            if (typeof updateKmhOptions === 'function') updateKmhOptions(values.art);
+        }
+    }
+    // Set kmh dropdown
+    if (values.kmh) {
+        setTimeout(function() {
+            var kmhEl = document.getElementById('kmh');
+            if (kmhEl) kmhEl.value = values.kmh;
+        }, 100);
+    }
+})();
+</script>

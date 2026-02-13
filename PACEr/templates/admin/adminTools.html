@@ -1,16 +1,21 @@
 {% extends "layout.html" %} {% block content %}
-<input type="hidden" id="key" name="key" value="{{key}}">
-<header class="bg-gray-800 py-2 px-4 md:px-6 lg:px-8 mb-4">
-    <h1 class="text-4xl font-bold text-orange-600 md:text-left text-center">Admin Tools</h1>
+<header class="page-header mb-4">
+    <div class="flex items-center justify-between">
+        <h1 class="text-4xl font-bold text-orange-600">Admin Tools</h1>
+        <a href="/adminLogout" class="btn-secondary text-sm">Abmelden</a>
+    </div>
 </header>
-<div class="flex flex-col md:flex-row">
-    <div class="w-full md:w-1/4 bg-gray-800 py-4 px-4">
-        <ul>
+<div class="flex flex-col md:flex-row gap-4">
+    <div class="w-full md:w-1/4 card">
+        <ul class="space-y-2">
             <li>
-                <a href="/viewReports" class="text-gray-400 hover:text-orange-600">Reports</a>
+                <a href="/viewReports" class="text-gray-400 hover:text-orange-500 transition-colors">Reports</a>
             </li>
             <li>
-                <a href="#" class="text-gray-400 hover:text-orange-600">Platzhalter</a>
+                <a href="/admin/turniere" class="text-gray-400 hover:text-orange-500 transition-colors">Turniere</a>
+            </li>
+            <li>
+                <a href="/changePassword" class="text-gray-400 hover:text-orange-500 transition-colors">Passwort ändern</a>
             </li>
         </ul>
     </div>
@@ -18,6 +23,4 @@
         {% block adminContent %} {% endblock %}
     </div>
 </div>
-
-
 {% endblock %}

@@ -1,19 +1,28 @@
 {% extends "admin/adminTools.html" %}
 
 {% block adminContent %}
-<div class="ml-4">
-    {% for date, reports_group in reports|groupby('date') %}
-        <div class="my-4">
-            <h2 class="text-2xl font-bold text-orange-600 mt-4 text-center">{{ date }}</h2>
-            <hr class="border-gray-400">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                {% for report in reports_group|sort(attribute='name') %}
-                    <a href="/displayReport?report={{ report.path }}" class="block bg-gray-800 text-gray-400 rounded py-2 px-4 hover:text-gray-200 hover:bg-gray-700">
-                        {{ report.name }}
-                    </a>
+<div class="ml-0 md:ml-4">
+    {% if reports %}
+        {% for date_group, reports_list in reports|groupby(attribute='created_at', default='') %}
+        <div class="my-4 animate-slide-up">
+            <h2 class="section-header mt-4 text-center">{{ date_group.strftime('%d.%m.%Y') if date_group else 'Unbekannt' }}</h2>
+            <hr class="border-gray-700 my-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                {% for report in reports_list %}
+                <a href="/displayReport/{{ report.id }}"
+                   class="card p-4 hover:bg-gray-700 transition-colors duration-200 block">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-300">{{ report.vorname }} {{ report.name }}</span>
+                        <span class="text-gray-500 text-sm">{{ report.created_at.strftime('%H:%M') if report.created_at else '' }}</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mt-1 truncate">{{ report.issue[:80] }}{% if report.issue|length > 80 %}...{% endif %}</p>
+                </a>
                 {% endfor %}
             </div>
         </div>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p class="text-gray-500 text-center mt-8">Keine Reports vorhanden.</p>
+    {% endif %}
 </div>
 {% endblock %}

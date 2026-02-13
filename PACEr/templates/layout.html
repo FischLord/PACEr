@@ -1,141 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='build/theme.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/theme.css') }}" /> -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title> PACEr {{ title }}</title>
-
-    <style>
-        main {
-            min-height: calc(100vh - 88px);
-            /* 88px is the combined height of the navbar and footer */
-        }
-    </style>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='build/theme.css') }}" />
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <title>PACEr {{ title if title else '' }}</title>
 </head>
 
-<body class="bg-gray-900 text-gray-200">
-    <nav class="flex items-center justify-between flex-wrap bg-gray-800 p-6">
-        <div class="flex items-center flex-no-shrink text-orange-600 mr-6">
-            <a class="font-semibold text-xl tracking-tight" href="/projektInfo">PACEr</a>
-        </div>
-        <div class="block lg:hidden">
-            <button id="nav-toggle"
-                class="flex items-center px-3 py-2 border rounded text-orange-600 border-orange-600 hover:text-white hover:border-white">
-                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <title>Menu</title>
-                    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-                </svg>
-            </button>
-        </div>
-        <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto hidden transition-all duration-500 ease-in-out"
-            id="nav-content">
-            <div class="text-sm lg:flex-grow">
-                <a href="/pacer"
-                    class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-orange-600 mr-4 transition-colors duration-200">
-                    Rechner
+<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
+    <!-- Sticky Navbar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-lg bg-gray-900/80 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a class="font-bold text-xl tracking-tight text-orange-600 hover:text-orange-500 transition-colors" href="/">
+                    PACEr
                 </a>
-                <a href="/reportProblem"
-                    class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-orange-600 mr-4 transition-colors duration-200">
-                    Probleme melden
-                </a>
-                <a href="/aboutUs"
-                    class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-orange-600 mr-4 transition-colors duration-200">
-                    Über uns
-                </a>
-                <a href="/impressum"
-                    class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-orange-600 transition-colors duration-200">
-                    Impressum
-                </a>
-            </div>
-        </div>
-    </nav>
-    {% if notification %}
-    <div id="popup" class="fixed inset-0 flex items-center justify-center z-50">
-        <div class="bg-gray-900 w-64 p-4 rounded shadow-lg">
-            <div class="flex justify-between">
-                <strong class="font-bold text-orange-600">{{notificationName}}</strong>
-                <button id="closeBtn" class="text-gray-400 hover:text-orange-600 focus:outline-none">
-                    <svg class="fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <title>Close</title>
-                        <path
-                            d="M14.348 5.652c.488.488.488 1.28 0 1.768L10 10.234l-4.348-4.814c-.488-.488-1.28-.488-1.768 0-.488.488-.488 1.28 0 1.768L8.766 10l-4.348 4.814c-.488.488-.488 1.28 0 1.768.488.488 1.28.488 1.768 0L10 11.766l4.348 4.814c.488.488 1.28.488 1.768 0 .488-.488.488-1.28 0-1.768L11.234 10l4.348-4.814c.488-.488.488-1.28 0-1.768-.488-.488-1.28-.488-1.768 0L10 8.234l-4.348-4.814c-.488-.488-1.28-.488-1.768 0-.488.488-.488 1.28 0 1.768L8.766 10l-4.348 4.814c-.488.488-.488 1.28 0 1.768.488.488 1.28.488 1.768 0L10 11.766l4.348 4.814c.488.488 1.28.488 1.768 0 .488-.488.488-1.28 0-1.768L11.234 10l4.348-4.814c.488-.488.488-1.28 0-1.768-.488-.488-1.28-.488-1.768 0L10 8.234z" />
+                <!-- Desktop nav -->
+                <div class="hidden lg:flex items-center space-x-6">
+                    <a href="/rechner" class="nav-link">Rechner</a>
+                    <a href="/turniere" class="nav-link">Turniere</a>
+                    <a href="/reportProblem" class="nav-link">Probleme melden</a>
+                    <a href="/aboutUs" class="nav-link">Über uns</a>
+                    <a href="/impressum" class="nav-link">Impressum</a>
+                    {% if current_user.is_authenticated %}
+                    <a href="/adminTools" class="nav-link text-orange-500">Admin</a>
+                    {% endif %}
+                </div>
+                <!-- Mobile hamburger -->
+                <button id="nav-toggle" class="lg:hidden flex items-center px-3 py-2 rounded-lg text-orange-600 hover:bg-gray-800 transition-colors">
+                    <svg class="fill-current h-5 w-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <title>Menu</title>
+                        <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
                     </svg>
                 </button>
             </div>
-            <span class="block text-gray-400">{{ notification }}</span>
         </div>
-    </div>
-    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+        <!-- Mobile menu -->
+        <div id="nav-content" class="lg:hidden hidden overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="px-4 pb-4 space-y-2 border-t border-gray-800">
+                <a href="/rechner" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Rechner</a>
+                <a href="/turniere" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Turniere</a>
+                <a href="/reportProblem" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Probleme melden</a>
+                <a href="/aboutUs" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Über uns</a>
+                <a href="/impressum" class="block py-2 text-gray-400 hover:text-orange-500 transition-colors">Impressum</a>
+                {% if current_user.is_authenticated %}
+                <a href="/adminTools" class="block py-2 text-orange-500 hover:text-orange-400 transition-colors">Admin</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2"></div>
+
+    {% if notification %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.showToast) {
+                window.showToast('{{ notificationName }}', '{{ notification }}');
+            }
+        });
+    </script>
     {% endif %}
 
-    <main class="m-2">{% block content %} {% endblock %}</main>
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
+        {% block content %} {% endblock %}
+    </main>
 
-
-    <footer class="relative bg-gray-800 text-gray-200 mt-12 bottom-0 w-full">
-        <div class="container mx-auto px-8">
-            <div class="w-full flex flex-col md:flex-row py-6">
-                <div class="flex-1 mb-6">
-                    <a class="text-orange-600 no-underline hover:no-underline font-bold text-2xl lg:text-4xl" href="#">
-                        PACEr
-                    </a>
-                    <p class="text-gray-400 text-sm">&copy; 2025 | All rights reserved</p>
+    <footer class="bg-gray-800/50 border-t border-gray-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <a class="text-orange-600 font-bold text-2xl" href="/">PACEr</a>
+                    <p class="text-gray-500 text-sm mt-2">&copy; {{ current_year }} | All rights reserved</p>
                 </div>
-                <div class="flex-1">
-                    <p class="uppercase text-gray-500 md:mb-6">Links</p>
-                    <ul class="list-reset mb-6">
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="/pacer"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Rechner</a>
-                        </li>
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="/reportProblem"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Probleme
-                                Melden</a>
-                        </li>
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="/aboutUs" class="no-underline hover:underline text-gray-400 hover:text-orange-500">Über
-                                uns</a>
-                        </li>
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="/impressum"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Impressum</a>
-                        </li>
+                <div>
+                    <p class="uppercase text-gray-500 text-sm font-medium mb-3">Navigation</p>
+                    <ul class="space-y-2">
+                        <li><a href="/rechner" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Rechner</a></li>
+                        <li><a href="/turniere" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Turniere</a></li>
+                        <li><a href="/reportProblem" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Probleme Melden</a></li>
+                        <li><a href="/aboutUs" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Über uns</a></li>
                     </ul>
                 </div>
-                <div class="flex-1">
-                    <p class="uppercase text-gray-500 md:mb-6">Legal</p>
-                    <ul class="list-reset mb-6">
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="/impressum"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Privacy</a>
-                        </li>
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="/impressum"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Terms</a>
-                        </li>
+                <div>
+                    <p class="uppercase text-gray-500 text-sm font-medium mb-3">Legal</p>
+                    <ul class="space-y-2">
+                        <li><a href="/impressum" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Impressum</a></li>
+                        {% if current_user.is_authenticated %}
+                        <li><a href="/adminLogout" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Abmelden</a></li>
+                        {% else %}
+                        <li><a href="/adminLogin" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Admin</a></li>
+                        {% endif %}
                     </ul>
                 </div>
-                <div class="flex-1">
-                    <p class="uppercase text-gray-500 md:mb-6">Social</p>
-                    <ul class="list-reset mb-6">
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="https://www.facebook.com/profile.php?id=100012000550092"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Facebook</a>
-                        </li>
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="https://www.instagram.com/dark4doener/"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Instagram</a>
-                        </li>
-                        <li class="mt-2 inline-block mr-2 md:block md:mr-0">
-                            <a href="https://twitter.com/dark4doener"
-                                class="no-underline hover:underline text-gray-400 hover:text-orange-500">Twitter</a>
-                        </li>
+                <div>
+                    <p class="uppercase text-gray-500 text-sm font-medium mb-3">Social</p>
+                    <ul class="space-y-2">
+                        <li><a href="https://www.facebook.com/profile.php?id=100012000550092" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Facebook</a></li>
+                        <li><a href="https://www.instagram.com/dark4doener/" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">Instagram</a></li>
                     </ul>
                 </div>
             </div>
@@ -143,7 +110,16 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+    <!-- HTMX CSRF header for all requests -->
+    <script>
+        document.body.addEventListener('htmx:configRequest', function(event) {
+            var token = document.querySelector('meta[name="csrf-token"]');
+            if (token) {
+                event.detail.headers['X-CSRFToken'] = token.getAttribute('content');
+            }
+        });
+    </script>
 </body>
-
 
 </html>

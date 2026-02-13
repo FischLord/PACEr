@@ -163,6 +163,9 @@ cython_debug/
 
 .PACEr
 node_modules/
+*.db
+pacer.db
+.env
 ```
 package.json
 package-lock.json
