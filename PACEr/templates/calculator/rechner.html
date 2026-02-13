@@ -22,38 +22,88 @@
 </header>
 
 {% if not has_result %}
-<!-- Form area -->
-<div id="form-area" class="max-w-2xl mx-auto animate-slide-up">
-    {% if mode == 'manuell' %}
-        {% include 'partials/form_old.html' %}
-    {% else %}
-        {% include 'partials/form_new.html' %}
-    {% endif %}
+<!-- Two-column layout: Form + Sidebar -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Form area (2 cols) -->
+    <div class="lg:col-span-2">
+        <div id="form-area" class="animate-slide-up">
+            {% if mode == 'manuell' %}
+                {% include 'partials/form_old.html' %}
+            {% else %}
+                {% include 'partials/form_new.html' %}
+            {% endif %}
 
-    {% if show_ocr %}
-    <!-- Photo upload area for OCR -->
-    <div class="card mt-6 border-dashed border-surface-border">
-        <form hx-post="/api/ocr" hx-target="#ocr-result" hx-swap="innerHTML" hx-encoding="multipart/form-data"
-              class="text-center py-4">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            <svg class="mx-auto h-10 w-10 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            <p class="text-text-secondary text-sm mt-2 mb-3">Foto-Erkennung <span class="text-xs text-yellow-500">(Beta)</span></p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <input type="file" name="photo" accept="image/*" capture="environment"
-                    class="text-sm text-text-secondary file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-surface-overlay file:text-text-secondary hover:file:bg-surface-border file:cursor-pointer file:transition-colors">
-                <button type="submit" class="btn-secondary text-sm">Analysieren</button>
+            {% if show_ocr %}
+            <!-- Photo upload area for OCR -->
+            <div class="card mt-6 border-dashed border-surface-border">
+                <form hx-post="/api/ocr" hx-target="#ocr-result" hx-swap="innerHTML" hx-encoding="multipart/form-data"
+                      class="text-center py-4">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <svg class="mx-auto h-10 w-10 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <p class="text-text-secondary text-sm mt-2 mb-3">Foto-Erkennung <span class="text-xs text-yellow-500">(Beta)</span></p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <input type="file" name="photo" accept="image/*" capture="environment"
+                            class="text-sm text-text-secondary file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-surface-overlay file:text-text-secondary hover:file:bg-surface-border file:cursor-pointer file:transition-colors">
+                        <button type="submit" class="btn-secondary text-sm">Analysieren</button>
+                    </div>
+                </form>
+                <div id="ocr-result" class="mt-3"></div>
             </div>
-        </form>
-        <div id="ocr-result" class="mt-3"></div>
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
+
+    <!-- Info Sidebar (1 col) -->
+    <div class="lg:col-span-1 space-y-4">
+        <!-- BZ / EZ / HZ Explanation -->
+        <div class="card border-l-4 border-l-time-bz">
+            <h3 class="text-time-bz font-bold text-sm uppercase tracking-wide mb-1">Bestzeit (BZ)</h3>
+            <p class="text-text-secondary text-sm">Schnellste erlaubte Zeit &mdash; schneller fahren gibt Strafpunkte.</p>
+        </div>
+        <div class="card border-l-4 border-l-time-ez">
+            <h3 class="text-time-ez font-bold text-sm uppercase tracking-wide mb-1">Erlaubte Zeit (EZ)</h3>
+            <p class="text-text-secondary text-sm">Optimale Zielzeit &mdash; hierauf solltest du dein Tempo einrichten.</p>
+        </div>
+        <div class="card border-l-4 border-l-time-hz">
+            <h3 class="text-time-hz font-bold text-sm uppercase tracking-wide mb-1">H&ouml;chstzeit (HZ)</h3>
+            <p class="text-text-secondary text-sm">Maximale Zeit &mdash; &uuml;berschreiten f&uuml;hrt zu Strafpunkten pro Sekunde.</p>
+        </div>
+
+        <!-- How it works -->
+        <div class="card">
+            <h3 class="text-text-primary font-semibold mb-3">So funktioniert&rsquo;s</h3>
+            <ol class="space-y-3 text-sm text-text-secondary">
+                <li class="flex gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 text-accent font-bold text-xs flex items-center justify-center">1</span>
+                    <span>Streckenart und Distanz w&auml;hlen</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 text-accent font-bold text-xs flex items-center justify-center">2</span>
+                    <span>Tempo einstellen oder manuell eingeben</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 text-accent font-bold text-xs flex items-center justify-center">3</span>
+                    <span>Split-Zeiten berechnen &amp; als PDF exportieren</span>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Tournament hint -->
+        <div class="card bg-accent/5 border-accent/20">
+            <p class="text-text-secondary text-sm">
+                <span class="text-accent font-semibold">Tipp:</span>
+                Unter <a href="/turniere" class="text-accent hover:text-accent-hover transition-colors font-medium">Turniere</a>
+                findest du vorgefertigte Berechnungen f&uuml;r aktuelle Events.
+            </p>
+        </div>
+    </div>
 </div>
 
 <!-- Result area for HTMX responses -->
-<div id="result-area" class="max-w-4xl mx-auto mt-6">
+<div id="result-area" class="mt-6">
     <!-- Loading skeleton (htmx-indicator) -->
     <div id="calc-loading" class="htmx-indicator space-y-4">
         <div class="loading-skeleton h-20 w-full"></div>
@@ -61,8 +111,8 @@
     </div>
 </div>
 {% else %}
-<!-- Show results -->
-<div class="max-w-4xl mx-auto">
+<!-- Show results (full width) -->
+<div>
     {% include 'partials/results.html' %}
 </div>
 {% endif %}

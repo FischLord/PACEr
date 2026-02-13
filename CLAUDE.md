@@ -63,6 +63,7 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 - **Slider:** `.range-slider` (w-6 h-6 thumb, accent shadow)
 - **Timer:** `.time-display`, `.time-bz`, `.time-ez`, `.time-hz`
 - **Flip Cards:** `.flip-card`, `.flip-card-inner`, `.flip-card-front`, `.flip-card-back` (CSS 3D flip), `.flip-card-backdrop` (mobile overlay). Mobile uses JS FLIP animation (position capture → fixed → animate expand/collapse) with `transitionend` + `setTimeout` fallback for cleanup
+- **Timeline:** `.timeline-line` (vertical 2px line), `.timeline-dot` (12px accent circle)
 - **Decorative:** `.accent-bar`, `.clip-angle`, `.loading-skeleton`, `.stagger-item`
 - **Nav:** `.nav-link`, `.nav-link-active`
 
@@ -92,16 +93,16 @@ On first start, the database (`PACEr/pacer.db`) is created automatically and a s
 
 - `layout.html` — Base: glass navbar (logo + Inter font), slide-in mobile overlay, footer with accent-bar, HTMX lifecycle (opacity transitions)
 - `projektInfo.html` — Landing page (hero, features, how-it-works, flip-card sport showcase, CTA). Also serves as `/`. Flip cards use FLIP animation on mobile (expand to overlay with backdrop, animate back on close)
-- `calculator/rechner.html` — Segmented control toggle (Auto/Manuell), loading skeleton
+- `calculator/rechner.html` — Two-column: form (2/3) + info sidebar with BZ/EZ/HZ cards, steps, tournament hint (1/3). Sidebar hidden in result view. Segmented control toggle (Auto/Manuell), loading skeleton
 - `partials/form_new.html` — Auto mode: chips for Streckenart, range slider for Tempo (slider + ticks + labels share one `flex-1` container for alignment)
 - `partials/form_old.html` — Manual mode: timer-style Min:Sek inputs
 - `partials/results.html` — Meta card with large numbers, color-coded timer table, PDF/new-calc actions
-- `tournaments/index.html` — Card grid with hover-lift, date badges
+- `tournaments/index.html` — Card grid with hover-lift, date badges, subtitle when tournaments exist
 - `tournaments/detail.html` — Accordion with BZ/EZ/HZ pill badges
 - `admin/` — 5 templates extending `adminTools.html` sidebar layout
-- `reportProblem.html` — Feedback form with character counter
-- `aboutUs.html` — Profile page with glass-card overlay on profile image (backdrop-blur + semi-transparent bg), "Über mich" text section
-- `impressum.html` — Legal info page with accent-bar separators
+- `reportProblem.html` — Two-column: FAQ accordion (2/5) + feedback form (3/5). FAQ has 3 entries (Rundung, BZ/EZ-Abstand, LPO-Erlaubnis) + contact card
+- `aboutUs.html` — Full-width sections: hero banner with gradient + profile image, 3 facts cards grid, wider "Über mich" card (max-w-3xl), vertical timeline (5 milestones), 3-col gallery placeholders, CTA + contact
+- `impressum.html` — Contact cards grid at top, `<details>` accordions for each legal section (Inhalte open by default)
 
 ## Gotchas
 

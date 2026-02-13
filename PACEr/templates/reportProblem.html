@@ -2,41 +2,103 @@
 {% block content %}
 <header class="page-header mb-8">
     <h1 class="page-title">Feedback</h1>
-    <p class="text-text-secondary mt-1">Anregungen, Verbesserungsvorschläge oder Fehler melden</p>
+    <p class="text-text-secondary mt-1">Anregungen, Verbesserungsvorschl&auml;ge oder Fehler melden</p>
 </header>
 
-<div class="max-w-2xl mx-auto animate-slide-up">
-    <form action="{{ url_for('report.report_problem') }}" method="POST" class="card">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-        <div class="mb-5 flex flex-col sm:flex-row gap-4">
-            <div class="flex-1">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" name="name" required class="form-input">
-            </div>
-            <div class="flex-1">
-                <label for="vorname" class="form-label">Vorname</label>
-                <input type="text" id="vorname" name="vorname" required class="form-input">
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-8 animate-slide-up">
+    <!-- FAQ Sidebar -->
+    <div class="lg:col-span-2 space-y-4">
+        <div class="card">
+            <h2 class="section-header mb-4">H&auml;ufige Fragen</h2>
+            <div class="space-y-3">
+                <details class="group">
+                    <summary class="flex items-center justify-between cursor-pointer text-text-primary font-medium py-2 hover:text-accent transition-colors">
+                        Andere Zeit als auf dem Blatt?
+                        <svg class="w-4 h-4 text-text-muted transition-transform duration-200 group-open:rotate-180 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </summary>
+                    <p class="text-text-secondary text-sm pb-3 leading-relaxed">
+                        PACEr rechnet exakt nach LPO-Formel. Minimale Abweichungen k&ouml;nnen durch unterschiedliche Rundung entstehen &mdash;
+                        manche Organisatoren runden auf ganze Sekunden, PACEr zeigt Minuten und Sekunden pr&auml;zise an.
+                    </p>
+                </details>
+
+                <div class="border-t border-surface-border"></div>
+
+                <details class="group">
+                    <summary class="flex items-center justify-between cursor-pointer text-text-primary font-medium py-2 hover:text-accent transition-colors">
+                        BZ/EZ-Abstand beim 1.&nbsp;km?
+                        <svg class="w-4 h-4 text-text-muted transition-transform duration-200 group-open:rotate-180 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </summary>
+                    <p class="text-text-secondary text-sm pb-3 leading-relaxed">
+                        Der Abstand zwischen BZ und EZ erscheint beim ersten Kilometer oft gro&szlig;. Das liegt am festen Zeitabzug,
+                        der unabh&auml;ngig von der Distanz gilt. Mit zunehmender Strecke gleicht sich das Verh&auml;ltnis an.
+                    </p>
+                </details>
+
+                <div class="border-t border-surface-border"></div>
+
+                <details class="group">
+                    <summary class="flex items-center justify-between cursor-pointer text-text-primary font-medium py-2 hover:text-accent transition-colors">
+                        Ist PACEr laut LPO erlaubt?
+                        <svg class="w-4 h-4 text-text-muted transition-transform duration-200 group-open:rotate-180 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </summary>
+                    <p class="text-text-secondary text-sm pb-3 leading-relaxed">
+                        Nat&uuml;rlich &mdash; solange du nicht w&auml;hrend der Fahrt auf dem Handy tippst.
+                        Die Berechnung vorab zu machen ist v&ouml;llig legitim und spart eine Menge Kopfrechnen.
+                    </p>
+                </details>
             </div>
         </div>
 
-        <div class="mb-5">
-            <label for="email" class="form-label">Email Adresse</label>
-            <input type="email" id="email" name="email" required class="form-input">
-            <span id="email-error" class="text-red-400 text-sm mt-1.5 block"></span>
+        <div class="card">
+            <h3 class="text-text-primary font-semibold mb-2">Direkter Kontakt</h3>
+            <p class="text-text-secondary text-sm">
+                F&uuml;r dringende Anliegen:
+                <a href="mailto:info@j-rz.de" class="text-accent hover:text-accent-hover transition-colors">info@j-rz.de</a>
+            </p>
         </div>
+    </div>
 
-        <div class="mb-6">
-            <label for="issue" class="form-label">Beschreibung</label>
-            <textarea id="issue" name="issue" rows="8" maxlength="1000" required class="form-input resize-y"
-                oninput="document.getElementById('char-count').textContent = this.value.length"></textarea>
-            <div class="flex justify-end mt-1.5">
-                <span class="text-text-muted text-xs"><span id="char-count">0</span> / 1000</span>
+    <!-- Form -->
+    <div class="lg:col-span-3">
+        <form action="{{ url_for('report.report_problem') }}" method="POST" class="card">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-5 flex flex-col sm:flex-row gap-4">
+                <div class="flex-1">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" name="name" required class="form-input">
+                </div>
+                <div class="flex-1">
+                    <label for="vorname" class="form-label">Vorname</label>
+                    <input type="text" id="vorname" name="vorname" required class="form-input">
+                </div>
             </div>
-        </div>
 
-        <input type="hidden" id="bot-field" name="bot-field">
-        <button type="submit" class="btn-primary w-full sm:w-auto">Absenden</button>
-    </form>
+            <div class="mb-5">
+                <label for="email" class="form-label">Email Adresse</label>
+                <input type="email" id="email" name="email" required class="form-input">
+                <span id="email-error" class="text-red-400 text-sm mt-1.5 block"></span>
+            </div>
+
+            <div class="mb-6">
+                <label for="issue" class="form-label">Beschreibung</label>
+                <textarea id="issue" name="issue" rows="8" maxlength="1000" required class="form-input resize-y"
+                    oninput="document.getElementById('char-count').textContent = this.value.length"></textarea>
+                <div class="flex justify-end mt-1.5">
+                    <span class="text-text-muted text-xs"><span id="char-count">0</span> / 1000</span>
+                </div>
+            </div>
+
+            <input type="hidden" id="bot-field" name="bot-field">
+            <button type="submit" class="btn-primary w-full sm:w-auto">Absenden</button>
+        </form>
+    </div>
 </div>
 <script src="{{ url_for('static', filename='js/reportProblem.js') }}"></script>
 {% endblock %}

@@ -1,55 +1,142 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<!-- Hero / Profile -->
-<section class="flex flex-col items-center text-center mb-12 stagger-item">
-    <div class="relative inline-flex flex-col items-center">
+<!-- Hero Banner -->
+<section class="relative -mx-4 sm:-mx-6 lg:-mx-8 mb-16 stagger-item">
+    <div class="h-48 md:h-64 bg-gradient-to-br from-accent/20 via-surface-raised to-surface-overlay rounded-2xl mx-4 sm:mx-6 lg:mx-8 overflow-hidden">
+        <div class="absolute inset-0 mx-4 sm:mx-6 lg:mx-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent"></div>
+    </div>
+    <div class="flex flex-col items-center -mt-20 md:-mt-24 relative z-10">
         <img src="{{ url_for('static', filename='img/aboutUs/janneck.webp') }}" alt="Janneck Lehmann"
-            class="rounded-full w-32 h-32 md:w-48 md:h-48 object-cover border-2 border-accent shadow-lg shadow-accent/20 relative z-10">
-        <div class="-mt-8 md:-mt-12 pt-10 md:pt-14 pb-4 px-10 md:px-14 rounded-2xl backdrop-blur-xl bg-surface-raised/60 border border-surface-border/50 shadow-lg">
+            class="rounded-full w-32 h-32 md:w-44 md:h-44 object-cover border-4 border-surface shadow-xl shadow-accent/10">
+        <div class="mt-4 text-center">
             <h1 class="page-title mb-1">Janneck Lehmann</h1>
-            <p class="text-text-secondary text-lg">Fachinformatiker, Turniersport-Fahrer &amp; Entwickler von PACEr</p>
+            <p class="text-text-secondary text-lg">Fachinformatiker, Turniersport-Fahrer & Entwickler von PACEr</p>
         </div>
     </div>
 </section>
 
-<div class="accent-bar mx-auto mb-12"></div>
+<!-- Facts -->
+<section class="mb-16 stagger-item" style="transition-delay: 0.1s">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card text-center">
+            <div class="text-3xl mb-2">&#127943;</div>
+            <p class="text-text-primary font-bold text-lg">Seit 2016 im Fahrsport</p>
+            <p class="text-text-secondary text-sm mt-1">Leidenschaftlicher Turniersport-Fahrer</p>
+        </div>
+        <div class="card text-center">
+            <div class="text-3xl mb-2">&#128052;</div>
+            <p class="text-text-primary font-bold text-lg">Welsh Cobs</p>
+            <p class="text-text-secondary text-sm mt-1">Gest&uuml;t Robinienheinz</p>
+        </div>
+        <div class="card text-center">
+            <div class="text-3xl mb-2">&#128187;</div>
+            <p class="text-text-primary font-bold text-lg">Fachinformatiker</p>
+            <p class="text-text-secondary text-sm mt-1">Systemintegration</p>
+        </div>
+    </div>
+</section>
+
+<div class="accent-bar mx-auto mb-16"></div>
 
 <!-- Über mich -->
-<section class="max-w-2xl mx-auto mb-12 stagger-item" style="transition-delay: 0.1s">
+<section class="max-w-3xl mx-auto mb-16 stagger-item" style="transition-delay: 0.15s">
     <div class="card">
-        <h2 class="section-header mb-4">Über mich</h2>
+        <h2 class="section-header mb-4">&Uuml;ber mich</h2>
         <div class="space-y-4 text-text-secondary leading-relaxed">
             <p>
-                Ich habe meine Ausbildung zum Fachinformatiker für Systemintegration erfolgreich abgeschlossen
+                Ich habe meine Ausbildung zum Fachinformatiker f&uuml;r Systemintegration erfolgreich abgeschlossen
                 und plane, im Laufe des Jahres Medieninformatik zu studieren.
             </p>
             <p>
-                Seit 2016 bin ich leidenschaftlicher Fahrer im Turniersport und genau aus dieser Kombination
-                von IT und Fahrsport ist PACEr entstanden. Statt die Split-Zeiten für den Marathon von Hand
-                auszurechnen, übernimmt jetzt eine App die Arbeit.
+                Seit 2016 bin ich leidenschaftlicher Fahrer im Turniersport &mdash; mit Welsh Cobs vom Gest&uuml;t
+                Robinienheinz. Genau aus dieser Kombination von IT und Fahrsport ist PACEr entstanden. Statt die
+                Split-Zeiten f&uuml;r den Marathon von Hand auszurechnen, &uuml;bernimmt jetzt eine App die Arbeit.
             </p>
             <p>
-                Design-Tipps nehme ich übrigens dankbar an, meine Stärken liegen definitiv eher im Backend.
+                Design-Tipps nehme ich &uuml;brigens dankbar an, meine St&auml;rken liegen definitiv eher im Backend.
             </p>
         </div>
     </div>
 </section>
 
-<!-- Feedback CTA -->
-<section class="max-w-2xl mx-auto mb-12 stagger-item" style="transition-delay: 0.2s">
-    <div class="card text-center">
-        <h2 class="section-header mb-3">Feedback willkommen</h2>
-        <p class="text-text-secondary mb-6">
-            Anregungen, Verbesserungsvorschläge oder Fehler gefunden? Ich freue mich über jede Nachricht.
-        </p>
-        <a href="/reportProblem" class="btn-primary inline-block">Feedback senden</a>
+<!-- Timeline -->
+<section class="mb-16 stagger-item" style="transition-delay: 0.2s">
+    <h2 class="section-header text-center mb-10">Projekthistorie</h2>
+    <div class="relative max-w-2xl mx-auto">
+        <!-- Vertical line -->
+        <div class="timeline-line"></div>
+
+        <div class="space-y-10">
+            <!-- Mai 2023 -->
+            <div class="relative pl-10">
+                <div class="timeline-dot" style="top: 4px;"></div>
+                <span class="text-accent font-semibold text-sm">Mai 2023</span>
+                <p class="text-text-primary font-medium mt-1">Erste Version</p>
+                <p class="text-text-secondary text-sm">Grundlegende Pace-Berechnung f&uuml;r den Fahrsport-Marathon.</p>
+            </div>
+
+            <!-- Jun 2023 -->
+            <div class="relative pl-10">
+                <div class="timeline-dot" style="top: 4px;"></div>
+                <span class="text-accent font-semibold text-sm">Juni 2023</span>
+                <p class="text-text-primary font-medium mt-1">Admin, Feedback & Slider</p>
+                <p class="text-text-secondary text-sm">Admin-Panel, Feedback-Formular und Tempo-Slider eingef&uuml;hrt.</p>
+            </div>
+
+            <!-- Aug 2023 -->
+            <div class="relative pl-10">
+                <div class="timeline-dot" style="top: 4px;"></div>
+                <span class="text-accent font-semibold text-sm">August 2023</span>
+                <p class="text-text-primary font-medium mt-1">PDF-Export</p>
+                <p class="text-text-secondary text-sm">Ergebnisse als PDF herunterladen f&uuml;r die Strecke.</p>
+            </div>
+
+            <!-- Apr 2025 -->
+            <div class="relative pl-10">
+                <div class="timeline-dot" style="top: 4px;"></div>
+                <span class="text-accent font-semibold text-sm">April 2025</span>
+                <p class="text-text-primary font-medium mt-1">Grundlegende &Uuml;berarbeitung</p>
+                <p class="text-text-secondary text-sm">Turnier-Modul, HTMX-Umbau, Auth-System, OCR-Fotoanalyse.</p>
+            </div>
+
+            <!-- Feb 2026 -->
+            <div class="relative pl-10">
+                <div class="timeline-dot" style="top: 4px;"></div>
+                <span class="text-accent font-semibold text-sm">Februar 2026</span>
+                <p class="text-text-primary font-medium mt-1">Modernisierung & neues UI</p>
+                <p class="text-text-secondary text-sm">Komplett neues Dark-Theme, Flip-Cards, Segmented Controls, volle Breite.</p>
+            </div>
+        </div>
     </div>
 </section>
 
-<!-- Kontakt -->
-<section class="max-w-2xl mx-auto mb-8 stagger-item" style="transition-delay: 0.3s">
-    <p class="text-center text-text-secondary">
+<!-- Galerie Platzhalter -->
+<section class="mb-16 stagger-item" style="transition-delay: 0.25s">
+    <h2 class="section-header text-center mb-8">Eindr&uuml;cke</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="aspect-[4/3] rounded-xl bg-gradient-to-br from-surface-raised to-surface-overlay border border-surface-border flex items-center justify-center">
+            <span class="text-text-muted text-sm">Bild 1</span>
+        </div>
+        <div class="aspect-[4/3] rounded-xl bg-gradient-to-br from-surface-overlay to-surface-raised border border-surface-border flex items-center justify-center">
+            <span class="text-text-muted text-sm">Bild 2</span>
+        </div>
+        <div class="aspect-[4/3] rounded-xl bg-gradient-to-br from-surface-raised to-surface-overlay border border-surface-border flex items-center justify-center">
+            <span class="text-text-muted text-sm">Bild 3</span>
+        </div>
+    </div>
+</section>
+
+<!-- Feedback CTA + Kontakt -->
+<section class="mb-12 stagger-item" style="transition-delay: 0.3s">
+    <div class="card text-center max-w-3xl mx-auto">
+        <h2 class="section-header mb-3">Feedback willkommen</h2>
+        <p class="text-text-secondary mb-6">
+            Anregungen, Verbesserungsvorschl&auml;ge oder Fehler gefunden? Ich freue mich &uuml;ber jede Nachricht.
+        </p>
+        <a href="/reportProblem" class="btn-primary inline-block">Feedback senden</a>
+    </div>
+    <p class="text-center text-text-secondary mt-6">
         Kontakt:
         <a href="mailto:info@j-rz.de" class="text-accent hover:text-accent-hover transition-colors">info@j-rz.de</a>
     </p>

@@ -246,6 +246,15 @@
     clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
   }
 
+  /* ── Timeline ── */
+  .timeline-line {
+    @apply absolute left-[5px] top-0 bottom-0 w-0.5 bg-surface-border;
+  }
+
+  .timeline-dot {
+    @apply absolute left-0 w-3 h-3 rounded-full bg-accent shadow-md shadow-accent/30;
+  }
+
   /* ── Stagger animation helper ── */
   .stagger-item {
     @apply opacity-0 translate-y-4 transition-all duration-500 ease-out;

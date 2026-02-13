@@ -1,6 +1,9 @@
 {% extends "layout.html" %} {% block content %}
 <header class="page-header mb-8">
     <h1 class="page-title">Turniere</h1>
+    {% if tournaments %}
+    <p class="text-text-secondary mt-1">&Uuml;bersicht aller Turniere mit vorgefertigten Berechnungen</p>
+    {% endif %}
 </header>
 
 {% if tournaments %}
