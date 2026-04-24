@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='build/theme.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='build/theme.css') }}?v={{ asset_version }}" />
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <title>PACEr {{ title if title else '' }}</title>
 </head>
@@ -134,8 +134,8 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/layout.js') }}?v={{ asset_version }}"></script>
+    <script src="{{ url_for('static', filename='js/notification.js') }}?v={{ asset_version }}"></script>
     <!-- HTMX CSRF header + lifecycle -->
     <script>
         document.body.addEventListener('htmx:configRequest', function(event) {

@@ -51,6 +51,7 @@ def create_app():
         return {
             'current_year': date.today().year,
             'csrf_token': generate_csrf_token,
+            'asset_version': os.environ.get('ASSET_VERSION', 'local'),
         }
 
     # Create tables and seed super admin
