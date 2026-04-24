@@ -11,7 +11,7 @@
             class="rounded-full w-32 h-32 md:w-44 md:h-44 object-cover border-4 border-surface shadow-xl shadow-accent/10">
         <div class="mt-4 text-center">
             <h1 class="page-title mb-1">Janneck Lehmann</h1>
-            <p class="text-text-secondary text-lg">Fachinformatiker, Turniersport-Fahrer & Entwickler von PACEr</p>
+            <p class="text-text-secondary text-lg">Fachinformatiker, Fahrsportler und Entwickler von PACEr</p>
         </div>
     </div>
 </section>
@@ -22,7 +22,7 @@
         <div class="card text-center">
             <div class="text-3xl mb-2">&#127943;</div>
             <p class="text-text-primary font-bold text-lg">Seit 2016 im Fahrsport</p>
-            <p class="text-text-secondary text-sm mt-1">Leidenschaftlicher Turniersport-Fahrer</p>
+            <p class="text-text-secondary text-sm mt-1">Aktiv im Turniersport</p>
         </div>
         <div class="card text-center">
             <div class="text-3xl mb-2">&#128052;</div>
@@ -49,12 +49,13 @@
                 und plane, im Laufe des Jahres Medieninformatik zu studieren.
             </p>
             <p>
-                Seit 2016 bin ich leidenschaftlicher Fahrer im Turniersport &mdash; mit Welsh Cobs vom Gest&uuml;t
-                Robinienheinz. Genau aus dieser Kombination von IT und Fahrsport ist PACEr entstanden. Statt die
-                Split-Zeiten f&uuml;r den Marathon von Hand auszurechnen, &uuml;bernimmt jetzt eine App die Arbeit.
+                Seit 2016 fahre ich im Turniersport mit Welsh Cobs vom Gest&uuml;t Robinienheinz. Aus dieser
+                Verbindung von IT und Fahrsport ist PACEr entstanden: eine kleine Anwendung, die Splitzeiten
+                f&uuml;r den Marathon berechnet.
             </p>
             <p>
-                Design-Tipps nehme ich &uuml;brigens dankbar an, meine St&auml;rken liegen definitiv eher im Backend.
+                Aktuell &uuml;berarbeite ich Oberfl&auml;che, Struktur und Bedienung Schritt f&uuml;r Schritt.
+                Der Rechner soll fachlich nachvollziehbar bleiben und im Turnieralltag schnell nutzbar sein.
             </p>
         </div>
     </div>
@@ -105,34 +106,79 @@
                 <div class="timeline-dot" style="top: 4px;"></div>
                 <span class="text-accent font-semibold text-sm">Februar 2026</span>
                 <p class="text-text-primary font-medium mt-1">Modernisierung & neues UI</p>
-                <p class="text-text-secondary text-sm">Komplett neues Dark-Theme, Flip-Cards, Segmented Controls, volle Breite.</p>
+                <p class="text-text-secondary text-sm">Neues UI mit Dark-Theme, Flip-Cards, Segmented Controls und breiteren Layouts.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Galerie Platzhalter -->
+<!-- Eindrücke -->
 <section class="mb-16 stagger-item" style="transition-delay: 0.25s">
     <h2 class="section-header text-center mb-8">Eindr&uuml;cke</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="aspect-[4/3] rounded-xl bg-gradient-to-br from-surface-raised to-surface-overlay border border-surface-border flex items-center justify-center">
-            <span class="text-text-muted text-sm">Bild 1</span>
-        </div>
-        <div class="aspect-[4/3] rounded-xl bg-gradient-to-br from-surface-overlay to-surface-raised border border-surface-border flex items-center justify-center">
-            <span class="text-text-muted text-sm">Bild 2</span>
-        </div>
-        <div class="aspect-[4/3] rounded-xl bg-gradient-to-br from-surface-raised to-surface-overlay border border-surface-border flex items-center justify-center">
-            <span class="text-text-muted text-sm">Bild 3</span>
-        </div>
+        <button type="button"
+            class="group overflow-hidden rounded-xl border border-surface-border bg-surface-raised text-left transition-all hover:-translate-y-1 hover:border-accent/60 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-accent"
+            data-lightbox-src="{{ url_for('static', filename='img/aboutUs/impressions/old-calculator-form.png') }}"
+            data-lightbox-alt="Fr&uuml;here Eingabemaske des PACEr-Rechners">
+            <span class="flex aspect-[4/3] items-center justify-center bg-surface p-2">
+                <img src="{{ url_for('static', filename='img/aboutUs/impressions/old-calculator-form.png') }}"
+                    alt="Fr&uuml;here Eingabemaske des PACEr-Rechners"
+                    class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
+            </span>
+            <span class="block px-4 py-3 text-sm text-text-secondary">
+                Erste Rechner-Maske
+            </span>
+        </button>
+        <button type="button"
+            class="group overflow-hidden rounded-xl border border-surface-border bg-surface-raised text-left transition-all hover:-translate-y-1 hover:border-accent/60 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-accent"
+            data-lightbox-src="{{ url_for('static', filename='img/aboutUs/impressions/old-calculator-results.png') }}"
+            data-lightbox-alt="Fr&uuml;here Ergebnisansicht des PACEr-Rechners">
+            <span class="flex aspect-[4/3] items-center justify-center bg-surface p-2">
+                <img src="{{ url_for('static', filename='img/aboutUs/impressions/old-calculator-results.png') }}"
+                    alt="Fr&uuml;here Ergebnisansicht des PACEr-Rechners"
+                    class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
+            </span>
+            <span class="block px-4 py-3 text-sm text-text-secondary">
+                Ergebnisansicht vor dem Redesign
+            </span>
+        </button>
+        <button type="button"
+            class="group overflow-hidden rounded-xl border border-surface-border bg-surface-raised text-left transition-all hover:-translate-y-1 hover:border-accent/60 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-accent"
+            data-lightbox-src="{{ url_for('static', filename='img/aboutUs/impressions/old-info-formula.png') }}"
+            data-lightbox-alt="Fr&uuml;here Infoseite mit Formel-Erkl&auml;rung">
+            <span class="flex aspect-[4/3] items-center justify-center bg-surface p-2">
+                <img src="{{ url_for('static', filename='img/aboutUs/impressions/old-info-formula.png') }}"
+                    alt="Fr&uuml;here Infoseite mit Formel-Erkl&auml;rung"
+                    class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
+            </span>
+            <span class="block px-4 py-3 text-sm text-text-secondary">
+                Formel-Erkl&auml;rung der ersten Version
+            </span>
+        </button>
     </div>
 </section>
+
+<div id="impression-lightbox"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+    aria-hidden="true">
+    <button type="button" class="absolute inset-0 cursor-zoom-out" data-lightbox-close
+        aria-label="Bildansicht schlie&szlig;en"></button>
+    <div class="relative max-h-[90vh] w-full max-w-6xl rounded-2xl border border-surface-border bg-surface-raised p-3 shadow-2xl">
+        <button type="button"
+            class="absolute right-3 top-3 z-10 rounded-full bg-surface-overlay px-3 py-1 text-xl text-text-primary hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent"
+            data-lightbox-close aria-label="Bildansicht schlie&szlig;en">
+            &times;
+        </button>
+        <img id="impression-lightbox-image" src="" alt="" class="mx-auto max-h-[82vh] w-auto max-w-full rounded-xl object-contain">
+    </div>
+</div>
 
 <!-- Feedback CTA + Kontakt -->
 <section class="mb-12 stagger-item" style="transition-delay: 0.3s">
     <div class="card text-center max-w-3xl mx-auto">
-        <h2 class="section-header mb-3">Feedback willkommen</h2>
+        <h2 class="section-header mb-3">Feedback</h2>
         <p class="text-text-secondary mb-6">
-            Anregungen, Verbesserungsvorschl&auml;ge oder Fehler gefunden? Ich freue mich &uuml;ber jede Nachricht.
+            Wenn dir ein Fehler auff&auml;llt oder eine Berechnung unklar ist, schreib mir gern eine Nachricht.
         </p>
         <a href="/reportProblem" class="btn-primary inline-block">Feedback senden</a>
     </div>
@@ -141,5 +187,42 @@
         <a href="mailto:info@j-rz.de" class="text-accent hover:text-accent-hover transition-colors">info@j-rz.de</a>
     </p>
 </section>
+
+<script>
+    (function() {
+        var lightbox = document.getElementById('impression-lightbox');
+        var image = document.getElementById('impression-lightbox-image');
+        var triggers = document.querySelectorAll('[data-lightbox-src]');
+        var closeButtons = document.querySelectorAll('[data-lightbox-close]');
+
+        function closeLightbox() {
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+            lightbox.setAttribute('aria-hidden', 'true');
+            image.src = '';
+            image.alt = '';
+        }
+
+        triggers.forEach(function(trigger) {
+            trigger.addEventListener('click', function() {
+                image.src = trigger.getAttribute('data-lightbox-src');
+                image.alt = trigger.getAttribute('data-lightbox-alt') || '';
+                lightbox.classList.remove('hidden');
+                lightbox.classList.add('flex');
+                lightbox.setAttribute('aria-hidden', 'false');
+            });
+        });
+
+        closeButtons.forEach(function(button) {
+            button.addEventListener('click', closeLightbox);
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                closeLightbox();
+            }
+        });
+    })();
+</script>
 
 {% endblock %}

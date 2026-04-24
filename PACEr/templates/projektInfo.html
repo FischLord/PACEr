@@ -14,7 +14,7 @@
                     Dein<br>Marathon-Timer
                 </h1>
                 <p class="text-text-secondary text-lg md:text-xl mt-4 max-w-lg">
-                    Berechne Split-Zeiten für Bestzeit, Erlaubte Zeit und Höchstzeit — präzise, schnell und mobil-optimiert.
+                    Berechne Splitzeiten für das gültige Zeitfenster zwischen Bestzeit und Erlaubter Zeit.
                 </p>
                 <div class="flex flex-wrap gap-4 mt-8">
                     <a href="/rechner" class="btn-primary text-lg px-8 py-4">
@@ -34,7 +34,7 @@
 <section class="mb-20">
     <div class="text-center mb-12">
         <div class="accent-bar mx-auto mb-4"></div>
-        <h2 class="section-header">Alles was du brauchst</h2>
+        <h2 class="section-header">Funktionen</h2>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="card-hover text-center stagger-item" style="transition-delay: 0s">
@@ -44,7 +44,7 @@
                 </svg>
             </div>
             <h3 class="text-lg font-bold text-text-primary mb-2">Automatisch</h3>
-            <p class="text-text-secondary text-sm">Strecke, Art und Tempo eingeben — BZ, EZ und HZ werden sofort berechnet.</p>
+            <p class="text-text-secondary text-sm">Strecke, Art und Tempo eingeben. PACEr berechnet BZ, EZ und HZ.</p>
         </div>
         <div class="card-hover text-center stagger-item" style="transition-delay: 0.1s">
             <div class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-accent/10 flex items-center justify-center">
@@ -53,7 +53,7 @@
                 </svg>
             </div>
             <h3 class="text-lg font-bold text-text-primary mb-2">Manuell</h3>
-            <p class="text-text-secondary text-sm">Eigene Zeiten direkt eingeben — für maximale Kontrolle über deine Berechnungen.</p>
+            <p class="text-text-secondary text-sm">Eigene Zeiten eingeben, wenn Vorgaben oder Zwischenzeiten schon feststehen.</p>
         </div>
         <div class="card-hover text-center stagger-item" style="transition-delay: 0.2s">
             <div class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-accent/10 flex items-center justify-center">
@@ -87,12 +87,12 @@
         <div class="text-center stagger-item" style="transition-delay: 0.3s">
             <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent text-white font-bold text-xl flex items-center justify-center shadow-lg shadow-accent/20">3</div>
             <h3 class="font-bold text-text-primary mb-2">Ergebnis erhalten</h3>
-            <p class="text-text-secondary text-sm">BZ, EZ und HZ Split-Zeiten pro Kilometer — als Tabelle oder PDF.</p>
+            <p class="text-text-secondary text-sm">Zwischenzeiten pro Kilometer anzeigen, als Tabelle oder PDF.</p>
         </div>
     </div>
 </section>
 
-<!-- Sport Showcase — Flip Cards -->
+<!-- Sport Showcase: Flip Cards -->
 <section class="mb-20">
     <div class="text-center mb-12">
         <div class="accent-bar mx-auto mb-4"></div>
@@ -143,7 +143,7 @@
                 </div>
                 <div class="flip-card-back rounded-2xl overflow-hidden bg-surface-raised border border-surface-border/50 p-5 lg:p-5 flex flex-col justify-center">
                     <h3 class="text-accent font-bold text-lg mb-3">Gelände (Marathon)</h3>
-                    <p class="text-text-secondary text-sm leading-relaxed">Im Marathon gibt es mehrere feste Hindernisse, die durch Streckenabschnitte miteinander verbunden sind. Das genaue Timing ist entscheidend, denn es gibt ein Zeitfenster, in dem man ins Ziel kommen muss. Genau dafür ist PACEr da.</p>
+                    <p class="text-text-secondary text-sm leading-relaxed">Im Marathon gibt es feste Hindernisse und verbindende Streckenabschnitte. Das Gespann muss zwischen BZ und EZ ins Ziel kommen. Vor der BZ und nach der EZ gibt es Strafpunkte, nach der HZ folgt die Eliminierung.</p>
                 </div>
             </div>
         </div>
@@ -289,6 +289,7 @@
             });
         } else {
             card.classList.add('is-flipped');
+            activeCard = card;
         }
     }
 
@@ -306,7 +307,7 @@
     <div class="card text-center py-12 px-6">
         <div class="accent-bar mx-auto mb-6"></div>
         <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-text-primary mb-4">Bereit?</h2>
-        <p class="text-text-secondary text-lg mb-8 max-w-md mx-auto">Berechne deine Split-Zeiten und starte optimal vorbereitet in den Marathon.</p>
+        <p class="text-text-secondary text-lg mb-8 max-w-md mx-auto">Berechne deine Splitzeiten und nimm geprüfte Zeiten mit an die Strecke.</p>
         <a href="/rechner" class="btn-primary text-lg px-10 py-4 inline-block">
             Jetzt berechnen
             <svg class="inline w-5 h-5 ml-2 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,10 +1,10 @@
-<!-- OCR result partial — shows detected values with confidence -->
+<!-- OCR result partial: shows detected values with confidence -->
 <div class="card animate-slide-up">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold text-text-primary">Erkannte Werte</h3>
         {% if ocr.confidence < 70 %}
         <span class="text-xs bg-yellow-900/30 text-yellow-400 px-2.5 py-1 rounded-lg">
-            Vertrauen: {{ ocr.confidence }}% — Bitte prüfen
+            Vertrauen: {{ ocr.confidence }}%. Bitte pr&uuml;fen
         </span>
         {% else %}
         <span class="text-xs bg-time-bz/10 text-time-bz px-2.5 py-1 rounded-lg">

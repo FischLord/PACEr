@@ -5,7 +5,7 @@
             <h1 class="page-title">Rechner</h1>
             <p class="text-text-secondary mt-1">Split-Zeiten berechnen</p>
         </div>
-        <!-- Mode toggle — segmented control -->
+        <!-- Mode toggle: segmented control -->
         <div class="relative flex items-center bg-surface-raised rounded-xl p-1 border border-surface-border">
             <div id="toggle-indicator" class="absolute top-1 bottom-1 rounded-lg bg-accent shadow-lg shadow-accent/20 transition-all duration-300 ease-out"
                 style="{% if mode != 'manuell' %}left: 4px; width: calc(50% - 4px);{% else %}left: calc(50%); width: calc(50% - 4px);{% endif %}"></div>
@@ -61,15 +61,15 @@
         <!-- BZ / EZ / HZ Explanation -->
         <div class="card border-l-4 border-l-time-bz">
             <h3 class="text-time-bz font-bold text-sm uppercase tracking-wide mb-1">Bestzeit (BZ)</h3>
-            <p class="text-text-secondary text-sm">Schnellste erlaubte Zeit &mdash; schneller fahren gibt Strafpunkte.</p>
+            <p class="text-text-secondary text-sm">Fr&uuml;heste erlaubte Zielzeit. Vor der BZ anzukommen gibt Strafpunkte.</p>
         </div>
         <div class="card border-l-4 border-l-time-ez">
             <h3 class="text-time-ez font-bold text-sm uppercase tracking-wide mb-1">Erlaubte Zeit (EZ)</h3>
-            <p class="text-text-secondary text-sm">Optimale Zielzeit &mdash; hierauf solltest du dein Tempo einrichten.</p>
+            <p class="text-text-secondary text-sm">Bis zur EZ bleibst du im Zeitfenster. Danach gibt es Strafpunkte.</p>
         </div>
         <div class="card border-l-4 border-l-time-hz">
             <h3 class="text-time-hz font-bold text-sm uppercase tracking-wide mb-1">H&ouml;chstzeit (HZ)</h3>
-            <p class="text-text-secondary text-sm">Maximale Zeit &mdash; &uuml;berschreiten f&uuml;hrt zu Strafpunkten pro Sekunde.</p>
+            <p class="text-text-secondary text-sm">Sp&auml;teste erlaubte Zeit. Nach der HZ ist das Gespann eliminiert.</p>
         </div>
 
         <!-- How it works -->
