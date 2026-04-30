@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/pacerWhiteMid.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/pacer-icon-64.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -21,7 +21,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <a class="flex items-center gap-2.5 group" href="/">
-                    <img src="{{ url_for('static', filename='img/pacerWhiteMid.png') }}" alt="PACEr" class="h-8 w-8">
+                    <img src="{{ url_for('static', filename='img/pacer-icon-64.png') }}"
+                        srcset="{{ url_for('static', filename='img/pacer-icon-64.png') }} 64w, {{ url_for('static', filename='img/pacer-icon-128.png') }} 128w"
+                        sizes="32px" alt="PACEr" width="32" height="32" decoding="async" class="h-8 w-8 object-contain">
                     <span class="font-extrabold text-xl tracking-tight text-accent group-hover:text-accent-hover transition-colors">PACEr</span>
                 </a>
                 <!-- Desktop nav -->
@@ -98,7 +100,9 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <a class="flex items-center gap-2 group" href="/">
-                        <img src="{{ url_for('static', filename='img/pacerWhiteMid.png') }}" alt="PACEr" class="h-7 w-7">
+                        <img src="{{ url_for('static', filename='img/pacer-icon-64.png') }}"
+                            srcset="{{ url_for('static', filename='img/pacer-icon-64.png') }} 64w, {{ url_for('static', filename='img/pacer-icon-128.png') }} 128w"
+                            sizes="28px" alt="PACEr" width="28" height="28" loading="lazy" decoding="async" class="h-7 w-7 object-contain">
                         <span class="text-accent font-bold text-xl">PACEr</span>
                     </a>
                     <p class="text-text-muted text-sm mt-3">&copy; {{ current_year }} | All rights reserved</p>
