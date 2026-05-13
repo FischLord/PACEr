@@ -6,7 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/pacerWhiteMid.png') }}">
+    <meta name="description" content="PACEr berechnet Split-Zeiten für den Fahrsport-Marathon: Bestzeit, erlaubte Zeit und Höchstzeit auf einen Blick." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="PACEr" />
+    <meta property="og:title" content="PACEr - Split-Zeiten für den Fahrsport" />
+    <meta property="og:description" content="Berechne Bestzeit, erlaubte Zeit und Höchstzeit für Wegstrecken und Hindernisstrecken." />
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:image" content="{{ url_for('static', filename='img/pacerLogo.png', _external=True) }}" />
+    <meta property="og:image:secure_url" content="{{ url_for('static', filename='img/pacerLogo.png', _external=True) }}" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="PACEr Logo mit Pferdegespann und Stoppuhr" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PACEr - Split-Zeiten für den Fahrsport" />
+    <meta name="twitter:description" content="Berechne Bestzeit, erlaubte Zeit und Höchstzeit für Wegstrecken und Hindernisstrecken." />
+    <meta name="twitter:image" content="{{ url_for('static', filename='img/pacerLogo.png', _external=True) }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/pacerLogoSmall.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -21,7 +38,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <a class="flex items-center gap-2.5 group" href="/">
-                    <img src="{{ url_for('static', filename='img/pacerWhiteMid.png') }}" alt="PACEr" class="h-8 w-8">
+                    <img src="{{ url_for('static', filename='img/pacerLogoSmall.png') }}" alt="PACEr" class="h-11 w-11 object-contain -my-1.5" width="256" height="256">
                     <span class="font-extrabold text-xl tracking-tight text-accent group-hover:text-accent-hover transition-colors">PACEr</span>
                 </a>
                 <!-- Desktop nav -->
@@ -98,7 +115,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <a class="flex items-center gap-2 group" href="/">
-                        <img src="{{ url_for('static', filename='img/pacerWhiteMid.png') }}" alt="PACEr" class="h-7 w-7">
+                        <img src="{{ url_for('static', filename='img/pacerLogoSmall.png') }}" alt="PACEr" class="h-12 w-12 md:h-20 md:w-20 object-contain -my-2 md:-my-4" width="256" height="256">
                         <span class="text-accent font-bold text-xl">PACEr</span>
                     </a>
                     <p class="text-text-muted text-sm mt-3">&copy; {{ current_year }} | All rights reserved</p>
