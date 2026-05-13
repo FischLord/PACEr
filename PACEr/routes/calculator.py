@@ -18,12 +18,20 @@ def rechner():
         return _handle_calculation()
 
     mode = request.args.get('mode', 'auto')
+    selected_art = _get_followup_art(request.args.get('followup_after'))
+    selected_tournament_id = request.args.get('tournament_id', '')
+    selected_klasse = request.args.get('klasse', '')
     tournaments = Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all()
+    selected_klassen = _get_tournament_klassen(selected_tournament_id)
     return render_template(
         'calculator/rechner.html',
         mode=mode,
         has_result=False,
         tournaments=tournaments,
+        selected_art=selected_art,
+        selected_tournament_id=selected_tournament_id,
+        selected_klasse=selected_klasse,
+        selected_klassen=selected_klassen,
         show_ocr=False,
     )
 
@@ -55,9 +63,28 @@ def api_calculate():
 def partials_form():
     """Returns form partial for mode switching via HTMX."""
     mode = request.args.get('mode', 'auto')
+    form_target_id = _get_form_target_id(request.args.get('target_id'))
+    selected_tournament_id = request.args.get('tournament_id', '')
+    selected_klasse = request.args.get('klasse', '')
     tournaments = Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all()
     template = 'partials/form_old.html' if mode == 'manuell' else 'partials/form_new.html'
-    return render_template(template, use_htmx=True, tournaments=tournaments)
+    return render_template(
+        template,
+        use_htmx=True,
+        tournaments=tournaments,
+        selected_art=_get_followup_art(request.args.get('followup_after')),
+        selected_tournament_id=selected_tournament_id,
+        selected_klasse=selected_klasse,
+        selected_klassen=_get_tournament_klassen(selected_tournament_id),
+        form_target_id=form_target_id,
+        reset_form_url=_build_partial_form_url(
+            mode=mode,
+            followup_after=request.args.get('followup_after'),
+            target_id=form_target_id,
+            tournament_id=selected_tournament_id,
+            klasse=selected_klasse,
+        ),
+    )
 
 
 @bp_calculator.route('/api/tournament-klassen')
@@ -70,7 +97,34 @@ def api_tournament_klassen():
     if not tournament:
         return ''
     klassen = json.loads(tournament.klassen) if tournament.klassen else []
-    return render_template('partials/klasse_select.html', klassen=klassen)
+    return render_template(
+        'partials/klasse_select.html',
+        klassen=klassen,
+        selected_klasse='',
+        form_target_id=_get_form_target_id(request.args.get('target_id')),
+    )
+
+
+def _get_followup_art(previous_art):
+    """Preselect the next likely section without forcing a combined workflow."""
+    if previous_art == 'wegstrecke':
+        return 'hindernisstrecke'
+    return None
+
+
+def _get_tournament_klassen(tournament_id):
+    if not tournament_id:
+        return []
+    tournament = Tournament.query.get(tournament_id)
+    if not tournament or not tournament.klassen:
+        return []
+    return json.loads(tournament.klassen)
+
+
+def _get_form_target_id(target_id):
+    if target_id and target_id.replace('-', '').isalnum():
+        return target_id
+    return 'form-area'
 
 
 @bp_calculator.route('/api/export/pdf/<int:calculation_id>')
@@ -194,6 +248,7 @@ def _handle_calculation(partial=False):
             laenge=laenge, kmh=kmh, art=art,
             bz_result=bz_result, ez_result=ez_result, hz_result=hz_result,
             calculation_id=calc.id,
+            followup_form_url=_build_followup_form_url(calc),
         )
 
         if partial:
@@ -214,3 +269,30 @@ def _handle_calculation(partial=False):
             has_result=False, notification=error, notificationName='Fehler',
             tournaments=Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all(),
         )
+
+
+def _build_followup_form_url(calc):
+    if not calc.art:
+        return None
+
+    return _build_partial_form_url(
+        mode='auto',
+        followup_after=calc.art,
+        target_id=f'followup-slot-{calc.id}',
+        tournament_id=calc.tournament_id,
+        klasse=calc.klasse,
+    )
+
+
+def _build_partial_form_url(mode='auto', followup_after=None, target_id='form-area', tournament_id=None, klasse=None):
+    params = {
+        'mode': mode,
+        'target_id': target_id,
+    }
+    if followup_after:
+        params['followup_after'] = followup_after
+    if tournament_id:
+        params['tournament_id'] = tournament_id
+    if klasse:
+        params['klasse'] = klasse
+    return url_for('calculator.partials_form', **params)

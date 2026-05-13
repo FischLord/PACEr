@@ -8,7 +8,7 @@
         <!-- Mode toggle: segmented control -->
         <div class="relative flex items-center bg-surface-raised rounded-xl p-1 border border-surface-border">
             <div id="toggle-indicator" class="absolute top-1 bottom-1 rounded-lg bg-accent shadow-lg shadow-accent/20 transition-all duration-300 ease-out"
-                style="{% if mode != 'manuell' %}left: 4px; width: calc(50% - 4px);{% else %}left: calc(50%); width: calc(50% - 4px);{% endif %}"></div>
+                style="left: 4px; width: 0;"></div>
             <button id="btn-auto" class="relative z-10 px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 {% if mode != 'manuell' %}text-white{% else %}text-text-secondary hover:text-text-primary{% endif %}"
                 hx-get="/partials/form?mode=auto" hx-target="#form-area" hx-swap="innerHTML">
                 Auto
@@ -102,14 +102,6 @@
     </div>
 </div>
 
-<!-- Result area for HTMX responses -->
-<div id="result-area" class="mt-6">
-    <!-- Loading skeleton (htmx-indicator) -->
-    <div id="calc-loading" class="htmx-indicator space-y-4">
-        <div class="loading-skeleton h-20 w-full"></div>
-        <div class="loading-skeleton h-64 w-full"></div>
-    </div>
-</div>
 {% else %}
 <!-- Show results (full width) -->
 <div>

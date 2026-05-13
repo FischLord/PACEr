@@ -1,14 +1,15 @@
 <!-- Manual-mode form partial -->
-<form {% if use_htmx %}hx-post="/api/calculate" hx-target="#result-area" hx-swap="innerHTML" hx-indicator="#calc-loading"{% else %}action="/rechner" method="POST"{% endif %}
-      id="form_calculator" class="card">
+<form action="/rechner" method="POST"
+      {% if use_htmx|default(true) %}hx-post="/api/calculate" hx-target="#{{ form_target_id|default('form-area') }}" hx-swap="innerHTML" hx-indicator="#calc-submit-spinner-{{ form_target_id|default('form-area') }}"{% endif %}
+      id="form-calculator-{{ form_target_id|default('form-area') }}" class="card form-calculator">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="mode" value="manuell">
 
     <div class="mb-6">
-        <label for="laenge" class="form-label">Streckenlänge (m)</label>
-        <input type="number" id="laenge" name="laenge" class="form-input"
+        <label for="laenge-{{ form_target_id|default('form-area') }}" class="form-label">Streckenlänge (m)</label>
+        <input type="number" id="laenge-{{ form_target_id|default('form-area') }}" name="laenge" class="form-input"
             placeholder="z.B. 4900" required min="1" max="100000" />
-        <div id="laenge-error" class="text-red-400 text-sm mt-1.5 hidden">
+        <div data-laenge-error class="text-red-400 text-sm mt-1.5 hidden">
             Bitte eine Länge zwischen 1 und 100.000 m angeben.
         </div>
     </div>
@@ -75,27 +76,38 @@
         </summary>
         <div class="px-4 pb-4 pt-2 space-y-4">
             <div>
-                <label for="tournament_id" class="form-label">Turnier</label>
-                <select id="tournament_id" name="tournament_id" class="form-select"
-                    hx-get="/api/tournament-klassen" hx-target="#klasse-container" hx-trigger="change"
-                    hx-include="this">
+                <label for="tournament-id-{{ form_target_id|default('form-area') }}" class="form-label">Turnier</label>
+                <select id="tournament-id-{{ form_target_id|default('form-area') }}" name="tournament_id" class="form-select"
+                    hx-get="/api/tournament-klassen" hx-target="#klasse-container-{{ form_target_id|default('form-area') }}" hx-trigger="change"
+                    hx-include="this" hx-vals='{"target_id": "{{ form_target_id|default("form-area") }}"}'>
                     <option value="">Kein Turnier</option>
                     {% for t in tournaments %}
-                    <option value="{{ t.id }}">{{ t.name }} ({{ t.datum.strftime('%d.%m.%Y') }})</option>
+                    <option value="{{ t.id }}" {% if selected_tournament_id|string == t.id|string %}selected{% endif %}>{{ t.name }} ({{ t.datum.strftime('%d.%m.%Y') }})</option>
                     {% endfor %}
                 </select>
             </div>
-            <div id="klasse-container"></div>
+            <div id="klasse-container-{{ form_target_id|default('form-area') }}">
+                {% set klassen = selected_klassen|default([]) %}
+                {% include 'partials/klasse_select.html' with context %}
+            </div>
         </div>
     </details>
     {% endif %}
 
-    <button type="submit" class="btn-primary w-full sm:w-auto" id="submit-button">
-        <span class="inline-flex items-center gap-2">
-            Berechnen
-            <svg class="w-4 h-4 animate-spin-slow hidden htmx-indicator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-            </svg>
-        </span>
-    </button>
+    <div class="flex flex-wrap gap-3">
+        <button type="submit" class="btn-primary w-full sm:w-auto submit-button">
+            <span class="inline-flex items-center gap-2">
+                Berechnen
+                <svg id="calc-submit-spinner-{{ form_target_id|default('form-area') }}" class="w-4 h-4 animate-spin-slow htmx-indicator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+            </span>
+        </button>
+        {% if form_target_id|default('form-area') != 'form-area' and reset_form_url %}
+        <button type="button" class="btn-secondary w-full sm:w-auto"
+            hx-get="{{ reset_form_url }}" hx-target="#{{ form_target_id }}" hx-swap="innerHTML">
+            Eingaben zurücksetzen
+        </button>
+        {% endif %}
+    </div>
 </form>

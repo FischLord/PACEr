@@ -157,6 +157,9 @@
   .htmx-request .htmx-indicator {
     @apply opacity-100;
   }
+  .htmx-request.htmx-indicator {
+    @apply opacity-100;
+  }
 
   .loading-skeleton {
     @apply bg-gradient-to-r from-surface-raised via-surface-overlay to-surface-raised

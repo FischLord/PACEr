@@ -109,4 +109,18 @@
             </a>
         </div>
     </div>
+
+    {% if followup_form_url %}
+    <div id="followup-slot-{{ calculation_id }}" class="mt-8">
+        <div class="flex justify-center">
+            <button type="button" class="btn-secondary inline-flex items-center gap-2"
+                hx-get="{{ followup_form_url }}" hx-target="#followup-slot-{{ calculation_id }}" hx-swap="innerHTML">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m0 0l-4-4m4 4l-4 4"/>
+                </svg>
+                Rechner darunter hinzufügen
+            </button>
+        </div>
+    </div>
+    {% endif %}
 </div>
