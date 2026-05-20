@@ -38,7 +38,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <a class="flex items-center gap-2.5 group" href="/">
-                    <img src="{{ url_for('static', filename='img/pacerLogoSmall.png') }}" alt="PACEr" class="h-11 w-11 object-contain -my-1.5" width="256" height="256">
+                    <img src="{{ url_for('static', filename='img/pacerLogoSmall.png') }}" alt="PACEr" class="h-11 w-11 object-contain -my-1.5" width="256" height="256" decoding="async">
                     <span class="font-extrabold text-xl tracking-tight text-accent group-hover:text-accent-hover transition-colors">PACEr</span>
                 </a>
                 <!-- Desktop nav -->
@@ -115,7 +115,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <a class="flex items-center gap-2 group" href="/">
-                        <img src="{{ url_for('static', filename='img/pacerLogoSmall.png') }}" alt="PACEr" class="h-12 w-12 md:h-20 md:w-20 object-contain -my-2 md:-my-4" width="256" height="256">
+                        <img src="{{ url_for('static', filename='img/pacerLogoSmall.png') }}" alt="PACEr" class="h-12 w-12 md:h-20 md:w-20 object-contain -my-2 md:-my-4" width="256" height="256" loading="lazy" decoding="async">
                         <span class="text-accent font-bold text-xl">PACEr</span>
                     </a>
                     <p class="text-text-muted text-sm mt-3">&copy; {{ current_year }} | All rights reserved</p>

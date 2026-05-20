@@ -3,8 +3,10 @@
 <!-- Hero Section -->
 <section class="relative -mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-16 overflow-hidden">
     <div class="relative h-[70vh] min-h-[500px] max-h-[700px]">
-        <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport Marathon"
-            class="absolute inset-0 w-full h-full object-cover" width="1920" height="1280" fetchpriority="high" decoding="async">
+        <img src="{{ url_for('static', filename='img/projektInfo/fahrsport-1440.webp') }}"
+            srcset="{{ url_for('static', filename='img/projektInfo/fahrsport-960.webp') }} 960w, {{ url_for('static', filename='img/projektInfo/fahrsport-1440.webp') }} 1440w, {{ url_for('static', filename='img/projektInfo/fahrsport-1920.webp') }} 1920w"
+            sizes="100vw" alt="Fahrsport Marathon" width="1440" height="960" fetchpriority="high" decoding="async"
+            class="absolute inset-0 w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/70 to-surface/30"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-surface/50 to-transparent"></div>
         <div class="relative h-full flex items-end">
@@ -102,8 +104,10 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport"
-                        class="absolute inset-0 w-full h-full object-cover" width="1920" height="1280" loading="lazy" decoding="async">
+                    <img src="{{ url_for('static', filename='img/projektInfo/fahrsport-960.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/fahrsport-960.webp') }} 960w, {{ url_for('static', filename='img/projektInfo/fahrsport-1440.webp') }} 1440w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Fahrsport" width="960" height="640" loading="lazy" decoding="async"
+                        class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="text-text-primary font-bold text-lg">Fahrsport</h3>
@@ -118,8 +122,10 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.1s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/dressur.webp') }}" alt="Dressur"
-                        class="absolute inset-0 w-full h-full object-cover" width="1200" height="800" loading="lazy" decoding="async">
+                    <img src="{{ url_for('static', filename='img/projektInfo/dressur-600.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/dressur-600.webp') }} 600w, {{ url_for('static', filename='img/projektInfo/dressur-1200.webp') }} 1200w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Dressur" width="600" height="400" loading="lazy" decoding="async"
+                        class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="text-text-primary font-bold text-lg">Dressur</h3>
@@ -134,8 +140,10 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.2s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/marathon.webp') }}" alt="Gelände"
-                        class="absolute inset-0 w-full h-full object-cover" width="1200" height="800" loading="lazy" decoding="async">
+                    <img src="{{ url_for('static', filename='img/projektInfo/marathon-600.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/marathon-600.webp') }} 600w, {{ url_for('static', filename='img/projektInfo/marathon-1200.webp') }} 1200w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Gelände" width="600" height="400" loading="lazy" decoding="async"
+                        class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="text-text-primary font-bold text-lg">Gelände</h3>
@@ -150,8 +158,10 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.3s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}" alt="Hindernisfahren"
-                        class="absolute inset-0 w-full h-full object-cover" width="1200" height="800" loading="lazy" decoding="async">
+                    <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren-600.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/hindernisfahren-600.webp') }} 600w, {{ url_for('static', filename='img/projektInfo/hindernisfahren-1200.webp') }} 1200w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Hindernisfahren" width="600" height="400" loading="lazy" decoding="async"
+                        class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="text-text-primary font-bold text-lg">Hindernis</h3>
