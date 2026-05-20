@@ -3,7 +3,9 @@
 <!-- Hero Section -->
 <section class="relative -mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-16 overflow-hidden">
     <div class="relative h-[70vh] min-h-[500px] max-h-[700px]">
-        <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport Marathon"
+        <img src="{{ url_for('static', filename='img/projektInfo/fahrsport-1440.webp') }}"
+            srcset="{{ url_for('static', filename='img/projektInfo/fahrsport-960.webp') }} 960w, {{ url_for('static', filename='img/projektInfo/fahrsport-1440.webp') }} 1440w, {{ url_for('static', filename='img/projektInfo/fahrsport-1920.webp') }} 1920w"
+            sizes="100vw" alt="Fahrsport Marathon" width="1440" height="960" fetchpriority="high" decoding="async"
             class="absolute inset-0 w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/70 to-surface/30"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-surface/50 to-transparent"></div>
@@ -11,7 +13,7 @@
             <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-16">
                 <div class="accent-bar mb-6"></div>
                 <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-text-primary leading-[1.1]">
-                    Dein<br>Marathon-Timer
+                    Fahrsport<br>Marathon-Timer
                 </h1>
                 <p class="text-text-secondary text-lg md:text-xl mt-4 max-w-lg">
                     Berechne Splitzeiten für das gültige Zeitfenster zwischen Bestzeit und Erlaubter Zeit.
@@ -25,6 +27,34 @@
                     </a>
                     <a href="/projektInfo" class="btn-secondary text-lg px-8 py-4">Mehr erfahren</a>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Turnieralltag -->
+<section class="mb-20">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+        <div class="lg:col-span-2">
+            <div class="accent-bar mb-4"></div>
+            <h2 class="section-header mb-4">F&uuml;r den Turnieralltag</h2>
+            <p class="text-text-secondary leading-relaxed">
+                PACEr ist f&uuml;r Fahrer gebaut, die vor dem Marathon schnell verl&auml;ssliche Zeiten brauchen:
+                Strecke eingeben, Tempo w&auml;hlen, Zeitfenster pr&uuml;fen und die Splits als PDF mitnehmen.
+            </p>
+        </div>
+        <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="card">
+                <p class="text-accent font-bold text-2xl mb-2">BZ</p>
+                <p class="text-text-secondary text-sm">Bestzeit sofort sichtbar, damit du nicht zu fr&uuml;h ins Ziel kommst.</p>
+            </div>
+            <div class="card">
+                <p class="text-accent font-bold text-2xl mb-2">EZ</p>
+                <p class="text-text-secondary text-sm">Erlaubte Zeit und Kilometer-Splits f&uuml;r die Marschtabelle.</p>
+            </div>
+            <div class="card">
+                <p class="text-accent font-bold text-2xl mb-2">PDF</p>
+                <p class="text-text-secondary text-sm">Ausdruck oder Handy-Datei f&uuml;r Training, Stall und Turnierplatz.</p>
             </div>
         </div>
     </div>
@@ -102,7 +132,9 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/fahrsport.webp') }}" alt="Fahrsport"
+                    <img src="{{ url_for('static', filename='img/projektInfo/fahrsport-960.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/fahrsport-960.webp') }} 960w, {{ url_for('static', filename='img/projektInfo/fahrsport-1440.webp') }} 1440w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Fahrsport" width="960" height="640" loading="lazy" decoding="async"
                         class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">
@@ -118,7 +150,9 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.1s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/dressur.webp') }}" alt="Dressur"
+                    <img src="{{ url_for('static', filename='img/projektInfo/dressur-600.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/dressur-600.webp') }} 600w, {{ url_for('static', filename='img/projektInfo/dressur-1200.webp') }} 1200w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Dressur" width="600" height="400" loading="lazy" decoding="async"
                         class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">
@@ -134,7 +168,9 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.2s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/marathon.webp') }}" alt="Gelände"
+                    <img src="{{ url_for('static', filename='img/projektInfo/marathon-600.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/marathon-600.webp') }} 600w, {{ url_for('static', filename='img/projektInfo/marathon-1200.webp') }} 1200w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Gelände" width="600" height="400" loading="lazy" decoding="async"
                         class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">
@@ -150,7 +186,9 @@
         <div class="flip-card aspect-[3/4] rounded-2xl stagger-item" style="transition-delay: 0.3s">
             <div class="flip-card-inner rounded-2xl">
                 <div class="flip-card-front rounded-2xl overflow-hidden">
-                    <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren.webp') }}" alt="Hindernisfahren"
+                    <img src="{{ url_for('static', filename='img/projektInfo/hindernisfahren-600.webp') }}"
+                        srcset="{{ url_for('static', filename='img/projektInfo/hindernisfahren-600.webp') }} 600w, {{ url_for('static', filename='img/projektInfo/hindernisfahren-1200.webp') }} 1200w"
+                        sizes="(min-width: 1024px) 25vw, 50vw" alt="Hindernisfahren" width="600" height="400" loading="lazy" decoding="async"
                         class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4">

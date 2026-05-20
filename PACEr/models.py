@@ -32,6 +32,20 @@ class UsageStatistic(db.Model):
     count = db.Column(db.Integer, default=1)
 
 
+class ReferralStatistic(db.Model):
+    __tablename__ = 'referral_statistics'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    event_type = db.Column(db.String(40), nullable=False)
+    ref = db.Column(db.String(80), nullable=False, default='direkt')
+    path = db.Column(db.String(120), nullable=False, default='/')
+    count = db.Column(db.Integer, default=1)
+
+    __table_args__ = (
+        db.UniqueConstraint('date', 'event_type', 'ref', 'path', name='uq_referral_stat'),
+    )
+
+
 class Calculation(db.Model):
     __tablename__ = 'calculations'
     id = db.Column(db.Integer, primary_key=True)

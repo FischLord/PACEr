@@ -1,14 +1,15 @@
 <!-- Auto-mode form partial -->
-<form {% if use_htmx %}hx-post="/api/calculate" hx-target="#result-area" hx-swap="innerHTML" hx-indicator="#calc-loading"{% else %}action="/rechner" method="POST"{% endif %}
-      id="form_calculator" class="card">
+<form action="/rechner" method="POST"
+      {% if use_htmx|default(true) %}hx-post="/api/calculate" hx-target="#{{ form_target_id|default('form-area') }}" hx-swap="innerHTML" hx-indicator="#calc-submit-spinner-{{ form_target_id|default('form-area') }}"{% endif %}
+      id="form-calculator-{{ form_target_id|default('form-area') }}" class="card form-calculator">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="mode" value="auto">
 
     <div class="mb-6">
-        <label for="laenge" class="form-label">Streckenlänge (m)</label>
-        <input type="number" id="laenge" name="laenge" class="form-input"
+        <label for="laenge-{{ form_target_id|default('form-area') }}" class="form-label">Streckenlänge (m)</label>
+        <input type="number" id="laenge-{{ form_target_id|default('form-area') }}" name="laenge" class="form-input"
             placeholder="z.B. 4900" required min="1" max="100000" />
-        <div id="laenge-error" class="text-red-400 text-sm mt-1.5 hidden">
+        <div data-laenge-error class="text-red-400 text-sm mt-1.5 hidden">
             Bitte eine Länge zwischen 1 und 100.000 m angeben.
         </div>
     </div>
@@ -17,32 +18,35 @@
         <label class="form-label">Art der Strecke</label>
         <div class="flex flex-wrap gap-2">
             <label>
-                <input type="radio" name="art" value="hindernisstrecke" class="hidden peer" required>
-                <span class="chip">Hindernisstrecke</span>
-            </label>
-            <label>
-                <input type="radio" name="art" value="wegstrecke" class="hidden peer" required>
+                <input type="radio" name="art" value="wegstrecke" class="hidden peer" required
+                    {% if selected_art == 'wegstrecke' %}checked{% endif %}>
                 <span class="chip">Wegstrecke</span>
             </label>
             <label>
-                <input type="radio" name="art" value="schrittstrecke" class="hidden peer" required>
-                <span class="chip">Schrittstrecke</span>
+                <input type="radio" name="art" value="hindernisstrecke" class="hidden peer" required
+                    {% if selected_art == 'hindernisstrecke' %}checked{% endif %}>
+                <span class="chip">Hindernisstrecke</span>
+            </label>
+            <label>
+                <input type="radio" name="art" value="schrittstrecke" class="hidden peer" required
+                    {% if selected_art == 'schrittstrecke' %}checked{% endif %}>
+                <span class="chip">Schrittstrecke <span class="text-xs opacity-70">selten / optional</span></span>
             </label>
         </div>
     </div>
 
-    <div class="mb-6" id="tempoInputField" style="display: none">
-        <label for="kmh" class="form-label">Tempo (km/h)</label>
+    <div class="mb-6" data-tempo-field style="display: none">
+        <label for="kmh-{{ form_target_id|default('form-area') }}" class="form-label">Tempo (km/h)</label>
         <div class="flex items-start gap-4">
             <div class="flex-1">
-                <input type="range" id="kmh" name="kmh" class="range-slider w-full" min="8" max="14" step="1" value="11" required>
-                <div id="kmh-ticks" class="flex justify-between px-[12px] mt-1"></div>
+                <input type="range" id="kmh-{{ form_target_id|default('form-area') }}" name="kmh" class="range-slider w-full" min="8" max="14" step="1" value="11" required data-kmh-slider>
+                <div data-kmh-ticks class="flex justify-between px-[12px] mt-1"></div>
                 <div class="flex justify-between text-xs text-text-muted mt-1">
-                    <span id="kmh-min-label">8 km/h</span>
-                    <span id="kmh-max-label">14 km/h</span>
+                    <span data-kmh-min-label>8 km/h</span>
+                    <span data-kmh-max-label>14 km/h</span>
                 </div>
             </div>
-            <span id="kmh-value" class="text-accent font-bold text-xl min-w-[4ch] text-center pt-0.5">11</span>
+            <span data-kmh-value class="text-accent font-bold text-xl min-w-[4ch] text-center pt-0.5">11</span>
         </div>
     </div>
 
@@ -57,27 +61,38 @@
                 Ordne deine Berechnung einem Turnier zu, damit die Ergebnisse auf der Turnierseite gesammelt angezeigt werden.
             </p>
             <div>
-                <label for="tournament_id" class="form-label">Turnier</label>
-                <select id="tournament_id" name="tournament_id" class="form-select"
-                    hx-get="/api/tournament-klassen" hx-target="#klasse-container" hx-trigger="change"
-                    hx-include="this">
+                <label for="tournament-id-{{ form_target_id|default('form-area') }}" class="form-label">Turnier</label>
+                <select id="tournament-id-{{ form_target_id|default('form-area') }}" name="tournament_id" class="form-select"
+                    hx-get="/api/tournament-klassen" hx-target="#klasse-container-{{ form_target_id|default('form-area') }}" hx-trigger="change"
+                    hx-include="this" hx-vals='{"target_id": "{{ form_target_id|default("form-area") }}"}'>
                     <option value="">Kein Turnier</option>
                     {% for t in tournaments %}
-                    <option value="{{ t.id }}">{{ t.name }} ({{ t.datum.strftime('%d.%m.%Y') }})</option>
+                    <option value="{{ t.id }}" {% if selected_tournament_id|string == t.id|string %}selected{% endif %}>{{ t.name }} ({{ t.datum.strftime('%d.%m.%Y') }})</option>
                     {% endfor %}
                 </select>
             </div>
-            <div id="klasse-container"></div>
+            <div id="klasse-container-{{ form_target_id|default('form-area') }}">
+                {% set klassen = selected_klassen|default([]) %}
+                {% include 'partials/klasse_select.html' with context %}
+            </div>
         </div>
     </details>
     {% endif %}
 
-    <button type="submit" class="btn-primary w-full sm:w-auto" id="submit-button">
-        <span class="inline-flex items-center gap-2">
-            Berechnen
-            <svg class="w-4 h-4 animate-spin-slow hidden htmx-indicator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-            </svg>
-        </span>
-    </button>
+    <div class="flex flex-wrap gap-3">
+        <button type="submit" class="btn-primary w-full sm:w-auto submit-button">
+            <span class="inline-flex items-center gap-2">
+                Berechnen
+                <svg id="calc-submit-spinner-{{ form_target_id|default('form-area') }}" class="w-4 h-4 animate-spin-slow htmx-indicator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+            </span>
+        </button>
+        {% if form_target_id|default('form-area') != 'form-area' and reset_form_url %}
+        <button type="button" class="btn-secondary w-full sm:w-auto"
+            hx-get="{{ reset_form_url }}" hx-target="#{{ form_target_id }}" hx-swap="innerHTML">
+            Eingaben zurücksetzen
+        </button>
+        {% endif %}
+    </div>
 </form>

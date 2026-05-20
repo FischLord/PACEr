@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from models import db, User
 from werkzeug.security import generate_password_hash
 from services.csrf import generate_csrf_token
+from services.tracking import capture_referral
 
 
 def create_app():
@@ -45,6 +46,10 @@ def create_app():
     app.register_blueprint(bp_report)
     app.register_blueprint(bp_admin)
     app.register_blueprint(bp_tournament)
+
+    @app.before_request
+    def remember_referral():
+        capture_referral()
 
     @app.context_processor
     def inject_globals():

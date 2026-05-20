@@ -7,7 +7,9 @@
         <div class="absolute inset-0 mx-4 sm:mx-6 lg:mx-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent"></div>
     </div>
     <div class="flex flex-col items-center -mt-20 md:-mt-24 relative z-10">
-        <img src="{{ url_for('static', filename='img/aboutUs/janneck.webp') }}" alt="Janneck Lehmann"
+        <img src="{{ url_for('static', filename='img/aboutUs/janneck-400.webp') }}"
+            srcset="{{ url_for('static', filename='img/aboutUs/janneck-400.webp') }} 400w, {{ url_for('static', filename='img/aboutUs/janneck-800.webp') }} 800w"
+            sizes="(min-width: 768px) 176px, 128px" alt="Janneck Lehmann" width="176" height="176" loading="lazy" decoding="async"
             class="rounded-full w-32 h-32 md:w-44 md:h-44 object-cover border-4 border-surface shadow-xl shadow-accent/10">
         <div class="mt-4 text-center">
             <h1 class="page-title mb-1">Janneck Lehmann</h1>
@@ -123,6 +125,7 @@
             <span class="flex aspect-[4/3] items-center justify-center bg-surface p-2">
                 <img src="{{ url_for('static', filename='img/aboutUs/impressions/old-calculator-form.png') }}"
                     alt="Fr&uuml;here Eingabemaske des PACEr-Rechners"
+                    loading="lazy" decoding="async"
                     class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
             </span>
             <span class="block px-4 py-3 text-sm text-text-secondary">
@@ -136,6 +139,7 @@
             <span class="flex aspect-[4/3] items-center justify-center bg-surface p-2">
                 <img src="{{ url_for('static', filename='img/aboutUs/impressions/old-calculator-results.png') }}"
                     alt="Fr&uuml;here Ergebnisansicht des PACEr-Rechners"
+                    loading="lazy" decoding="async"
                     class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
             </span>
             <span class="block px-4 py-3 text-sm text-text-secondary">
@@ -149,6 +153,7 @@
             <span class="flex aspect-[4/3] items-center justify-center bg-surface p-2">
                 <img src="{{ url_for('static', filename='img/aboutUs/impressions/old-info-formula.png') }}"
                     alt="Fr&uuml;here Infoseite mit Formel-Erkl&auml;rung"
+                    loading="lazy" decoding="async"
                     class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
             </span>
             <span class="block px-4 py-3 text-sm text-text-secondary">

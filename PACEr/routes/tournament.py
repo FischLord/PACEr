@@ -4,6 +4,8 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from models import db, Tournament, Calculation
 from routes.admin import admin_required
 from services.csrf import validate_csrf
+from services.seo import page_meta
+from services.tracking import record_referral_event
 
 bp_tournament = Blueprint('tournament', __name__)
 
@@ -12,16 +14,26 @@ bp_tournament = Blueprint('tournament', __name__)
 
 @bp_tournament.route('/turniere')
 def turniere():
+    record_referral_event('tournament_view')
     tournaments = Tournament.query.filter_by(is_active=True).order_by(Tournament.datum.desc()).all()
     # Pre-parse klassen JSON for template
     for t in tournaments:
         t._klassen_list = json.loads(t.klassen) if t.klassen else []
-    return render_template('tournaments/index.html', tournaments=tournaments)
+    return render_template(
+        'tournaments/index.html',
+        tournaments=tournaments,
+        **page_meta(
+            title='Fahrsport Turniere mit PACEr-Berechnungen',
+            description='Aktuelle Fahrsport-Turniere mit vorbereiteten Marathon-Zeitberechnungen und Splitzeiten.',
+            canonical_path='/turniere',
+        ),
+    )
 
 
 @bp_tournament.route('/turnier/<int:tournament_id>')
 def turnier_detail(tournament_id):
     tournament = Tournament.query.get_or_404(tournament_id)
+    record_referral_event('tournament_detail_view', path=f'/turnier/{tournament_id}')
     klassen = json.loads(tournament.klassen) if tournament.klassen else []
 
     # Group calculations by klasse and parse results
@@ -51,6 +63,11 @@ def turnier_detail(tournament_id):
         tournament=tournament,
         klassen=klassen,
         calcs_by_klasse=calcs_by_klasse,
+        **page_meta(
+            title=f'{tournament.name} - PACEr Turnierzeiten',
+            description=f'PACEr-Berechnungen fuer {tournament.name} in {tournament.ort}: BZ, EZ, HZ und Splitzeiten je Klasse.',
+            canonical_path=f'/turnier/{tournament.id}',
+        ),
     )
 
 

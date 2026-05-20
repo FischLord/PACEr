@@ -1,0 +1,41 @@
+{% extends "admin/adminTools.html" %}
+
+{% block adminContent %}
+<div class="ml-0 md:ml-4">
+    <div class="card mb-4">
+        <h2 class="section-header mb-2">Reichweite</h2>
+        <p class="text-text-secondary text-sm">
+            Aggregierte Ref-/QR-Auswertung ohne IP-Adressen, User-Agents oder Nutzerprofile.
+        </p>
+    </div>
+
+    {% if stats %}
+    <div class="overflow-x-auto card">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-text-muted border-b border-surface-border">
+                    <th class="py-3 pr-4 font-semibold">Datum</th>
+                    <th class="py-3 pr-4 font-semibold">Event</th>
+                    <th class="py-3 pr-4 font-semibold">Quelle</th>
+                    <th class="py-3 pr-4 font-semibold">Pfad</th>
+                    <th class="py-3 text-right font-semibold">Anzahl</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in stats %}
+                <tr class="border-b border-surface-border/60 last:border-0">
+                    <td class="py-3 pr-4 text-text-secondary whitespace-nowrap">{{ stat.date.strftime('%d.%m.%Y') }}</td>
+                    <td class="py-3 pr-4 text-text-primary">{{ stat.event_type }}</td>
+                    <td class="py-3 pr-4 text-accent">{{ stat.ref }}</td>
+                    <td class="py-3 pr-4 text-text-secondary">{{ stat.path }}</td>
+                    <td class="py-3 text-right text-text-primary font-semibold">{{ stat.count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-text-muted text-center mt-8">Noch keine Reichweiten-Daten vorhanden.</p>
+    {% endif %}
+</div>
+{% endblock %}

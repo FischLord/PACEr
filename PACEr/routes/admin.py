@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from models import db, User, Report
+from models import db, User, Report, ReferralStatistic
 from services.csrf import validate_csrf
 from services.rate_limit import check_rate_limit, record_attempt
 
@@ -126,6 +126,16 @@ def change_password():
 def view_reports():
     reports = Report.query.order_by(Report.created_at.desc()).all()
     return render_template('admin/viewReports.html', reports=reports)
+
+
+@bp_admin.route('/admin/referrals')
+@admin_required
+def referral_stats():
+    stats = ReferralStatistic.query.order_by(
+        ReferralStatistic.date.desc(),
+        ReferralStatistic.count.desc(),
+    ).limit(120).all()
+    return render_template('admin/referrals.html', stats=stats)
 
 
 @bp_admin.route('/displayReport/<int:report_id>')

@@ -7,8 +7,8 @@ var kmhRanges = {
     'schrittstrecke': { min: 3, max: 7 }
 };
 
-function updateKmhTicks(min, max) {
-    var container = document.getElementById('kmh-ticks');
+function updateKmhTicks(min, max, form) {
+    var container = form.querySelector('[data-kmh-ticks]');
     if (!container) return;
     container.innerHTML = '';
     for (var i = min; i <= max; i++) {
@@ -18,12 +18,13 @@ function updateKmhTicks(min, max) {
     }
 }
 
-function updateKmhOptions(art) {
-    var kmhSlider = document.getElementById('kmh');
-    var kmhValue = document.getElementById('kmh-value');
-    var kmhMinLabel = document.getElementById('kmh-min-label');
-    var kmhMaxLabel = document.getElementById('kmh-max-label');
-    var tempoField = document.getElementById('tempoInputField');
+function updateKmhOptions(art, form) {
+    if (!form) return;
+    var kmhSlider = form.querySelector('[data-kmh-slider]');
+    var kmhValue = form.querySelector('[data-kmh-value]');
+    var kmhMinLabel = form.querySelector('[data-kmh-min-label]');
+    var kmhMaxLabel = form.querySelector('[data-kmh-max-label]');
+    var tempoField = form.querySelector('[data-tempo-field]');
     if (!kmhSlider || !tempoField) return;
 
     var range = kmhRanges[art];
@@ -37,33 +38,72 @@ function updateKmhOptions(art) {
         if (kmhValue) kmhValue.textContent = mid;
         if (kmhMinLabel) kmhMinLabel.textContent = range.min + ' km/h';
         if (kmhMaxLabel) kmhMaxLabel.textContent = range.max + ' km/h';
-        updateKmhTicks(range.min, range.max);
+        updateKmhTicks(range.min, range.max, form);
         tempoField.style.display = '';
     } else {
         tempoField.style.display = 'none';
     }
 }
 
+function initializeSelectedArt(root) {
+    var scope = root || document;
+    var forms = scope.matches && scope.matches('.form-calculator')
+        ? [scope]
+        : scope.querySelectorAll('.form-calculator');
+
+    for (var i = 0; i < forms.length; i++) {
+        var selectedArt = forms[i].querySelector('input[name="art"]:checked');
+        if (selectedArt) {
+            updateKmhOptions(selectedArt.value, forms[i]);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initializeSelectedArt);
+
+function moveToggleIndicator(activeButton) {
+    var indicator = document.getElementById('toggle-indicator');
+    var toggle = indicator ? indicator.parentElement : null;
+    if (!indicator || !toggle || !activeButton) return;
+
+    var toggleRect = toggle.getBoundingClientRect();
+    var buttonRect = activeButton.getBoundingClientRect();
+    indicator.style.left = (buttonRect.left - toggleRect.left) + 'px';
+    indicator.style.width = buttonRect.width + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var activeButton = document.querySelector('#btn-auto.text-white, #btn-manuell.text-white');
+    moveToggleIndicator(activeButton);
+});
+
+window.addEventListener('resize', function() {
+    var activeButton = document.querySelector('#btn-auto.text-white, #btn-manuell.text-white');
+    moveToggleIndicator(activeButton);
+});
+
 // Radio button change handler for art chips
 document.addEventListener('change', function(e) {
     if (e.target.name === 'art' && e.target.type === 'radio') {
-        updateKmhOptions(e.target.value);
+        updateKmhOptions(e.target.value, e.target.closest('.form-calculator'));
     }
 });
 
 // Slider live value display
 document.addEventListener('input', function(e) {
-    if (e.target.id === 'kmh' && e.target.type === 'range') {
-        var kmhValue = document.getElementById('kmh-value');
+    if (e.target.name === 'kmh' && e.target.type === 'range') {
+        var form = e.target.closest('.form-calculator');
+        var kmhValue = form ? form.querySelector('[data-kmh-value]') : null;
         if (kmhValue) kmhValue.textContent = e.target.value;
     }
 });
 
 // Validate length input
 document.addEventListener('input', function(e) {
-    if (e.target.id !== 'laenge') return;
+    if (e.target.name !== 'laenge') return;
     var val = parseInt(e.target.value);
-    var errEl = document.getElementById('laenge-error');
+    var form = e.target.closest('.form-calculator');
+    var errEl = form ? form.querySelector('[data-laenge-error]') : null;
     if (!errEl) return;
 
     if (val <= 0 || val > MAX_LENGTH || isNaN(val)) {
@@ -89,14 +129,19 @@ document.addEventListener('input', function(e) {
     }
 });
 
+// Initialize dependent tempo controls after HTMX replaces the form.
+document.addEventListener('htmx:afterSwap', function(e) {
+    initializeSelectedArt(e.detail.target);
+});
+
 // Mode toggle — segmented control with sliding indicator
 document.addEventListener('htmx:afterSwap', function(e) {
     if (e.detail.target.id === 'form-area') {
         var trigger = e.detail.requestConfig.elt;
+        if (!trigger || (trigger.id !== 'btn-auto' && trigger.id !== 'btn-manuell')) return;
+
         var btnAuto = document.getElementById('btn-auto');
         var btnManuell = document.getElementById('btn-manuell');
-        var indicator = document.getElementById('toggle-indicator');
-
         if (btnAuto && btnManuell) {
             // Reset both buttons
             btnAuto.classList.remove('text-white');
@@ -109,15 +154,23 @@ document.addEventListener('htmx:afterSwap', function(e) {
             trigger.classList.remove('text-text-secondary');
         }
 
-        // Slide the indicator
-        if (indicator) {
-            if (trigger.id === 'btn-auto') {
-                indicator.style.left = '4px';
-                indicator.style.width = 'calc(50% - 4px)';
-            } else {
-                indicator.style.left = 'calc(50%)';
-                indicator.style.width = 'calc(50% - 4px)';
-            }
-        }
+        moveToggleIndicator(trigger);
     }
+});
+
+// Prevent accidental duplicate calculations while a mobile request is still pending.
+document.addEventListener('htmx:beforeRequest', function(e) {
+    if (!e.detail.elt || !e.detail.elt.classList.contains('form-calculator')) return;
+    var submitButton = e.detail.elt.querySelector('.submit-button');
+    if (!submitButton) return;
+    submitButton.disabled = true;
+    submitButton.classList.add('opacity-70', 'cursor-wait');
+});
+
+document.addEventListener('htmx:afterRequest', function(e) {
+    if (!e.detail.elt || !e.detail.elt.classList.contains('form-calculator')) return;
+    var submitButton = e.detail.elt.querySelector('.submit-button');
+    if (!submitButton) return;
+    submitButton.disabled = false;
+    submitButton.classList.remove('opacity-70', 'cursor-wait');
 });
