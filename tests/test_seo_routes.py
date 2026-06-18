@@ -80,6 +80,22 @@ class SeoRoutesTestCase(unittest.TestCase):
         pace_core_index = html.index('/static/js/pace-core.js')
         calculator_index = html.index('/static/js/calculator.js')
         self.assertLess(pace_core_index, calculator_index)
+    def test_layout_links_manifest_and_registers_service_worker(self):
+        response = self.client.get('/rechner')
+
+        self.assertEqual(response.status_code, 200)
+        html = response.get_data(as_text=True)
+        self.assertIn('/static/manifest.webmanifest', html)
+        self.assertIn("navigator.serviceWorker.register('/sw.js')", html)
+
+    def test_service_worker_is_served_from_root_scope(self):
+        response = self.client.get('/sw.js')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(response.mimetype, ['application/javascript', 'text/javascript'])
+        self.assertEqual(response.headers.get('Service-Worker-Allowed'), '/')
+        self.assertEqual(response.headers.get('Cache-Control'), 'no-cache')
+        self.assertIn('pacer-offline-v1', response.get_data(as_text=True))
 
 
 if __name__ == '__main__':

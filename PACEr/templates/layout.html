@@ -49,6 +49,8 @@
     <meta name="twitter:description" content="Berechne Bestzeit, erlaubte Zeit und Höchstzeit für Wegstrecken und Hindernisstrecken." />
     <meta name="twitter:image" content="{{ url_for('static', filename='img/pacerLogo.png', _external=True) }}" />
     #}
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+    <meta name="theme-color" content="#f97316" />
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/pacerLogoSmall.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -198,6 +200,15 @@
             var target = event.detail.target;
             if (target) target.style.opacity = '1';
         });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').catch(function(error) {
+                    console.warn('PACEr Service Worker konnte nicht registriert werden:', error);
+                });
+            });
+        }
     </script>
 </body>
 

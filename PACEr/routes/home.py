@@ -1,6 +1,7 @@
 from datetime import date
+import os
 
-from flask import Blueprint, Response, render_template, request, url_for
+from flask import Blueprint, Response, current_app, render_template, request, url_for
 
 from models import Tournament
 from services.seo import page_meta, webapp_schema
@@ -91,6 +92,17 @@ def robots_txt():
         '',
     ])
     return Response(content, mimetype='text/plain')
+
+
+@bp_home.route('/sw.js')
+def service_worker():
+    sw_path = os.path.join(current_app.static_folder, 'sw.js')
+    with open(sw_path, encoding='utf-8') as sw_file:
+        content = sw_file.read()
+    response = Response(content, mimetype='application/javascript')
+    response.headers['Service-Worker-Allowed'] = '/'
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
 
 
 @bp_home.route('/sitemap.xml')
