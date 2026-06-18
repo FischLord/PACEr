@@ -175,12 +175,12 @@ document.addEventListener('htmx:afterRequest', function(e) {
     submitButton.classList.remove('opacity-70', 'cursor-wait');
 });
 
-// Offline-first calculation fallback.
-// Online submissions intentionally keep using the existing HTMX/server flow so PDF,
-// persistence and statistics remain unchanged until the JSON background-save phase.
+// Client-first calculation flow.
+// The browser renders immediately. When online, the server recalculates and
+// persists in the background, then returns the authoritative PDF URL.
 (function() {
-    function isOfflineCalculationAvailable() {
-        return window.PacerPaceCore && navigator.onLine === false;
+    function isClientCalculationAvailable() {
+        return !!window.PacerPaceCore;
     }
 
     function getTargetElement(form) {
@@ -263,14 +263,18 @@ document.addEventListener('htmx:afterRequest', function(e) {
         }).join('');
     }
 
-    function renderOfflineResult(result) {
+    function renderClientResult(result, isOnline) {
         var keys = Object.keys(result.ez_result);
         var hasBestzeit = !!result.bz_result;
+        var statusTitle = isOnline ? 'Sofort berechnet' : 'Offline';
+        var statusText = isOnline
+            ? 'Die Berechnung wurde direkt auf diesem Gerät angezeigt. PDF-Link und Speicherung werden im Hintergrund vorbereitet.'
+            : 'Die Berechnung wurde direkt auf diesem Gerät ausgeführt. PDF-Export, Speichern und Statistik sind wieder verfügbar, sobald Internet vorhanden ist.';
         return '<div class="animate-slide-up" data-offline-result>' +
             '<div class="card mb-6 border-l-4 border-l-yellow-500">' +
                 '<div class="flex items-start gap-3">' +
-                    '<div class="text-yellow-400 font-bold">Offline</div>' +
-                    '<div class="text-text-secondary text-sm">Die Berechnung wurde direkt auf diesem Gerät ausgeführt. PDF-Export, Speichern und Statistik sind wieder verfügbar, sobald Internet vorhanden ist.</div>' +
+                    '<div class="text-yellow-400 font-bold">' + statusTitle + '</div>' +
+                    '<div class="text-text-secondary text-sm" data-save-status>' + statusText + '</div>' +
                 '</div>' +
             '</div>' +
             '<div class="card mb-6"><div class="flex flex-wrap gap-6 justify-center md:justify-start">' +
@@ -285,27 +289,57 @@ document.addEventListener('htmx:afterRequest', function(e) {
                 '<th class="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide"><span class="time-hz">Höchstzeit</span></th>' +
             '</tr></thead><tbody class="divide-y divide-surface-border/50">' + renderDesktopRows(result, keys) + '</tbody></table></div></div>' +
             '<div class="md:hidden space-y-3">' + renderMobileCards(result, keys) + '</div>' +
-            '<div class="mt-8"><div class="accent-bar mb-6"></div><div class="flex flex-wrap gap-3 justify-center">' +
+            '<div class="mt-8"><div class="accent-bar mb-6"></div><div class="flex flex-wrap gap-3 justify-center" data-result-actions>' +
                 '<button type="button" class="btn-primary inline-flex items-center gap-2" onclick="window.print()">Drucken / als PDF speichern</button>' +
                 '<button type="button" class="btn-secondary inline-flex items-center gap-2" data-reset-offline-form>Neue Berechnung</button>' +
             '</div></div>' +
         '</div>';
     }
 
+    function saveCalculationInBackground(form, target) {
+        var status = target.querySelector('[data-save-status]');
+        var actions = target.querySelector('[data-result-actions]');
+        fetch('/api/calculations', {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(function(response) {
+            if (!response.ok) throw new Error('Speichern nicht möglich');
+            return response.json();
+        }).then(function(payload) {
+            if (status) {
+                status.textContent = 'Online gespeichert. Der serverseitige PDF-Export ist jetzt verfügbar.';
+            }
+            if (actions && payload.pdf_url && !actions.querySelector('[data-server-pdf-link]')) {
+                actions.insertAdjacentHTML('afterbegin', '<a href="' + escapeHtml(payload.pdf_url) + '" class="btn-primary inline-flex items-center gap-2" data-server-pdf-link>PDF herunterladen</a>');
+            }
+        }).catch(function() {
+            if (status) {
+                status.textContent = 'Berechnung angezeigt, aber Speichern/PDF ist gerade nicht erreichbar. Drucken funktioniert weiterhin.';
+            }
+        });
+    }
+
     document.addEventListener('submit', function(e) {
         var form = e.target;
         if (!form || !form.classList || !form.classList.contains('form-calculator')) return;
-        if (!isOfflineCalculationAvailable()) return;
+        if (!isClientCalculationAvailable()) return;
 
         e.preventDefault();
         e.stopImmediatePropagation();
 
         var target = getTargetElement(form);
         try {
+            var isOnline = navigator.onLine !== false;
             var originalFormHtml = form.outerHTML;
             var result = calculateFromForm(form);
-            target.innerHTML = renderOfflineResult(result);
+            target.innerHTML = renderClientResult(result, isOnline);
             target.dataset.offlineOriginalForm = originalFormHtml;
+            if (isOnline) {
+                saveCalculationInBackground(form, target);
+            }
         } catch (err) {
             var error = form.querySelector('[data-laenge-error]');
             if (error) {

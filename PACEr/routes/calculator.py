@@ -1,6 +1,6 @@
 import json
 from datetime import date
-from flask import Blueprint, render_template, request, redirect, url_for, send_file
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, send_file
 from helper import pace, calculatePace, oldPace, writeStatistics
 from models import db, Calculation, Tournament
 from services.pdf_generator import PacerPdfGenerator
@@ -65,6 +65,26 @@ def pacer_old():
 def api_calculate():
     """HTMX endpoint — returns result partial."""
     return _handle_calculation(partial=True)
+
+
+@bp_calculator.route('/api/calculations', methods=['POST'])
+@validate_csrf
+def api_calculations():
+    """JSON endpoint for client-first calculations.
+
+    The browser may render an immediate local result, but the server still
+    recalculates and persists the calculation before returning PDF/follow-up
+    URLs. This keeps stored tournament data authoritative.
+    """
+    try:
+        template_vars = _calculate_and_save(request.form)
+        return jsonify({
+            'calculation_id': template_vars['calculation_id'],
+            'pdf_url': url_for('calculator.export_pdf', calculation_id=template_vars['calculation_id']),
+            'followup_form_url': template_vars['followup_form_url'],
+        })
+    except (ValueError, KeyError) as e:
+        return jsonify({'error': f'Ungültige Eingabe: {e}'}), 400
 
 
 @bp_calculator.route('/partials/form')
@@ -188,78 +208,7 @@ def _handle_calculation(partial=False):
     """Core calculation handler for all modes."""
     try:
         mode = request.form.get('mode', 'auto')
-        laenge = int(request.form['laenge'])
-
-        if laenge <= 0 or laenge > MAX_LENGTH:
-            error = f"Bitte eine Streckenlänge zwischen 1 und {MAX_LENGTH} m angeben."
-            if partial:
-                return render_template('partials/error.html', error=error)
-            return render_template(
-                'calculator/rechner.html', mode=mode, has_result=False,
-                notification=error, notificationName='Fehler',
-                tournaments=Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all(),
-            )
-
-        if mode == 'manuell':
-            bz_min = int(request.form['bz_min'])
-            bz_sec = int(request.form['bz_sec'])
-            ez_min = int(request.form['ez_min'])
-            ez_sec = int(request.form['ez_sec'])
-            hz_min = int(request.form['hz_min'])
-            hz_sec = int(request.form['hz_sec'])
-
-            ez_result = pace(laenge, ez_min, ez_sec)
-            hz_result = pace(laenge, hz_min, hz_sec)
-            bz_result = pace(laenge, bz_min, bz_sec)
-
-            art = None
-            kmh = None
-        else:
-            kmh = int(request.form['kmh'])
-            art = request.form['art']
-
-            bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min = calculatePace(laenge, kmh, art)
-            ez_result = pace(laenge, ez_min, ez_sec)
-            hz_result = pace(laenge, hz_min, hz_sec)
-            bz_result = pace(laenge, bz_min, bz_sec) if bz_min is not None else None
-
-        writeStatistics()
-
-        # Save calculation to DB
-        result_data = {
-            'ez': {str(k): v for k, v in ez_result.items()},
-            'hz': {str(k): v for k, v in hz_result.items()},
-        }
-        if bz_result:
-            result_data['bz'] = {str(k): v for k, v in bz_result.items()}
-
-        calc = Calculation(
-            laenge=laenge,
-            art=art,
-            kmh=kmh,
-            bz_min=bz_min, bz_sec=bz_sec,
-            ez_min=ez_min, ez_sec=ez_sec,
-            hz_min=hz_min, hz_sec=hz_sec,
-            result_json=json.dumps(result_data),
-            mode=mode,
-        )
-
-        # Tournament assignment
-        tournament_id = request.form.get('tournament_id')
-        if tournament_id:
-            calc.tournament_id = int(tournament_id)
-            calc.klasse = request.form.get('klasse', '')
-
-        db.session.add(calc)
-        db.session.commit()
-        record_referral_event('calculation')
-
-        template_vars = dict(
-            laenge=laenge, kmh=kmh, art=art,
-            bz_result=bz_result, ez_result=ez_result, hz_result=hz_result,
-            calculation_id=calc.id,
-            followup_form_url=_build_followup_form_url(calc),
-        )
+        template_vars = _calculate_and_save(request.form)
 
         if partial:
             return render_template('partials/results.html', **template_vars)
@@ -279,6 +228,73 @@ def _handle_calculation(partial=False):
             has_result=False, notification=error, notificationName='Fehler',
             tournaments=Tournament.query.filter_by(is_active=True).filter(Tournament.datum >= date.today()).order_by(Tournament.datum.asc()).all(),
         )
+
+
+def _calculate_and_save(form_data):
+    mode = form_data.get('mode', 'auto')
+    laenge = int(form_data['laenge'])
+
+    if laenge <= 0 or laenge > MAX_LENGTH:
+        raise ValueError(f"Bitte eine Streckenlänge zwischen 1 und {MAX_LENGTH} m angeben.")
+
+    if mode == 'manuell':
+        bz_min = int(form_data['bz_min'])
+        bz_sec = int(form_data['bz_sec'])
+        ez_min = int(form_data['ez_min'])
+        ez_sec = int(form_data['ez_sec'])
+        hz_min = int(form_data['hz_min'])
+        hz_sec = int(form_data['hz_sec'])
+
+        ez_result = pace(laenge, ez_min, ez_sec)
+        hz_result = pace(laenge, hz_min, hz_sec)
+        bz_result = pace(laenge, bz_min, bz_sec)
+
+        art = None
+        kmh = None
+    else:
+        kmh = int(form_data['kmh'])
+        art = form_data['art']
+
+        bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min = calculatePace(laenge, kmh, art)
+        ez_result = pace(laenge, ez_min, ez_sec)
+        hz_result = pace(laenge, hz_min, hz_sec)
+        bz_result = pace(laenge, bz_min, bz_sec) if bz_min is not None else None
+
+    writeStatistics()
+
+    result_data = {
+        'ez': {str(k): v for k, v in ez_result.items()},
+        'hz': {str(k): v for k, v in hz_result.items()},
+    }
+    if bz_result:
+        result_data['bz'] = {str(k): v for k, v in bz_result.items()}
+
+    calc = Calculation(
+        laenge=laenge,
+        art=art,
+        kmh=kmh,
+        bz_min=bz_min, bz_sec=bz_sec,
+        ez_min=ez_min, ez_sec=ez_sec,
+        hz_min=hz_min, hz_sec=hz_sec,
+        result_json=json.dumps(result_data),
+        mode=mode,
+    )
+
+    tournament_id = form_data.get('tournament_id')
+    if tournament_id:
+        calc.tournament_id = int(tournament_id)
+        calc.klasse = form_data.get('klasse', '')
+
+    db.session.add(calc)
+    db.session.commit()
+    record_referral_event('calculation')
+
+    return dict(
+        laenge=laenge, kmh=kmh, art=art,
+        bz_result=bz_result, ez_result=ez_result, hz_result=hz_result,
+        calculation_id=calc.id,
+        followup_form_url=_build_followup_form_url(calc),
+    )
 
 
 def _build_followup_form_url(calc):
