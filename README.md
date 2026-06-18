@@ -31,10 +31,16 @@ Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen S
    
 ### Tests ausführen
 
-Die vorhandenen Unit-Tests können ohne zusätzliche Test-Abhängigkeit mit `unittest` gestartet werden:
+Die vorhandenen Python-Unit-Tests können ohne zusätzliche Test-Abhängigkeit mit `unittest` gestartet werden:
 
 ```bash
 .PACEr/bin/python -m unittest discover -s tests -v
+```
+
+Die JavaScript-Tests für die clientseitige Rechnerlogik laufen direkt über Node:
+
+```bash
+node tests/js/pace-core.test.js
 ```
 
 ### Starten des Entwicklung-Servers
