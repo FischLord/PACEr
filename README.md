@@ -29,6 +29,14 @@ Um **P.A.C.E.r** für die Weiterentwicklung zu installieren, folgen Sie diesen S
    pip install -r requirements.txt
    ```
    
+### Tests ausführen
+
+Die vorhandenen Unit-Tests können ohne zusätzliche Test-Abhängigkeit mit `unittest` gestartet werden:
+
+```bash
+.PACEr/bin/python -m unittest discover -s tests -v
+```
+
 ### Starten des Entwicklung-Servers
 
 Unter Linux:

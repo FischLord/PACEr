@@ -9,7 +9,7 @@ from services.csrf import generate_csrf_token
 from services.tracking import capture_referral
 
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__, static_folder='static', template_folder='templates')
     app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(16))
 
@@ -20,8 +20,11 @@ def create_app():
 
     # Database config
     db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pacer.db')
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{db_path}')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    if config:
+        app.config.update(config)
 
     db.init_app(app)
 
