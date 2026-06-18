@@ -1,4 +1,6 @@
 import json
+import time
+from collections import defaultdict
 from datetime import date
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, send_file
 from helper import pace, calculatePace, oldPace, writeStatistics
@@ -11,6 +13,14 @@ from services.tracking import record_referral_event
 bp_calculator = Blueprint('calculator', __name__)
 
 MAX_LENGTH = 100000
+KMH_RANGES = {
+    'hindernisstrecke': (8, 14),
+    'wegstrecke': (8, 15),
+    'schrittstrecke': (3, 7),
+}
+MAX_CALCULATIONS_PER_WINDOW = 60
+CALCULATION_RATE_WINDOW_SECONDS = 300
+_calculation_attempts = defaultdict(list)
 
 
 @bp_calculator.route('/rechner', methods=['GET', 'POST'])
@@ -64,6 +74,8 @@ def pacer_old():
 @validate_csrf
 def api_calculate():
     """HTMX endpoint — returns result partial."""
+    if _is_calculation_rate_limited():
+        return render_template('partials/error.html', error='Zu viele Berechnungen in kurzer Zeit. Bitte kurz warten.'), 429
     return _handle_calculation(partial=True)
 
 
@@ -76,6 +88,8 @@ def api_calculations():
     recalculates and persists the calculation before returning PDF/follow-up
     URLs. This keeps stored tournament data authoritative.
     """
+    if _is_calculation_rate_limited():
+        return jsonify({'error': 'Zu viele Berechnungen in kurzer Zeit. Bitte kurz warten.'}), 429
     try:
         template_vars = _calculate_and_save(request.form)
         return jsonify({
@@ -232,18 +246,18 @@ def _handle_calculation(partial=False):
 
 def _calculate_and_save(form_data):
     mode = form_data.get('mode', 'auto')
-    laenge = int(form_data['laenge'])
+    laenge = _parse_int(form_data['laenge'], 'Streckenlänge')
 
     if laenge <= 0 or laenge > MAX_LENGTH:
         raise ValueError(f"Bitte eine Streckenlänge zwischen 1 und {MAX_LENGTH} m angeben.")
 
     if mode == 'manuell':
-        bz_min = int(form_data['bz_min'])
-        bz_sec = int(form_data['bz_sec'])
-        ez_min = int(form_data['ez_min'])
-        ez_sec = int(form_data['ez_sec'])
-        hz_min = int(form_data['hz_min'])
-        hz_sec = int(form_data['hz_sec'])
+        bz_min = _parse_minutes(form_data['bz_min'], 'Bestzeit-Minuten')
+        bz_sec = _parse_seconds(form_data['bz_sec'], 'Bestzeit-Sekunden')
+        ez_min = _parse_minutes(form_data['ez_min'], 'Erlaubte-Zeit-Minuten')
+        ez_sec = _parse_seconds(form_data['ez_sec'], 'Erlaubte-Zeit-Sekunden')
+        hz_min = _parse_minutes(form_data['hz_min'], 'Höchstzeit-Minuten')
+        hz_sec = _parse_seconds(form_data['hz_sec'], 'Höchstzeit-Sekunden')
 
         ez_result = pace(laenge, ez_min, ez_sec)
         hz_result = pace(laenge, hz_min, hz_sec)
@@ -252,8 +266,8 @@ def _calculate_and_save(form_data):
         art = None
         kmh = None
     else:
-        kmh = int(form_data['kmh'])
         art = form_data['art']
+        kmh = _parse_kmh(form_data['kmh'], art)
 
         bz_sec, hz_sec, ez_sec, bz_min, hz_min, ez_min = calculatePace(laenge, kmh, art)
         ez_result = pace(laenge, ez_min, ez_sec)
@@ -295,6 +309,48 @@ def _calculate_and_save(form_data):
         calculation_id=calc.id,
         followup_form_url=_build_followup_form_url(calc),
     )
+
+
+def _parse_int(value, field_name):
+    text = str(value).strip()
+    if not text or not text.lstrip('-').isdigit():
+        raise ValueError(f'{field_name} muss eine ganze Zahl sein.')
+    return int(text)
+
+
+def _parse_seconds(value, field_name):
+    seconds = _parse_int(value, field_name)
+    if seconds < 0 or seconds > 59:
+        raise ValueError(f'{field_name} muss zwischen 0 und 59 liegen.')
+    return seconds
+
+
+def _parse_minutes(value, field_name):
+    minutes = _parse_int(value, field_name)
+    if minutes < 0:
+        raise ValueError(f'{field_name} muss mindestens 0 sein.')
+    return minutes
+
+
+def _parse_kmh(value, art):
+    if art not in KMH_RANGES:
+        raise ValueError('Error: Art not defined')
+    kmh = _parse_int(value, 'Tempo')
+    min_kmh, max_kmh = KMH_RANGES[art]
+    if kmh < min_kmh or kmh > max_kmh:
+        raise ValueError(f'Tempo muss für diese Streckenart zwischen {min_kmh} und {max_kmh} km/h liegen.')
+    return kmh
+
+
+def _is_calculation_rate_limited():
+    now = time.time()
+    ip = request.remote_addr or 'unknown'
+    cutoff = now - CALCULATION_RATE_WINDOW_SECONDS
+    _calculation_attempts[ip] = [timestamp for timestamp in _calculation_attempts[ip] if timestamp > cutoff]
+    if len(_calculation_attempts[ip]) >= MAX_CALCULATIONS_PER_WINDOW:
+        return True
+    _calculation_attempts[ip].append(now)
+    return False
 
 
 def _build_followup_form_url(calc):

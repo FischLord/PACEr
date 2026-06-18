@@ -9,8 +9,20 @@
 
     var MAX_LENGTH = 100000;
     var VALID_ARTEN = ['wegstrecke', 'hindernisstrecke', 'schrittstrecke'];
+    var KMH_RANGES = {
+        hindernisstrecke: { min: 8, max: 14 },
+        wegstrecke: { min: 8, max: 15 },
+        schrittstrecke: { min: 3, max: 7 }
+    };
+
+    function isIntegerString(value) {
+        return /^-?\d+$/.test(String(value).trim());
+    }
 
     function toInt(value, fieldName) {
+        if (!isIntegerString(value)) {
+            throw new Error((fieldName || 'Wert') + ' muss eine ganze Zahl sein.');
+        }
         var number = Number(value);
         if (!Number.isFinite(number)) {
             throw new Error((fieldName || 'Wert') + ' muss eine Zahl sein.');
@@ -26,6 +38,26 @@
         return length;
     }
 
+    function validateNonNegativeMinutes(minutes, fieldName) {
+        var value = toInt(minutes, fieldName || 'Minuten');
+        if (value < 0) {
+            throw new Error((fieldName || 'Minuten') + ' muessen mindestens 0 sein.');
+        }
+        return value;
+    }
+
+    function validateKmh(kmh, art) {
+        var speed = toInt(kmh, 'Tempo');
+        var range = KMH_RANGES[art];
+        if (!range) {
+            throw new Error('Error: Art not defined');
+        }
+        if (speed < range.min || speed > range.max) {
+            throw new Error('Tempo muss fuer diese Streckenart zwischen ' + range.min + ' und ' + range.max + ' km/h liegen.');
+        }
+        return speed;
+    }
+
     function validateSeconds(seconds, fieldName) {
         var value = toInt(seconds, fieldName || 'Sekunden');
         if (value < 0 || value > 59) {
@@ -36,7 +68,7 @@
 
     function pace(laenge, timeMin, timeSec) {
         var length = validateLength(laenge);
-        var minutes = toInt(timeMin, 'Minuten');
+        var minutes = validateNonNegativeMinutes(timeMin, 'Minuten');
         var seconds = toInt(timeSec, 'Sekunden');
         var totalSeconds = minutes * 60 + seconds;
         var result = {};
@@ -58,10 +90,10 @@
 
     function calculatePace(laenge, kmh, art) {
         var length = validateLength(laenge);
-        var speed = toInt(kmh, 'Tempo');
         if (VALID_ARTEN.indexOf(art) === -1) {
             throw new Error('Error: Art not defined');
         }
+        var speed = validateKmh(kmh, art);
 
         var laengeKm = length / 1000;
         var ez = laengeKm * 60 / speed;
@@ -105,7 +137,7 @@
         var calc = calculatePace(input.laenge, input.kmh, input.art);
         var result = {
             laenge: validateLength(input.laenge),
-            kmh: toInt(input.kmh, 'Tempo'),
+            kmh: validateKmh(input.kmh, input.art),
             art: input.art,
             ez_result: pace(input.laenge, calc.ez_min, calc.ez_sec),
             hz_result: pace(input.laenge, calc.hz_min, calc.hz_sec),
@@ -136,9 +168,9 @@
                 bz_sec: bzSec,
                 hz_sec: hzSec,
                 ez_sec: ezSec,
-                bz_min: toInt(input.bz_min, 'Bestzeit-Minuten'),
-                hz_min: toInt(input.hz_min, 'Hoechstzeit-Minuten'),
-                ez_min: toInt(input.ez_min, 'Erlaubte-Zeit-Minuten')
+                bz_min: validateNonNegativeMinutes(input.bz_min, 'Bestzeit-Minuten'),
+                hz_min: validateNonNegativeMinutes(input.hz_min, 'Hoechstzeit-Minuten'),
+                ez_min: validateNonNegativeMinutes(input.ez_min, 'Erlaubte-Zeit-Minuten')
             }
         };
     }

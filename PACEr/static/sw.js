@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pacer-offline-v1';
+const CACHE_NAME = 'pacer-offline-v2';
 const APP_SHELL = [
     '/rechner',
     '/static/js/pace-core.js',
@@ -16,6 +16,16 @@ function isAdminOrPrivatePath(pathname) {
         pathname === '/adminTools' ||
         pathname === '/changePassword' ||
         pathname === '/viewReports';
+}
+
+function cacheStaticResponse(request) {
+    return fetch(request)
+        .then(function(response) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(function(cache) { cache.put(request, copy); });
+            return response;
+        })
+        .catch(function() { return caches.match(request); });
 }
 
 self.addEventListener('install', function(event) {
@@ -62,15 +72,6 @@ self.addEventListener('fetch', function(event) {
     }
 
     if (url.pathname.startsWith('/static/')) {
-        event.respondWith(
-            caches.match(request).then(function(cached) {
-                if (cached) return cached;
-                return fetch(request).then(function(response) {
-                    const copy = response.clone();
-                    caches.open(CACHE_NAME).then(function(cache) { cache.put(request, copy); });
-                    return response;
-                });
-            })
-        );
+        event.respondWith(cacheStaticResponse(request));
     }
 });

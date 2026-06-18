@@ -95,7 +95,10 @@ class SeoRoutesTestCase(unittest.TestCase):
         self.assertIn(response.mimetype, ['application/javascript', 'text/javascript'])
         self.assertEqual(response.headers.get('Service-Worker-Allowed'), '/')
         self.assertEqual(response.headers.get('Cache-Control'), 'no-cache')
-        self.assertIn('pacer-offline-v1', response.get_data(as_text=True))
+        body = response.get_data(as_text=True)
+        self.assertIn('pacer-offline-v2', body)
+        self.assertIn('function cacheStaticResponse', body)
+        self.assertIn('fetch(request)', body)
 
 
 if __name__ == '__main__':

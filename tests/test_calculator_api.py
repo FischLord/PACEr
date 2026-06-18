@@ -9,10 +9,12 @@ sys.path.insert(0, str(APP_ROOT))
 
 from app import create_app
 from models import Calculation, db
+import routes.calculator as calculator_routes
 
 
 class CalculatorApiTestCase(unittest.TestCase):
     def setUp(self):
+        calculator_routes._calculation_attempts.clear()
         self.tmpdir = tempfile.TemporaryDirectory()
         db_path = Path(self.tmpdir.name) / 'test-pacer.db'
         self.app = create_app({
@@ -64,6 +66,99 @@ class CalculatorApiTestCase(unittest.TestCase):
         })
 
         self.assertEqual(response.status_code, 403)
+
+    def test_json_calculation_rejects_decimal_values_like_server_form(self):
+        response = self.client.post('/api/calculations', data={
+            '_csrf_token': self.csrf_token(),
+            'mode': 'auto',
+            'laenge': '1000.9',
+            'art': 'wegstrecke',
+            'kmh': '12',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('ganze Zahl', response.get_json()['error'])
+
+        response = self.client.post('/api/calculations', data={
+            '_csrf_token': self.csrf_token(),
+            'mode': 'auto',
+            'laenge': '1000',
+            'art': 'wegstrecke',
+            'kmh': '12.5',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('ganze Zahl', response.get_json()['error'])
+
+    def test_json_calculation_rejects_out_of_range_tempo(self):
+        response = self.client.post('/api/calculations', data={
+            '_csrf_token': self.csrf_token(),
+            'mode': 'auto',
+            'laenge': '1000',
+            'art': 'wegstrecke',
+            'kmh': '16',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Tempo muss', response.get_json()['error'])
+
+    def test_json_calculation_rejects_invalid_manual_times(self):
+        token = self.csrf_token()
+        response = self.client.post('/api/calculations', data={
+            '_csrf_token': token,
+            'mode': 'manuell',
+            'laenge': '1000',
+            'bz_min': '-1',
+            'bz_sec': '0',
+            'ez_min': '2',
+            'ez_sec': '0',
+            'hz_min': '3',
+            'hz_sec': '0',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('mindestens 0', response.get_json()['error'])
+
+        response = self.client.post('/api/calculations', data={
+            '_csrf_token': token,
+            'mode': 'manuell',
+            'laenge': '1000',
+            'bz_min': '1',
+            'bz_sec': '60',
+            'ez_min': '2',
+            'ez_sec': '0',
+            'hz_min': '3',
+            'hz_sec': '0',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('zwischen 0 und 59', response.get_json()['error'])
+
+    def test_json_calculation_endpoint_is_rate_limited(self):
+        token = self.csrf_token()
+        old_max = calculator_routes.MAX_CALCULATIONS_PER_WINDOW
+        calculator_routes.MAX_CALCULATIONS_PER_WINDOW = 1
+        try:
+            first = self.client.post('/api/calculations', data={
+                '_csrf_token': token,
+                'mode': 'auto',
+                'laenge': '1000',
+                'art': 'wegstrecke',
+                'kmh': '10',
+            })
+            second = self.client.post('/api/calculations', data={
+                '_csrf_token': token,
+                'mode': 'auto',
+                'laenge': '1000',
+                'art': 'wegstrecke',
+                'kmh': '10',
+            })
+        finally:
+            calculator_routes.MAX_CALCULATIONS_PER_WINDOW = old_max
+
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(second.status_code, 429)
+        self.assertIn('Zu viele Berechnungen', second.get_json()['error'])
 
 
 if __name__ == '__main__':

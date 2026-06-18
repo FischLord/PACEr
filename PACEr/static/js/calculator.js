@@ -299,6 +299,7 @@ document.addEventListener('htmx:afterRequest', function(e) {
     function saveCalculationInBackground(form, target) {
         var status = target.querySelector('[data-save-status]');
         var actions = target.querySelector('[data-result-actions]');
+        var result = target.querySelector('[data-offline-result]');
         fetch('/api/calculations', {
             method: 'POST',
             body: new FormData(form),
@@ -314,6 +315,19 @@ document.addEventListener('htmx:afterRequest', function(e) {
             }
             if (actions && payload.pdf_url && !actions.querySelector('[data-server-pdf-link]')) {
                 actions.insertAdjacentHTML('afterbegin', '<a href="' + escapeHtml(payload.pdf_url) + '" class="btn-primary inline-flex items-center gap-2" data-server-pdf-link>PDF herunterladen</a>');
+            }
+            if (result && payload.followup_form_url && !target.querySelector('[data-followup-slot]')) {
+                var slotId = 'followup-slot-' + escapeHtml(payload.calculation_id);
+                result.insertAdjacentHTML('beforeend',
+                    '<div id="' + slotId + '" class="mt-8" data-followup-slot>' +
+                        '<div class="flex justify-center">' +
+                            '<button type="button" class="btn-secondary inline-flex items-center gap-2" hx-get="' + escapeHtml(payload.followup_form_url) + '" hx-target="#' + slotId + '" hx-swap="innerHTML">Rechner darunter hinzufügen</button>' +
+                        '</div>' +
+                    '</div>'
+                );
+                if (window.htmx) {
+                    window.htmx.process(result);
+                }
             }
         }).catch(function() {
             if (status) {

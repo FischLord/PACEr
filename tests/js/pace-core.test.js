@@ -119,7 +119,11 @@ assert.deepStrictEqual(
 assert.strictEqual(paceCore.formatTime({ min: 4, sec: 5 }), '4:05');
 assert.throws(() => paceCore.calculateAuto({ laenge: 0, kmh: 10, art: 'wegstrecke' }), /Streckenlaenge/);
 assert.throws(() => paceCore.calculateAuto({ laenge: 100001, kmh: 10, art: 'wegstrecke' }), /Streckenlaenge/);
+assert.throws(() => paceCore.calculateAuto({ laenge: '1000.9', kmh: 10, art: 'wegstrecke' }), /ganze Zahl/);
+assert.throws(() => paceCore.calculateAuto({ laenge: 1000, kmh: '12.5', art: 'wegstrecke' }), /ganze Zahl/);
 assert.throws(() => paceCore.calculateAuto({ laenge: 1000, kmh: 10, art: 'unbekannt' }), /Art not defined/);
+assert.throws(() => paceCore.calculateAuto({ laenge: 1000, kmh: 16, art: 'wegstrecke' }), /Tempo/);
 assert.throws(() => paceCore.calculateManual({ laenge: 1000, bz_min: 1, bz_sec: 60, ez_min: 2, ez_sec: 0, hz_min: 3, hz_sec: 0 }), /Sekunden/);
+assert.throws(() => paceCore.calculateManual({ laenge: 1000, bz_min: -1, bz_sec: 0, ez_min: 2, ez_sec: 0, hz_min: 3, hz_sec: 0 }), /Minuten/);
 
 console.log('pace-core tests passed');
