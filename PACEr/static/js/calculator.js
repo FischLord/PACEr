@@ -174,3 +174,156 @@ document.addEventListener('htmx:afterRequest', function(e) {
     submitButton.disabled = false;
     submitButton.classList.remove('opacity-70', 'cursor-wait');
 });
+
+// Offline-first calculation fallback.
+// Online submissions intentionally keep using the existing HTMX/server flow so PDF,
+// persistence and statistics remain unchanged until the JSON background-save phase.
+(function() {
+    function isOfflineCalculationAvailable() {
+        return window.PacerPaceCore && navigator.onLine === false;
+    }
+
+    function getTargetElement(form) {
+        var targetSelector = form.getAttribute('hx-target') || '#form-area';
+        if (!targetSelector || targetSelector.charAt(0) !== '#') return form.parentElement;
+        return document.querySelector(targetSelector) || form.parentElement;
+    }
+
+    function readFormInput(form) {
+        var data = new FormData(form);
+        var mode = data.get('mode') || 'auto';
+        var input = { mode: mode, laenge: data.get('laenge') };
+
+        if (mode === 'manuell') {
+            input.bz_min = data.get('bz_min');
+            input.bz_sec = data.get('bz_sec');
+            input.ez_min = data.get('ez_min');
+            input.ez_sec = data.get('ez_sec');
+            input.hz_min = data.get('hz_min');
+            input.hz_sec = data.get('hz_sec');
+        } else {
+            input.art = data.get('art');
+            input.kmh = data.get('kmh');
+        }
+
+        return input;
+    }
+
+    function calculateFromForm(form) {
+        var input = readFormInput(form);
+        if (input.mode === 'manuell') {
+            return window.PacerPaceCore.calculateManual(input);
+        }
+        return window.PacerPaceCore.calculateAuto(input);
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function formatArt(art) {
+        if (!art) return '';
+        if (art === 'wegstrecke') return 'Wegstrecke';
+        if (art === 'hindernisstrecke') return 'Hindernisstrecke';
+        if (art === 'schrittstrecke') return 'Schrittstrecke';
+        return art;
+    }
+
+    function time(result, key) {
+        return window.PacerPaceCore.formatTime(result[key]);
+    }
+
+    function renderDesktopRows(result, keys) {
+        var hasBestzeit = !!result.bz_result;
+        return keys.map(function(key) {
+            return '<tr class="hover:bg-surface-overlay/30 transition-colors">' +
+                '<td class="px-5 py-3.5 text-text-secondary font-medium">' + escapeHtml(key) + '</td>' +
+                (hasBestzeit ? '<td class="px-5 py-3.5 text-center"><span class="time-bz font-mono font-bold text-lg">' + time(result.bz_result, key) + '</span></td>' : '') +
+                '<td class="px-5 py-3.5 text-center"><span class="time-ez font-mono font-bold text-lg">' + time(result.ez_result, key) + '</span></td>' +
+                '<td class="px-5 py-3.5 text-center"><span class="time-hz font-mono font-bold text-lg">' + time(result.hz_result, key) + '</span></td>' +
+                '</tr>';
+        }).join('');
+    }
+
+    function renderMobileCards(result, keys) {
+        var hasBestzeit = !!result.bz_result;
+        return keys.map(function(key) {
+            return '<div class="card p-4">' +
+                '<div class="text-text-muted text-sm font-semibold mb-2">' + escapeHtml(key) + ' m</div>' +
+                '<div class="grid ' + (hasBestzeit ? 'grid-cols-3' : 'grid-cols-2') + ' gap-2">' +
+                (hasBestzeit ? '<div class="bg-time-bz/10 border border-time-bz/20 rounded-xl p-2.5 text-center"><div class="text-time-bz text-xs font-semibold mb-1">BZ</div><div class="time-bz font-mono font-bold">' + time(result.bz_result, key) + '</div></div>' : '') +
+                '<div class="bg-time-ez/10 border border-time-ez/20 rounded-xl p-2.5 text-center"><div class="text-time-ez text-xs font-semibold mb-1">EZ</div><div class="time-ez font-mono font-bold">' + time(result.ez_result, key) + '</div></div>' +
+                '<div class="bg-time-hz/10 border border-time-hz/20 rounded-xl p-2.5 text-center"><div class="text-time-hz text-xs font-semibold mb-1">HZ</div><div class="time-hz font-mono font-bold">' + time(result.hz_result, key) + '</div></div>' +
+                '</div></div>';
+        }).join('');
+    }
+
+    function renderOfflineResult(result) {
+        var keys = Object.keys(result.ez_result);
+        var hasBestzeit = !!result.bz_result;
+        return '<div class="animate-slide-up" data-offline-result>' +
+            '<div class="card mb-6 border-l-4 border-l-yellow-500">' +
+                '<div class="flex items-start gap-3">' +
+                    '<div class="text-yellow-400 font-bold">Offline</div>' +
+                    '<div class="text-text-secondary text-sm">Die Berechnung wurde direkt auf diesem Gerät ausgeführt. PDF-Export, Speichern und Statistik sind wieder verfügbar, sobald Internet vorhanden ist.</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="card mb-6"><div class="flex flex-wrap gap-6 justify-center md:justify-start">' +
+                '<div><span class="text-text-muted text-xs uppercase tracking-wide block">Strecke</span><span class="text-text-primary font-bold text-2xl">' + escapeHtml(result.laenge) + '<span class="text-text-muted text-base font-normal ml-1">m</span></span></div>' +
+                (result.kmh ? '<div><span class="text-text-muted text-xs uppercase tracking-wide block">Tempo</span><span class="text-text-primary font-bold text-2xl">' + escapeHtml(result.kmh) + '<span class="text-text-muted text-base font-normal ml-1">km/h</span></span></div>' : '') +
+                (result.art ? '<div><span class="text-text-muted text-xs uppercase tracking-wide block">Streckenart</span><span class="text-text-primary font-bold text-2xl">' + escapeHtml(formatArt(result.art)) + '</span></div>' : '') +
+            '</div></div>' +
+            '<div class="hidden md:block"><div class="card overflow-hidden p-0"><table class="w-full"><thead><tr class="bg-surface-overlay/50">' +
+                '<th class="px-5 py-3.5 text-left text-text-muted text-xs font-semibold uppercase tracking-wide">Strecke (m)</th>' +
+                (hasBestzeit ? '<th class="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide"><span class="time-bz">Bestzeit</span></th>' : '') +
+                '<th class="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide"><span class="time-ez">Erlaubte Zeit</span></th>' +
+                '<th class="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide"><span class="time-hz">Höchstzeit</span></th>' +
+            '</tr></thead><tbody class="divide-y divide-surface-border/50">' + renderDesktopRows(result, keys) + '</tbody></table></div></div>' +
+            '<div class="md:hidden space-y-3">' + renderMobileCards(result, keys) + '</div>' +
+            '<div class="mt-8"><div class="accent-bar mb-6"></div><div class="flex flex-wrap gap-3 justify-center">' +
+                '<button type="button" class="btn-primary inline-flex items-center gap-2" onclick="window.print()">Drucken / als PDF speichern</button>' +
+                '<button type="button" class="btn-secondary inline-flex items-center gap-2" data-reset-offline-form>Neue Berechnung</button>' +
+            '</div></div>' +
+        '</div>';
+    }
+
+    document.addEventListener('submit', function(e) {
+        var form = e.target;
+        if (!form || !form.classList || !form.classList.contains('form-calculator')) return;
+        if (!isOfflineCalculationAvailable()) return;
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var target = getTargetElement(form);
+        try {
+            var originalFormHtml = form.outerHTML;
+            var result = calculateFromForm(form);
+            target.innerHTML = renderOfflineResult(result);
+            target.dataset.offlineOriginalForm = originalFormHtml;
+        } catch (err) {
+            var error = form.querySelector('[data-laenge-error]');
+            if (error) {
+                error.textContent = err.message || 'Die Eingaben konnten nicht berechnet werden.';
+                error.classList.remove('hidden');
+            } else {
+                alert(err.message || 'Die Eingaben konnten nicht berechnet werden.');
+            }
+        }
+    }, true);
+
+    document.addEventListener('click', function(e) {
+        var button = e.target.closest('[data-reset-offline-form]');
+        if (!button) return;
+        var container = button.closest('[data-offline-result]');
+        var target = container ? container.parentElement : document.getElementById('form-area');
+        if (!target || !target.dataset.offlineOriginalForm) return;
+        target.innerHTML = target.dataset.offlineOriginalForm;
+        initializeSelectedArt(target);
+    });
+}());

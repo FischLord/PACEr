@@ -72,6 +72,14 @@ class SeoRoutesTestCase(unittest.TestCase):
         self.assertIn('<loc>http://pacer.test/reportProblem</loc>', body)
         self.assertNotIn('/admin', body)
         self.assertNotIn('/adminLogin', body)
+    def test_calculator_loads_pace_core_before_calculator_script(self):
+        response = self.client.get('/rechner')
+
+        self.assertEqual(response.status_code, 200)
+        html = response.get_data(as_text=True)
+        pace_core_index = html.index('/static/js/pace-core.js')
+        calculator_index = html.index('/static/js/calculator.js')
+        self.assertLess(pace_core_index, calculator_index)
 
 
 if __name__ == '__main__':
