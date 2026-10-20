@@ -1,0 +1,33 @@
+# Allow only build inputs and application files. This also excludes .git,
+# node_modules, virtualenvs (.PACEr/venv/.venv), tests, screenshots and notes.
+**
+!requirements.txt
+!package.json
+!package-lock.json
+!tailwind.config.js
+!docker/
+!docker/gunicorn.conf.py
+!PACEr/
+!PACEr/*.py
+!PACEr/routes/
+!PACEr/routes/*.py
+!PACEr/services/
+!PACEr/services/*.py
+!PACEr/templates/
+!PACEr/templates/**
+!PACEr/static/
+!PACEr/static/**
+
+# Never include local data, generated CSS, caches or credentials, even below
+# an allowed directory. Static images used by the application stay included.
+**/__pycache__/
+**/node_modules/
+**/instance/
+**/build/
+**/*.py[cod]
+**/*.db*
+**/*.sqlite*
+**/*.log
+**/.env*
+**/*.pem
+**/*.key
