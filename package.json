@@ -1,0 +1,16 @@
+{
+  "name": "pacer",
+  "version": "1.0.0",
+  "description": "**P**räzise **A**bstands-**C**alculierung für ein **E**rfolgreiches Ma**r**athon",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "build:css": "npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --minify",
+    "watch:css": "npx tailwindcss -i PACEr/static/css/theme.css -o PACEr/static/build/theme.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

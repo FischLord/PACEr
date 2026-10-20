@@ -1,10 +1,11 @@
 import os
 import secrets
 from datetime import date, timedelta
-from flask import Flask
+from flask import Flask, current_app
 from flask_login import LoginManager
 from models import db, User
 from werkzeug.security import generate_password_hash
+from werkzeug.middleware.proxy_fix import ProxyFix
 from services.csrf import generate_csrf_token
 from services.tracking import capture_referral
 
@@ -17,6 +18,13 @@ def create_app(config=None):
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=8)
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', '').lower() in ('1', 'true', 'yes', 'on')
+
+    # Nginx Proxy Manager + Traefik may append different numbers of values
+    # per header. Trust only the configured values from the right.
+    app.config['PROXY_FIX_X_FOR'] = int(os.environ.get('PROXY_FIX_X_FOR', '2'))
+    app.config['PROXY_FIX_X_PROTO'] = int(os.environ.get('PROXY_FIX_X_PROTO', '1'))
+    app.config['PROXY_FIX_X_HOST'] = int(os.environ.get('PROXY_FIX_X_HOST', '1'))
 
     # Database config
     db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pacer.db')
@@ -26,7 +34,18 @@ def create_app(config=None):
     if config:
         app.config.update(config)
 
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=app.config['PROXY_FIX_X_FOR'],
+        x_proto=app.config['PROXY_FIX_X_PROTO'],
+        x_host=app.config['PROXY_FIX_X_HOST'],
+    )
+
     db.init_app(app)
+
+    @app.get('/healthz')
+    def healthz():
+        return 'ok\n', 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
     # Flask-Login
     login_manager = LoginManager()
@@ -74,7 +93,10 @@ def _seed_super_admin():
     """Seed super admin user if not already present."""
     existing = User.query.filter_by(username='admin').first()
     if not existing:
-        default_password = os.environ.get('ADMIN_PASSWORD', 'Potsdam1')
+        default_password = os.environ.get('ADMIN_PASSWORD')
+        if not default_password:
+            current_app.logger.warning('Kein Admin angelegt: ADMIN_PASSWORD ist nicht gesetzt.')
+            return
         user = User(
             username='admin',
             password_hash=generate_password_hash(default_password),
