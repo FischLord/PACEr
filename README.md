@@ -60,16 +60,18 @@ machen. Details: [Werkzeug ProxyFix](https://werkzeug.palletsprojects.com/en/sta
    Basisverzeichnis `/`, Dockerfile `/Dockerfile`, interner Port `8000`.
    **Auto Deploy / Deploy on push** einschalten; GitHub-App oder Repository-Webhook
    für Push-Ereignisse verbinden.
-2. Produktionsdomain `pacer.apps.j-rz.de` im bestehenden Proxy-Setup routen;
+2. In Coolify `http://pacer.apps.j-rz.de` als Domain eintragen;
    öffentliches HTTPS endet am Nginx Proxy Manager, der Upstream nutzt HTTP.
+   In Traefik für diese Route keine zusätzliche HTTPS-Weiterleitung aktivieren.
    Später kann die Domain auf `pacer.j-rz.de` wechseln, ohne Codeänderung.
 3. Laufzeitvariablen und Volume für `/data` konfigurieren. Den im Dockerfile
    enthaltenen Healthcheck nutzen (`http://127.0.0.1:8000/healthz`). Für Commit-basierte Asset-Versionen
    `SOURCE_COMMIT` als Build-Argument verfügbar machen oder `ASSET_VERSION` setzen.
 4. **Preview Deployments** aktivieren, Pull-Request-Ereignisse der GitHub-App bzw.
    des Webhooks verbinden. Domainvorlage
-   `https://pacer-pr{{pr_id}}.preview.j-rz.de` sowie Wildcard-DNS und TLS im
-   Nginx Proxy Manager einrichten. Produktions- und Vorschauvariablen getrennt
+   `pacer-pr{{pr_id}}.preview.j-rz.de` (erbt intern HTTP) sowie Wildcard-DNS und TLS im
+   Nginx Proxy Manager einrichten; öffentlich ist die Vorschau per HTTPS erreichbar.
+   Produktions- und Vorschauvariablen getrennt
    pflegen; die `/data`-Volumes müssen je PR unterschiedlich sein. Dafür von
    Coolify verwaltete, pro Vorschau getrennte Volumes verwenden und die tatsächlich
    zugeordneten Volumenamen vor dem ersten Vorschau-Start prüfen.
