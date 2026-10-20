@@ -170,3 +170,5 @@ Unter Windows (in PowerShell):
 - Fehlermeldung oder kritische Informationen: Rot (`text-red-600`)
 - Erfolgsmeldung oder positive Informationen: Grün (`text-green-600`)
 - Warnhinweise: Gelb (`text-yellow-600`)
+
+<!-- Test der Coolify-PR-Vorschau (20.10.2026), wird nicht gemergt. -->
